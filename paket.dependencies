@@ -14,3 +14,12 @@ group Test
   
   nuget NUnit ~> 2
   nuget NUnit.Runners ~> 2
+
+group FParsec
+  source https://nuget.org/api/v2
+  
+  nuget FParsec-Big-Data-Edition
+
+group EmParsec
+  
+  github mavnn/EmParsec EmParsec.fs

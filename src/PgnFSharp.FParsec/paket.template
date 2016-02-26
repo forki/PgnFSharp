@@ -1,0 +1,23 @@
+type project
+owners
+    Phil Brooks
+authors 
+    Phil Brooks
+projectUrl
+    http://github.com/pbbwfc/PgnFSharp
+iconUrl
+    https://raw.githubusercontent.com/pbbwfc/PgnFSharp/master/docs/files/img/logo.png
+licenseUrl
+    http://github.com/pbbwfc/PgnFSharp/blob/master/LICENSE.txt
+requireLicenseAcceptance
+    false
+copyright
+    Copyright 2015
+tags
+    F# Chess PGN
+summary
+    PGN tools using F#
+description
+    PGN tools using F#
+
+

@@ -1,7 +1,7 @@
 ﻿namespace System
 open System.Reflection
 
-[<assembly: AssemblyTitleAttribute("PgnFSharp")>]
+[<assembly: AssemblyTitleAttribute("PgnFSharp.EmParsec")>]
 [<assembly: AssemblyProductAttribute("PgnFSharp")>]
 [<assembly: AssemblyDescriptionAttribute("PGN tools using F#")>]
 [<assembly: AssemblyVersionAttribute("1.0")>]
