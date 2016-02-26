@@ -1,38 +1,19 @@
-[![Issue Stats](http://issuestats.com/github/fsprojects/ProjectScaffold/badge/issue)](http://issuestats.com/github/fsprojects/ProjectScaffold)
-[![Issue Stats](http://issuestats.com/github/fsprojects/ProjectScaffold/badge/pr)](http://issuestats.com/github/fsprojects/ProjectScaffold)
+[![Build status](https://ci.appveyor.com/api/projects/status/hhb7xtnlv9pd2o9j?svg=true)](https://ci.appveyor.com/project/pb_bwfc/pgnfsharp)
+[![Issue Stats](http://issuestats.com/github/pbbwfc/PgnFSharp/badge/issue)](http://issuestats.com/github/pbbwfc/PgnFSharp)
+[![Issue Stats](http://issuestats.com/github/pbbwfc/PgnFSharp/badge/pr)](http://issuestats.com/github/pbbwfc/PgnFSharp)
 
-# ProjectScaffold
+ScidNET
+=======
 
-This project can be used to scaffold a prototypical .NET solution including file system layout and tooling. This includes a build process that: 
+This is a set of tools for chess PGN files using F#.
 
-* updates all AssemblyInfo files
-* compiles the application and runs all test projects
-* generates [SourceLinks](https://github.com/ctaggart/SourceLink)
-* generates API docs based on XML document tags
-* generates [documentation based on Markdown files](http://fsprojects.github.io/ProjectScaffold/writing-docs.html)
-* generates [NuGet](http://www.nuget.org) packages
-* and allows a simple [one step release process](http://fsprojects.github.io/ProjectScaffold/release-process.html).
+Binaries can be found as Artifacts from the AppVeyor build - please follow the AppVeyor link above.
 
-In order to start the scaffolding process run 
+## Building
 
-    > build.cmd // on windows    
-    $ ./build.sh  // on unix
-    
-Read the [Getting started tutorial](http://fsprojects.github.io/ProjectScaffold/index.html#Getting-started) to learn more.
-
-Documentation: http://fsprojects.github.io/ProjectScaffold
-
-
-## Build Status
-
-Mono | .NET
----- | ----
-[![Mono CI Build Status](https://img.shields.io/travis/fsprojects/ProjectScaffold/master.svg)](https://travis-ci.org/fsprojects/ProjectScaffold) | [![.NET Build Status](https://img.shields.io/appveyor/ci/fsgit/ProjectScaffold/master.svg)](https://ci.appveyor.com/project/fsgit/projectscaffold)
+* Windows: Run *build.cmd* 
+ 
 
 ## Maintainer(s)
 
-- [@forki](https://github.com/forki)
-- [@pblasucci](https://github.com/pblasucci)
-- [@sergey-tihon](https://github.com/sergey-tihon)
-
-The default maintainer account for projects under "fsprojects" is [@fsprojectsgit](https://github.com/fsprojectsgit) - F# Community Project Incubation Space (repo management)
+- [@phil__brooks](https://github.com/pbbwfc)
