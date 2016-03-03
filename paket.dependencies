@@ -19,7 +19,9 @@ group FParsec
   source https://nuget.org/api/v2
   
   nuget FParsec-Big-Data-Edition
+  nuget NLog
 
-group EmParsec
+group FsPickler
+  source https://nuget.org/api/v2
   
-  github mavnn/EmParsec EmParsec.fs
+  nuget FsPickler
