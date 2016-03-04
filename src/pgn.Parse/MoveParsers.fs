@@ -75,7 +75,7 @@ let pCapturingMove =
     |>> fun (move, enpassant) ->
             match enpassant with
             | None -> move
-            | _ -> move.Type <- MoveType.CaptureEnPassant; move
+            | _ -> {move with Type=MoveType.CaptureEnPassant}
     <!!> ("pCapturingMove", 1)
 
 
@@ -86,17 +86,17 @@ let pCapturingMove =
 let pPawnPromotion = 
     (attempt  pBasicCapturingMove <|> pBasicMove)
     .>>. ((str "=" >>. pPiece) <|> (str "(" >>. pPiece .>> str ")"))
-    |>> fun (move, piece) -> move.PromotedPiece <- Nullable(piece); move
+    |>> fun (move, piece) -> {move with PromotedPiece=Some(piece)}
     <!> "pPawnPromotion"
 
 let pCasteKingSide = 
     str "O-O" <|> str "O - O" <|> str "0-0"  <|> str "0 - 0" 
-    |>> fun _ -> new Move(Type=MoveType.CastleKingSide) 
+    |>> fun _ -> {Type=MoveType.CastleKingSide;TargetPiece=None;TargetSquare=None;TargetFile=None;Piece=None;OriginSquare=None;OriginFile=None;OriginRank=None;PromotedPiece=None;IsCheck=None;IsDoubleCheck=None;IsCheckMate=None;Annotation=None}
     <!> "pCastleKingSide"
 
 let pCasteQueenSide = 
     str "O-O-O" <|> str "O - O - O" <|> str "0-0-0"  <|> str "0 - 0 - 0" 
-    |>> fun _ -> new Move(Type=MoveType.CastleQueenSide) 
+    |>> fun _ -> {Type=MoveType.CastleQueenSide;TargetPiece=None;TargetSquare=None;TargetFile=None;Piece=None;OriginSquare=None;OriginFile=None;OriginRank=None;PromotedPiece=None;IsCheck=None;IsDoubleCheck=None;IsCheckMate=None;Annotation=None}
     <!> "pCasteQueenSide"
 
 let pCastle = pCasteQueenSide <|> pCasteKingSide
@@ -160,15 +160,15 @@ let pMove =
                 match addInfo with
                 | None -> None, None
                 | Some(x) -> x
-            move.Annotation<- toNullable(annotation)
+            //move.Annotation<- toNullable(annotation)
             match indicator with 
-            | None -> move
+            | None -> {move with Annotation=annotation}
             | Some(i) ->
                 match i with
-                | "+"  | "†"  | "ch" -> move.IsCheck <- Nullable(true); move
-                | "++" | "††" | "dbl ch" -> move.IsCheck <- Nullable(true); move.IsDoubleCheck <- Nullable(true); move
-                | "#"  | "‡" -> move.IsCheckMate <- Nullable(true); move
-                | _ -> move
+                | "+"  | "†"  | "ch" -> {move with Annotation=annotation;IsCheck=Some(true)}
+                | "++" | "††" | "dbl ch" -> {move with Annotation=annotation;IsCheck=Some(true);IsDoubleCheck=Some(true)}
+                | "#"  | "‡" -> {move with Annotation=annotation;IsCheckMate=Some(true)}
+                | _ -> {move with Annotation=annotation}
 
 
     <!!> ("pMove", 2)

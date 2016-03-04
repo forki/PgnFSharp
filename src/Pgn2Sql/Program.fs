@@ -1,5 +1,5 @@
 ﻿open System.IO
-open ilf.pgn
+open PgnFSharp
 open System.Data
 open System.Data.SqlClient
 open Nessos.FsPickler
@@ -10,10 +10,9 @@ let main argv =
     let fol = @"I:\GitHub\pgn.net\test\pgn.NET.Test\Test Files\Real Files"
     let fl = "demoGames.pgn"
     let pth = Path.Combine(fol,fl)
-    let parser = new PgnReader()
-    let db = parser.ReadFromFile(pth)
-    let cnt = db.Games.Count
-    let gm = db.Games.[0]
+    let db = PgnReader.ReadFromFile(pth)
+    let cnt = db.Length
+    let gm = db.[0]
     let ser = FsPickler.CreateBinarySerializer()
     let addi = gm.AdditionalInfo|>Seq.map(fun a -> a.Name,a.Value)|>Seq.toArray
     let seraddi = ser.Pickle addi

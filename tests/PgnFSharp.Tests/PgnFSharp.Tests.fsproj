@@ -76,13 +76,6 @@
   </Target>
   -->
   <Import Project="..\..\.paket\paket.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\PgnFSharp.FParsec\PgnFSharp.FParsec.fsproj">
-      <Name>PgnFSharp.FParsec</Name>
-      <Project>{ef2babc1-c281-496e-923e-99cb85527b6e}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0')">
       <ItemGroup>
@@ -119,5 +112,12 @@
       <Private>True</Private>
       <Paket>True</Paket>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\PgnFSharp\PgnFSharp.fsproj">
+      <Name>PgnFSharp</Name>
+      <Project>{ef2babc1-c281-496e-923e-99cb85527b6e}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
 </Project>

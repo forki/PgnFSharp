@@ -78,7 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\pgn.Data\pgn.Data.fsproj">
+    <ProjectReference Include="..\pgn.Data\pgn.Data.fsproj">
       <Name>pgn.Data</Name>
       <Project>{ca39f3a7-cefc-418d-aff6-bb8b72091396}</Project>
       <Private>True</Private>

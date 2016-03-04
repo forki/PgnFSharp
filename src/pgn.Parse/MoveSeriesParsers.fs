@@ -3,7 +3,7 @@ module internal ilf.pgn.PgnParsers.MoveSeries
 
 open System.Collections.Generic
 open FParsec
-open ilf.pgn.Data
+open pgn.Data
 
 
 let pPeriods = 
@@ -20,19 +20,19 @@ let pMoveNumberIndicator =
 let pFullMoveTextEntry =
     pMoveNumberIndicator .>> ws .>>. pMove .>> ws1 .>>. pMove 
     |>> fun (((moveNum, contd), moveWhite), moveBlack) ->  
-            MovePairEntry(moveWhite, moveBlack, MoveNumber=toNullable(moveNum)) :> MoveTextEntry
+            MovePairEntry(moveNum, moveWhite, moveBlack) 
     <!!> ("pFullMoveTextEntry", 3)
 
 let pSplitMoveTextEntry = 
     pMoveNumberIndicator .>> ws .>>. pMove
-    |>> fun ((moveNum, contd), move) -> HalfMoveEntry(move, MoveNumber = toNullable(moveNum), IsContinued=contd) :> MoveTextEntry
+    |>> fun ((moveNum, contd), move) -> HalfMoveEntry(moveNum,contd,move)
     <!!> ("pSplitMoveTextEntry", 3)
 
 let pCommentary = 
     between (str "{") (str "}") (many (noneOf "}")) 
     <|> between (str ";") newline (many (noneOf "\n")) //to end of line comment
     |>> charList2String
-    |>> fun text -> CommentEntry(text) :> MoveTextEntry
+    |>> fun text -> CommentEntry(text)
     <!!> ("pCommentary", 3)
     <?> "Comment ( {...} or ;... )"
 
@@ -43,12 +43,12 @@ let pBlackWin = str "0" .>> ws .>> str "-" .>> ws .>> str "1"  |>> fun _ -> Game
 let pEndOpen = str "*"  |>> fun _ -> GameResult.Open
 
 let pEndOfGame =
-    pDraw <|> pWhiteWin <|> pBlackWin <|> pEndOpen |>> fun endType -> GameEndEntry(endType) :> MoveTextEntry
+    pDraw <|> pWhiteWin <|> pBlackWin <|> pEndOpen |>> fun endType -> GameEndEntry(endType) 
     <!!> ("pEndOfGame", 3)
     <?> "Game termination marker (1/2-1/2 or 1-0 or 0-1 or *)"
 
 let pNAG =
-    pchar '$' >>. pint32 |>> fun code -> NAGEntry(code) :> MoveTextEntry
+    pchar '$' >>. pint32 |>> fun code -> NAGEntry(code) 
     <?> "NAG ($<num> e.g. $6 or $32)"
     <!!> ("pNAG", 3)
 
@@ -57,9 +57,7 @@ let pMoveSeries, pMoveSeriesImpl = createParserForwardedToRef()
 let pRAV =
     pchar '(' .>> ws >>. pMoveSeries .>> ws .>> pchar ')' 
     |>> fun moveSeries -> 
-            let moveSeriesList = MoveText.MoveTextEntryList()
-            moveSeriesList.AddRange(moveSeries)
-            RAVEntry(moveSeriesList) :> MoveTextEntry
+            RAVEntry(moveSeries)
     <?> "RAV e.g. \"(6. Bd3)\""
     <!!> ("pRAV", 4)
 

@@ -1,11 +1,11 @@
 ﻿namespace ilf.pgn.PgnParsers
 
 open FParsec
+open System
 open System.IO
-open ilf.pgn.Exceptions
 open ilf.pgn.PgnParsers.Game
 
-type internal Parser() =
+type Parser() =
     member this.ReadFromFile(file:string) =  
         let stream = new FileStream(file, FileMode.Open)
         let result = this.ReadFromStream(stream)
@@ -19,7 +19,7 @@ type internal Parser() =
         let db =
             match parserResult with
             | Success(result, _, _)   -> result
-            | Failure(errorMsg, _, _) -> raise (PgnFormatException errorMsg)
+            | Failure(errorMsg, _, _) -> raise (FormatException errorMsg)
 
         db
 
@@ -29,7 +29,7 @@ type internal Parser() =
         let db =
             match parserResult with
             | Success(result, _, _)   -> result
-            | Failure(errorMsg, _, _) -> raise (PgnFormatException errorMsg)
+            | Failure(errorMsg, _, _) -> raise (FormatException errorMsg)
 
         db
 
@@ -53,6 +53,6 @@ type internal Parser() =
         let game  =
             match parserResult.Status with
             | ReplyStatus.Ok   -> parserResult.Result
-            | _ -> raise (PgnFormatException (ErrorMessageList.ToSortedArray(parserResult.Error) |> Array.map(fun e -> e.ToString()) |> String.concat "\n" ));
+            | _ -> raise (FormatException (ErrorMessageList.ToSortedArray(parserResult.Error) |> Array.map(fun e -> e.ToString()) |> String.concat "\n" ));
 
         game
