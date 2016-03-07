@@ -31,7 +31,7 @@
     <OutputPath>.\bin\Release</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>.\bin\Release\PgnFSharp.FParsec.XML</DocumentationFile>
+    <DocumentationFile>.\bin\Release\PgnFSharp.XML</DocumentationFile>
     <OtherFlags>--warnon:1182</OtherFlags>
   </PropertyGroup>
   <ItemGroup>
@@ -44,6 +44,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="PgnWriter.fs" />
     <Compile Include="PgnReader.fs" />
     <None Include="Script.fsx" />

@@ -1,11 +1,13 @@
 ﻿namespace System
 open System.Reflection
+open System.Runtime.CompilerServices
 
-[<assembly: AssemblyTitleAttribute("PgnFSharp.FParsec")>]
+[<assembly: AssemblyTitleAttribute("PgnFSharp")>]
 [<assembly: AssemblyProductAttribute("PgnFSharp")>]
 [<assembly: AssemblyDescriptionAttribute("PGN tools using F#")>]
 [<assembly: AssemblyVersionAttribute("1.0")>]
 [<assembly: AssemblyFileVersionAttribute("1.0")>]
+[<assembly: InternalsVisibleToAttribute("PgnFSharp.Tests")>]
 do ()
 
 module internal AssemblyVersionInformation =
