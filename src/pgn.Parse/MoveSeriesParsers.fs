@@ -38,8 +38,8 @@ let pCommentary =
 
 let pOneHalf = str "1/2" <|> str "½"
 let pDraw = pOneHalf .>> ws .>> str "-" .>> ws .>> pOneHalf |>> fun _ -> GameResult.Draw
-let pWhiteWin = str "1" .>> ws .>> str "-" .>> ws .>> str "0"  |>> fun _ -> GameResult.White
-let pBlackWin = str "0" .>> ws .>> str "-" .>> ws .>> str "1"  |>> fun _ -> GameResult.Black
+let pWhiteWin = str "1" .>> ws .>> str "-" .>> ws .>> str "0"  |>> fun _ -> GameResult.WhiteWin
+let pBlackWin = str "0" .>> ws .>> str "-" .>> ws .>> str "1"  |>> fun _ -> GameResult.BlackWin
 let pEndOpen = str "*"  |>> fun _ -> GameResult.Open
 
 let pEndOfGame =

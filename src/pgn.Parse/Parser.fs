@@ -47,7 +47,7 @@ type Parser() =
                  yield this.ParseGame(charStream)
             }
 
-    member this.ParseGame(charStream: CharStream<'a>) =
+    member this.ParseGame(charStream: CharStream<unit>) =
 
         let parserResult = pGame(charStream)
         let game  =

@@ -54,20 +54,6 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <ItemGroup>
-    <Compile Include="FsUnit.fs" />
-    <Compile Include="Tests.fs" />
-    <None Include="paket.references" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="mscorlib" />
-    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -76,6 +62,39 @@
   </Target>
   -->
   <Import Project="..\..\.paket\paket.targets" />
+  <ItemGroup>
+    <Compile Include="FsUnit.fs" />
+    <Compile Include="Move.fs" />
+    <Compile Include="MoveEntry.fs" />
+    <Compile Include="Game.fs" />
+    <Compile Include="Database.fs" />
+    <None Include="paket.references" />
+    <Content Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\pgn.Parse\pgn.Parse.fsproj">
+      <Name>pgn.Parse</Name>
+      <Project>{90538968-8127-451b-945d-59707a910b63}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <Reference Include="mscorlib" />
+    <Reference Include="FSharp.Core, Version=$(TargetFSharpCoreVersion), Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <ProjectReference Include="..\..\src\pgn.Data\pgn.Data.fsproj">
+      <Name>pgn.Data</Name>
+      <Project>{ca39f3a7-cefc-418d-aff6-bb8b72091396}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\PgnFSharp\PgnFSharp.fsproj">
+      <Name>PgnFSharp</Name>
+      <Project>{ef2babc1-c281-496e-923e-99cb85527b6e}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0')">
       <ItemGroup>
@@ -112,12 +131,5 @@
       <Private>True</Private>
       <Paket>True</Paket>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\PgnFSharp\PgnFSharp.fsproj">
-      <Name>PgnFSharp</Name>
-      <Project>{ef2babc1-c281-496e-923e-99cb85527b6e}</Project>
-      <Private>True</Private>
-    </ProjectReference>
   </ItemGroup>
 </Project>

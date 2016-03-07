@@ -33,8 +33,8 @@ let pRoundTagValue =
 
 let pResultTagVaue = 
     pchar '"' >>. (
-        ((str "1-0" <|> str "1 - 0") |>> fun _ -> GameResult.White)
-    <|> ((str "0-1" <|> str "0 - 1") |>> fun _ -> GameResult.Black)
+        ((str "1-0" <|> str "1 - 0") |>> fun _ -> GameResult.WhiteWin)
+    <|> ((str "0-1" <|> str "0 - 1") |>> fun _ -> GameResult.BlackWin)
     <|> ((str "1/2-1/2" <|> str "1/2 - 1/2" <|> str "½-½" <|> str "½ - ½")  |>> fun _ -> GameResult.Draw)
     <|> ((str "*" <|> str "?") |>> fun _ -> GameResult.Open)
     ) .>> pchar '"'

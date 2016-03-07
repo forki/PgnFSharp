@@ -44,7 +44,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="PgnWriter.fs" />
+    <Compile Include="PgnWriter.fs" />
     <Compile Include="PgnReader.fs" />
     <None Include="Script.fsx" />
     <None Include="paket.references" />

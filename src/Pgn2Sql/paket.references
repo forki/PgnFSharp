@@ -1,2 +1,4 @@
 group FsPickler
 FsPickler
+group FParsec
+FParsec-Big-Data-Edition

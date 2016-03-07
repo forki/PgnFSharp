@@ -81,6 +81,11 @@
       <Project>{ca39f3a7-cefc-418d-aff6-bb8b72091396}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <ProjectReference Include="..\pgn.Parse\pgn.Parse.fsproj">
+      <Name>pgn.Parse</Name>
+      <Project>{90538968-8127-451b-945d-59707a910b63}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\PgnFSharp\PgnFSharp.fsproj">
       <Name>PgnFSharp</Name>
       <Project>{ef2babc1-c281-496e-923e-99cb85527b6e}</Project>
@@ -94,6 +99,36 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.0')">
+      <ItemGroup>
+        <Reference Include="FParsec">
+          <HintPath>..\..\packages\fparsec\FParsec-Big-Data-Edition\lib\net40-client\FParsec.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="FParsecCS">
+          <HintPath>..\..\packages\fparsec\FParsec-Big-Data-Edition\lib\net40-client\FParsecCS.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5' Or $(TargetFrameworkVersion) == 'v4.5.1' Or $(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.5.3' Or $(TargetFrameworkVersion) == 'v4.6' Or $(TargetFrameworkVersion) == 'v4.6.1')">
+      <ItemGroup>
+        <Reference Include="FParsec">
+          <HintPath>..\..\packages\fparsec\FParsec-Big-Data-Edition\lib\net45\FParsec.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+        <Reference Include="FParsecCS">
+          <HintPath>..\..\packages\fparsec\FParsec-Big-Data-Edition\lib\net45\FParsecCS.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And $(TargetFrameworkVersion) == 'v3.5'">
       <ItemGroup>

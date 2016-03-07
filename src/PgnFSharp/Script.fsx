@@ -1,21 +1,15 @@
-#I @"I:\GitHub\PgnFSharp\src\PgnFSharp.FParsec\bin\Debug"
-#r "PgnFSharp.FParsec.dll"
-#r "FParsec.dll"
+#r @"I:\GitHub\PgnFSharp\src\PgnFSharp\bin\Release\pgn.Data.dll"
+#r @"I:\GitHub\PgnFSharp\src\PgnFSharp\bin\Release\PgnFSharp.dll"
 
-open PgnFSharp.FParsec
-open FParsec
-
-let test p str =
-    match run p str with
-    | Success(result, _, _)   -> printfn "Success: %A" result
-    | Failure(errorMsg, _, _) -> printfn "Failure: %s" errorMsg
-
-let tst1 = test Parse.piece "A"
-let r1 = run Parse.piece "A"
-let a1 = Parse.applyPc "A"
-
-let tst2 = test Parse.piece "N"
-let r2 = run Parse.piece "N"
-
-let tst3 = test Parse.piece ""
-let r3 = run Parse.piece ""
+open PgnFSharp
+//open pgn.Data
+open System.IO
+#time
+let fol = @"I:\GitHub\PgnFSharp\tests\data\RealFiles"
+let fl = Path.Combine(fol,"o-deville.pgn")
+let ofl = Path.Combine(fol,"o-deville_copy.pgn")
+//let fl = Path.Combine(fol,"demoGames.pgn")
+//let ofl = Path.Combine(fol,"demoGames_copy.pgn")
+let gms = PgnReader.ReadFromFile fl 
+if File.Exists ofl then File.Delete ofl
+PgnWriter.Write gms ofl

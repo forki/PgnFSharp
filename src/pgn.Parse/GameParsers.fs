@@ -24,8 +24,8 @@ let makeGame (tagList : PgnTag list, moveTextList : MoveTextEntry list) =
     let rec addTags tl gm =
         if List.isEmpty tl then gm
         else addTags tl.Tail (setTag(gm,tl.Head))
-    let game = addTags tagList BlankGm
-    {game with MoveText=moveTextList}
+    let game = addTags tagList (BlankGm())
+    {game with MoveText=moveTextList;AdditionalInfo=game.AdditionalInfo|>List.rev}
 
 let pGame = 
     ws >>. pTagList .>> ws .>>.  pMoveSeries .>> (ws <|> eof)

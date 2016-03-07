@@ -36,8 +36,8 @@ type PgnDateTag(name: string, year: int option, month: int option, day: int opti
 
 let formatResult(result: GameResult) = 
     match result with
-    | GameResult.White -> "1 - 0"
-    | GameResult.Black -> "0 - 1"
+    | GameResult.WhiteWin -> "1 - 0"
+    | GameResult.BlackWin -> "0 - 1"
     | GameResult.Draw  -> "1/2 - 1/2"
     | GameResult.Open  -> "*"
 

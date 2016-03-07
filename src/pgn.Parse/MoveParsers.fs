@@ -12,12 +12,12 @@ type MoveInfo(piece, file, rank) =
 
 let getSquare(moveInfo : MoveInfo) =
     match moveInfo.File, moveInfo.Rank with
-    | x, y when x.IsSome && y.IsSome -> Some{File=x.Value; Rank = y.Value}
+    | x, y when x.IsSome && y.IsSome -> Some{Fil=x.Value; Rank = y.Value}
     | _, _ -> None
 
 let getMove(originInfo: MoveInfo option, targetInfo: MoveInfo, moveType: MoveType) = 
     match originInfo, targetInfo with
-    | None, _ -> {Type=moveType;TargetPiece=targetInfo.Piece;TargetSquare=getSquare targetInfo;TargetFile=targetInfo.File;Piece=None;OriginSquare=None;OriginFile=None;OriginRank=None;PromotedPiece=None;IsCheck=None;IsDoubleCheck=None;IsCheckMate=None;Annotation=None}
+    | None, _ -> {Type=moveType;TargetPiece=targetInfo.Piece;TargetSquare=getSquare targetInfo;TargetFile=targetInfo.File;Piece=targetInfo.Piece;OriginSquare=None;OriginFile=None;OriginRank=None;PromotedPiece=None;IsCheck=None;IsDoubleCheck=None;IsCheckMate=None;Annotation=None}
     | Some(orig), _ -> {Type=moveType;TargetPiece=targetInfo.Piece;TargetSquare=getSquare targetInfo;TargetFile=targetInfo.File;Piece=orig.Piece;OriginSquare=getSquare orig;OriginFile=orig.File;OriginRank=orig.Rank;PromotedPiece=None;IsCheck=None;IsDoubleCheck=None;IsCheckMate=None;Annotation=None}
 
 //MOVE MECHANICS
