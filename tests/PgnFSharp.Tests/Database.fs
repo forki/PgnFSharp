@@ -6,10 +6,10 @@ open NUnit.Framework
 open System.IO
 open pgn.Data
 
-let fol = @"I:\GitHub\PgnFSharp\tests\data"
+let fol = @"..\..\..\data"
 let fl = Path.Combine(fol,"simple-game.pgn")
 let db = PgnReader.ReadFromFile fl
-let fol2 = @"I:\GitHub\PgnFSharp\tests\data\RealFiles"
+let fol2 = @"..\..\..\data\RealFiles"
 let fl2 = Path.Combine(fol2,"demoGames.pgn")
 let db2 = PgnReader.ReadFromFile fl2
 

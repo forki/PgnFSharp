@@ -7,7 +7,7 @@ open System.IO
 open pgn.Data
 
 let nl = System.Environment.NewLine
-let fol = @"I:\GitHub\PgnFSharp\tests\data"
+let fol = @"..\..\..\data"
 let fl = Path.Combine(fol,"simple-game.pgn")
 let db = PgnReader.ReadFromFile fl
 let gm = db.Head 
