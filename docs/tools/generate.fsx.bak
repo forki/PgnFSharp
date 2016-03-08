@@ -52,7 +52,6 @@ let files      = __SOURCE_DIRECTORY__ @@ "../files"
 let templates  = __SOURCE_DIRECTORY__ @@ "templates"
 let formatting = __SOURCE_DIRECTORY__ @@ "../../packages/build/FSharp.Formatting/"
 let docTemplate = "docpage.cshtml"
-let fsi = FsiEvaluator()
 
 // Where to look for *.csproj templates (in this order)
 let layoutRootsAll = new System.Collections.Generic.Dictionary<string, string list>()
@@ -113,7 +112,7 @@ let buildDocumentation () =
 
   Literate.ProcessDirectory
     ( content, docTemplate, output, replacements = ("root", root)::info,
-      layoutRoots = layoutRootsAll.["en"], fsiEvaluator = fsi,
+      layoutRoots = layoutRootsAll.["en"],
       generateAnchors = true,
       processRecursive = false)
 
@@ -133,7 +132,7 @@ let buildDocumentation () =
 
     Literate.ProcessDirectory
       ( dir, docTemplate, output @@ dirname, replacements = ("root", root)::info,
-        layoutRoots = layoutRoots, fsiEvaluator = fsi,
+        layoutRoots = layoutRoots,
         generateAnchors = true )
 
 // Generate
