@@ -1,11 +1,9 @@
 ﻿[<AutoOpen>]
-module internal ilf.pgn.PgnParsers.Tag
+module internal PgnParsers.Tag
 
 open System
 open FParsec
-open pgn.Data
-
-
+open PgnFSharp
 
 let sevenTagRosterTagNames= ["Event"; "Site"; "Date"; "Round"; "White"; "Black"; "Result"];
 let suplementTagNames = 

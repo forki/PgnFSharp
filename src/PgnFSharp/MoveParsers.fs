@@ -1,9 +1,9 @@
 ﻿[<AutoOpen>]
-module internal ilf.pgn.PgnParsers.Move
+module internal PgnParsers.Move
 
 open System
 open FParsec
-open pgn.Data
+open PgnFSharp
 
 type MoveInfo(piece, file, rank) =
     member val Piece : PieceType option = piece with get, set

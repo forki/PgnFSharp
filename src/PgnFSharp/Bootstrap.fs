@@ -1,5 +1,5 @@
 ﻿[<AutoOpen>]
-module internal ilf.pgn.PgnParsers.Bootstrap
+module internal PgnParsers.Bootstrap
 
 open System 
 

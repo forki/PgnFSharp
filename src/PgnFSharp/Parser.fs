@@ -1,9 +1,9 @@
-﻿namespace ilf.pgn.PgnParsers
+﻿namespace PgnFSharp
 
 open FParsec
 open System
 open System.IO
-open ilf.pgn.PgnParsers.Game
+open PgnParsers.Game
 
 type Parser() =
     member this.ReadFromFile(file:string) =  

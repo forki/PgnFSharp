@@ -1,8 +1,8 @@
 ﻿[<AutoOpen>]
-module internal ilf.pgn.PgnParsers.PgnTags
+module internal PgnParsers.PgnTags
 
 open System
-open pgn.Data
+open PgnFSharp
 
 type PgnTag(name: string, value: string) = 
     member val Name = name with get, set

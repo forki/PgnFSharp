@@ -1,7 +1,6 @@
 ﻿namespace PgnFSharp
 
 open System.IO
-open pgn.Data
 
 module PgnWriter = 
     let nl = System.Environment.NewLine

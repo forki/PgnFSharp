@@ -32,10 +32,11 @@ NUGET
     FParsec-Big-Data-Edition (1.0.2)
     NLog (4.2.3)
 
-GROUP FsPickler
+GROUP FsSql
 NUGET
   remote: https://www.nuget.org/api/v2
   specs:
+    FSharp.Data.SqlClient (1.8.1)
     FsPickler (1.8.0)
 
 GROUP Test

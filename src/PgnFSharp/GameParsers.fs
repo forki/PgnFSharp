@@ -1,9 +1,9 @@
 ﻿[<AutoOpen>]
-module internal ilf.pgn.PgnParsers.Game
+module internal PgnParsers.Game
 
 open System
 open FParsec
-open pgn.Data
+open PgnFSharp
 
 let setTag(game : Game, tag : PgnTag) =
     game.Tags.Add(tag.Name, tag.Value)

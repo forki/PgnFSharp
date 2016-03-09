@@ -1,4 +1,4 @@
-﻿namespace pgn.Data
+﻿namespace PgnFSharp
 
 open System.Collections.Generic
 
@@ -53,6 +53,12 @@ module Types =
             | BlackWin -> "0-1"
             | Draw -> "1/2-1/2"
             | Open -> "*"
+        member x.ToByte() =
+            match x with
+            | WhiteWin -> 0uy
+            | BlackWin -> 1uy
+            | Draw -> 2uy
+            | Open -> 3uy
     
     type Color = 
         | White

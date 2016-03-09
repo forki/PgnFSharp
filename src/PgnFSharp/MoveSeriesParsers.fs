@@ -1,9 +1,9 @@
 ﻿[<AutoOpen>]
-module internal ilf.pgn.PgnParsers.MoveSeries
+module internal PgnParsers.MoveSeries
 
 open System.Collections.Generic
 open FParsec
-open pgn.Data
+open PgnFSharp
 
 
 let pPeriods = 

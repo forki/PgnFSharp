@@ -1,8 +1,8 @@
 ﻿[<AutoOpen>]
-module internal ilf.pgn.PgnParsers.FenTagParser
+module internal PgnParsers.FenTagParser
 
 open FParsec
-open pgn.Data
+open PgnFSharp
 open System.Linq
 
 let pFenPieces = 

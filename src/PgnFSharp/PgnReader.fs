@@ -1,6 +1,6 @@
 namespace PgnFSharp
 
-open ilf.pgn.PgnParsers
+open PgnParsers
 
 module PgnReader = 
     let ReadFromFile file = 

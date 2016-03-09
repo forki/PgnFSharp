@@ -3,9 +3,8 @@
 open FsUnit
 open NUnit.Framework
 open System.IO
-open pgn.Data
-open ilf.pgn.PgnParsers
-open FParsec 
+open FParsec
+open PgnParsers
 
 let getres p =
     match p with

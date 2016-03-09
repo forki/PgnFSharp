@@ -1,8 +1,8 @@
 ﻿[<AutoOpen>]
-module internal ilf.pgn.PgnParsers.BasicChess
+module internal PgnParsers.BasicChess
 
 open FParsec
-open pgn.Data
+open PgnFSharp
 
 let fileSymbol = [ 'a' .. 'h'] |> List.map (fun x -> x.ToString())
 

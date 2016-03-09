@@ -1,5 +1,5 @@
 ﻿[<AutoOpen>]
-module internal ilf.pgn.PgnParsers.DateTagParser
+module internal PgnParsers.DateTagParser
 
 open FParsec
 

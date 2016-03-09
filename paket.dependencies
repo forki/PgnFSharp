@@ -21,7 +21,9 @@ group FParsec
   nuget FParsec-Big-Data-Edition
   nuget NLog
 
-group FsPickler
+group FsSql
   source https://nuget.org/api/v2
   
+  nuget FSharp.Data.SqlClient
   nuget FsPickler
+

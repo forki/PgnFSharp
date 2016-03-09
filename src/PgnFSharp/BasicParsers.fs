@@ -1,5 +1,5 @@
 ﻿[<AutoOpen>]
-module internal ilf.pgn.PgnParsers.BasicCommons
+module internal PgnParsers.BasicCommons
 
 open FParsec
 

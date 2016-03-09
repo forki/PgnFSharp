@@ -4,7 +4,6 @@ open PgnFSharp
 open FsUnit
 open NUnit.Framework
 open System.IO
-open pgn.Data
 
 let fol = @"..\..\..\data"
 let fl = Path.Combine(fol,"simple-game.pgn")
