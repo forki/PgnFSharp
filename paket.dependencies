@@ -19,7 +19,6 @@ group FParsec
   source https://nuget.org/api/v2
   
   nuget FParsec-Big-Data-Edition
-  nuget NLog
 
 group FsSql
   source https://nuget.org/api/v2

@@ -1,8 +1,6 @@
-#r @"I:\GitHub\PgnFSharp\src\PgnFSharp\bin\Release\pgn.Data.dll"
 #r @"I:\GitHub\PgnFSharp\src\PgnFSharp\bin\Release\PgnFSharp.dll"
 
 open PgnFSharp
-//open pgn.Data
 open System.IO
 #time
 let fol = @"I:\GitHub\PgnFSharp\tests\data\RealFiles"

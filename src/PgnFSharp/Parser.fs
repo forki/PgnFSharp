@@ -4,11 +4,19 @@ open FParsec
 open System
 open System.IO
 open PgnParsers.Game
+open PgnParsers.BasicCommons
 
 type Parser() =
     member this.ReadFromFile(file:string) =  
         let stream = new FileStream(file, FileMode.Open)
         let result = this.ReadFromStream(stream)
+        stream.Close()
+
+        result
+
+    member this.ReadFromFileDebug(file:string) =  
+        let stream = new FileStream(file, FileMode.Open)
+        let result = this.ReadFromStreamDebug(stream)
         stream.Close()
 
         result
@@ -23,8 +31,27 @@ type Parser() =
 
         db
 
+    member this.ReadFromStreamDebug(stream: System.IO.Stream) =
+        let parserResult = runParserOnStream (BP pDatabase) () "pgn" stream System.Text.Encoding.UTF8
+
+        let db =
+            match parserResult with
+            | Success(result, _, _)   -> result
+            | Failure(errorMsg, _, _) -> raise (FormatException errorMsg)
+
+        db
     member this.ReadFromString(input: string) =
         let parserResult = run pDatabase input
+
+        let db =
+            match parserResult with
+            | Success(result, _, _)   -> result
+            | Failure(errorMsg, _, _) -> raise (FormatException errorMsg)
+
+        db
+
+    member this.ReadFromStringDebug(input: string) =
+        let parserResult = run (BP pDatabase) input
 
         let db =
             match parserResult with

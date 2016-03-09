@@ -1,7 +1,6 @@
 ﻿[<AutoOpen>]
 module internal PgnParsers.Move
 
-open System
 open FParsec
 open PgnFSharp
 
@@ -160,7 +159,6 @@ let pMove =
                 match addInfo with
                 | None -> None, None
                 | Some(x) -> x
-            //move.Annotation<- toNullable(annotation)
             match indicator with 
             | None -> {move with Annotation=annotation}
             | Some(i) ->

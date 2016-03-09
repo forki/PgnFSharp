@@ -7,6 +7,10 @@ module PgnReader =
         let p = new Parser()
         p.ReadFromFile(file)
     
+    let ReadFromFileDebug file = 
+        let p = new Parser()
+        p.ReadFromFileDebug(file)
+
     let ReadFromStream stream = 
         let p = new Parser()
         p.ReadFromStream(stream)
