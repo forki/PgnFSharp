@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>PgnReader - PgnFSharp</title>
+    <title>MoveTextEntry - PgnFSharp</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Phil Brooks"/>
@@ -35,33 +35,31 @@
 
 
 
-<h1>PgnReader</h1>
+<h1>MoveTextEntry</h1>
 <p>
   <span>Namespace: PgnFSharp</span><br />
+  <span>Parent Module: <a href="pgnfsharp-types.html">Types</a></span>
 </p>
 <div class="xmldoc">
 </div>
-
-<!-- Render nested types and modules, if there are any -->
-
-  <h3>Functions and values</h3>
+  <h3>Union Cases</h3>
   <table class="table table-bordered member-list">
     <thead>
-      <tr><td>Function or value</td><td>Description</td></tr>
+      <tr><td>Union Case</td><td>Description</td></tr>
     </thead>
     <tbody>
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '1', 1)" onmouseover="showTip(event, '1', 1)">
-            ReadFromFile file
+          <code onmouseout="hideTip(event, '109', 109)" onmouseover="showTip(event, '109', 109)">
+            CommentEntry(string)
           </code>
-          <div class="tip" id="1">
-            <strong>Signature:</strong> file:string -&gt; Database<br />
+          <div class="tip" id="109">
+            <strong>Signature:</strong> string<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/PgnReader.fs#L6-6" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L281-281" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -71,15 +69,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '2', 2)" onmouseover="showTip(event, '2', 2)">
-            ReadFromFileDebug file
+          <code onmouseout="hideTip(event, '110', 110)" onmouseover="showTip(event, '110', 110)">
+            GameEndEntry(GameResult)
           </code>
-          <div class="tip" id="2">
-            <strong>Signature:</strong> file:string -&gt; Database<br />
+          <div class="tip" id="110">
+            <strong>Signature:</strong> GameResult<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/PgnReader.fs#L10-10" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L282-282" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -89,15 +87,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '3', 3)" onmouseover="showTip(event, '3', 3)">
-            ReadFromStream stream
+          <code onmouseout="hideTip(event, '111', 111)" onmouseover="showTip(event, '111', 111)">
+            HalfMoveEntry(int option,bool,Move)
           </code>
-          <div class="tip" id="3">
-            <strong>Signature:</strong> stream:Stream -&gt; Database<br />
+          <div class="tip" id="111">
+            <strong>Signature:</strong> int option * bool * Move<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/PgnReader.fs#L14-14" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L280-280" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -107,15 +105,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '4', 4)" onmouseover="showTip(event, '4', 4)">
-            ReadFromString s
+          <code onmouseout="hideTip(event, '112', 112)" onmouseover="showTip(event, '112', 112)">
+            MovePairEntry(int option,Move,Move)
           </code>
-          <div class="tip" id="4">
-            <strong>Signature:</strong> s:string -&gt; Database<br />
+          <div class="tip" id="112">
+            <strong>Signature:</strong> int option * Move * Move<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/PgnReader.fs#L18-18" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L279-279" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -125,15 +123,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '5', 5)" onmouseover="showTip(event, '5', 5)">
-            ReadGamesFromFile file
+          <code onmouseout="hideTip(event, '113', 113)" onmouseover="showTip(event, '113', 113)">
+            NAGEntry(int)
           </code>
-          <div class="tip" id="5">
-            <strong>Signature:</strong> file:string -&gt; seq&lt;Game&gt;<br />
+          <div class="tip" id="113">
+            <strong>Signature:</strong> int<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/PgnReader.fs#L22-22" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L283-283" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -143,15 +141,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '6', 6)" onmouseover="showTip(event, '6', 6)">
-            ReadGamesFromStream stream
+          <code onmouseout="hideTip(event, '114', 114)" onmouseover="showTip(event, '114', 114)">
+            RAVEntry(MoveTextEntry list)
           </code>
-          <div class="tip" id="6">
-            <strong>Signature:</strong> stream:Stream -&gt; seq&lt;Game&gt;<br />
+          <div class="tip" id="114">
+            <strong>Signature:</strong> MoveTextEntry list<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/PgnReader.fs#L26-26" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L284-284" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
