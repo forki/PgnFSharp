@@ -4,8 +4,8 @@ module internal PgnParsers.DateTagParser
 open FParsec
 
 // Date Tag value (e.g. ????.??.??, 2013.05.18, 2013.??.??)
-let pYear = ((str "????" |>> fun x -> None) <|> (pint32 |>> fun x -> Some(x)))
-let pMonth = ((str "??" |>> fun x -> None) <|> (pint32 |>> fun x -> Some(x)))
+let pYear = ((str "????" |>> fun x -> None) <|> (pint16 |>> fun x -> Some(x)))
+let pMonth = ((str "??" |>> fun x -> None) <|> (pint8 |>> fun x -> Some(x|>byte)))
 let pDay = pMonth
 
 let pDateTagValue = 

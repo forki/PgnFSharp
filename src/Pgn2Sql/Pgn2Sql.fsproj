@@ -60,6 +60,8 @@
     <None Include="App.config" />
     <None Include="paket.references" />
     <None Include="paket.template" />
+    <None Include="SqlScripts\CreateDB.sql" />
+    <None Include="SqlScripts\CreateTables.sql" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />

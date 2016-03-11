@@ -308,9 +308,9 @@ module Types =
     type Game = 
         { Event : string
           Site : string
-          Year : int option
-          Month : int option
-          Day : int option
+          Year : int16 option
+          Month : byte option
+          Day : byte option
           Round : string
           WhitePlayer : string
           BlackPlayer : string

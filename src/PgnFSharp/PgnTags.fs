@@ -8,7 +8,7 @@ type PgnTag(name: string, value: string) =
     member val Name = name with get, set
     member val Value = value with get, set
 
-let formatDate (year : int option, month : int option, day : int option) = 
+let formatDate (year : int16 option, month : byte option, day : byte option) = 
     let yearStr = 
         match year with 
         | None -> "????"
@@ -26,7 +26,7 @@ let formatDate (year : int option, month : int option, day : int option) =
 
     String.Format("{0}-{1}-{2}", yearStr, monthStr, dayStr)
 
-type PgnDateTag(name: string, year: int option, month: int option, day: int option) = 
+type PgnDateTag(name: string, year: int16 option, month: byte option, day: byte option) = 
     inherit PgnTag(name, formatDate(year, month, day))
     
     member val Year = year with get, set

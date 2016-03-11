@@ -2,6 +2,7 @@ namespace PgnFSharp
 
 open PgnParsers
 
+/// Functions to Parse PGN files and convert to a sequence of Games
 module PgnReader = 
     let ReadFromFile file = 
         let p = new Parser()
