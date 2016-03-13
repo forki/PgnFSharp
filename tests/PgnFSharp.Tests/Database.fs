@@ -6,28 +6,53 @@ open NUnit.Framework
 open System.IO
 
 let fol = @"..\..\..\data"
-let fl = Path.Combine(fol,"simple-game.pgn")
-let db = PgnReader.ReadFromFile fl
+let fl1 = Path.Combine(fol, "empty-file.pgn")
+let fl2 = Path.Combine(fol, "simple-game.pgn")
+let fl3 = Path.Combine(fol, "time-annotated-games.pgn")
 let fol2 = @"..\..\..\data\RealFiles"
-let fl2 = Path.Combine(fol2,"demoGames.pgn")
-let db2 = PgnReader.ReadFromFile fl2
+let fl4 = Path.Combine(fol2, "C.pgn")
+let fl5 = Path.Combine(fol2, "chess-informant-sample.pgn")
+let fl6 = Path.Combine(fol2, "demoGames.pgn")
+let fl7 = Path.Combine(fol2, "tilb98r2.pgn")
 
 [<Test>]
-let ``Simple database to string length`` () =
-  let ans = db.ToString()
-  ans.Length |> should equal 865
+let ``Empty database test``() = 
+    let db1 = PgnReader.ReadFromFile fl1
+    db1.ToString().Length |> should equal 2
+    db1.Length |> should equal 0
 
 [<Test>]
-let ``Simple database count`` () =
-  let ans = db.Length
-  ans |> should equal 1
+let ``Simple database test``() = 
+    let db = PgnReader.ReadFromFile fl2
+    db.ToString().Length |> should equal 865
+    db.Length |> should equal 1
 
 [<Test>]
-let ``Demo database to string length`` () =
-  let ans = db2.ToString()
-  ans.Length |> should equal 4131
+let ``Time database test``() = 
+    let db = PgnReader.ReadFromFile fl3
+    db.ToString().Length |> should equal 5948
+    db.Length |> should equal 4
 
 [<Test>]
-let ``Demo database count`` () =
-  let ans = db2.Length
-  ans |> should equal 2
+let ``C database test``() = 
+    let db = PgnReader.ReadFromFile fl4
+    db.ToString().Length |> should equal 2444
+    db.Length |> should equal 4
+
+[<Test>]
+let ``Informant database test``() = 
+    let db = PgnReader.ReadFromFile fl5
+    db.ToString().Length |> should equal 22346
+    db.Length |> should equal 5
+
+[<Test>]
+let ``Demo database test``() = 
+    let db = PgnReader.ReadFromFile fl6
+    db.ToString().Length |> should equal 4131
+    db.Length |> should equal 2
+
+[<Test>]
+let ``Tilb database test``() = 
+    let db = PgnReader.ReadFromFile fl7
+    db.ToString().Length |> should equal 8921
+    db.Length |> should equal 6

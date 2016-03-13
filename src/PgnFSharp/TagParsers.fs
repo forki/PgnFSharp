@@ -47,7 +47,7 @@ let pBasicTagValue =
 
 let pBasicTag = 
     pTagName .>> spaces .>>. pBasicTagValue
-    |>> fun (tagName, tagValue) -> PgnTag(tagName, tagValue)
+    |>> PgnTag
     <!> "pBasicTag"
 
 let tagContent = 
