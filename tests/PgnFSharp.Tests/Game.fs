@@ -47,14 +47,6 @@ let ``Result to string`` () =
   ans |> should equal ("[Result \"1/2-1/2\"]" + nl)
 
 [<Test>]
-let ``AdditionalInfo to string`` () =
-  let ans = gm.AdditionalInfo|>List.map(fun g -> FormatTag g.Name g.Value)|>List.reduce(+)
-  ans |> should equal 
-    ("[WhiteElo \"2597\"]" + nl
-    + "[BlackElo \"2772\"]" + nl
-    + "[ECO \"C42\"]" + nl)
-
-[<Test>]
 let ``Game to string length`` () =
   let ans = gm.ToString()
-  ans.Length |> should equal 863
+  ans.Length |> should equal 812

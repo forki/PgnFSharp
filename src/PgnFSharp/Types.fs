@@ -1,7 +1,5 @@
 ﻿namespace PgnFSharp
 
-open System.Collections.Generic
-
 [<AutoOpen>]
 module Types = 
     let nl = System.Environment.NewLine
@@ -315,10 +313,7 @@ module Types =
           WhitePlayer : string
           BlackPlayer : string
           Result : GameResult
-          AdditionalInfo : GameInfo list
-          Tags : Dictionary<string, string>
-          MoveText : MoveTextEntry list
-          BoardSetup : BoardSetup option }
+          MoveText : MoveTextEntry list }
         
         member x.DateStr = 
             (if x.Year.IsNone then "????"
@@ -331,7 +326,6 @@ module Types =
             (x.Event |> FormatTag "Event") + (x.Site |> FormatTag "Site") + (x.DateStr |> FormatTag "Date") 
             + (x.Round |> FormatTag "Round") + (x.WhitePlayer |> FormatTag "White") 
             + (x.BlackPlayer |> FormatTag "Black") + (x.Result.ToString() |> FormatTag "Result") 
-            + (x.AdditionalInfo |> List.map (fun g -> FormatTag g.Name g.Value) |> List.reduce (+))
             + nl
             + (x.MoveText|>List.map(fun m -> m.ToString())|>List.reduce(fun a b -> a + " " + b))
     
@@ -345,9 +339,6 @@ module Types =
           WhitePlayer = "?"
           BlackPlayer = "?"
           Result = Open
-          AdditionalInfo = []
-          Tags = new Dictionary<string, string>()
-          MoveText = []
-          BoardSetup = None }
+          MoveText = [] }
     
     type Database = Game list
