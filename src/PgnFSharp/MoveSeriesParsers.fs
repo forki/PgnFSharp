@@ -1,10 +1,8 @@
 ﻿[<AutoOpen>]
 module internal PgnParsers.MoveSeries
 
-open System.Collections.Generic
 open FParsec
 open PgnFSharp
-
 
 let pPeriods = 
     (str ".." .>> manyChars (pchar '.') >>% true) //two or more dots => Continued move pair
@@ -20,19 +18,18 @@ let pMoveNumberIndicator =
 let pFullMoveTextEntry =
     pMoveNumberIndicator .>> ws .>>. pMove .>> ws1 .>>. pMove 
     |>> fun (((moveNum, contd), moveWhite), moveBlack) ->  
-            MovePairEntry(moveNum, moveWhite, moveBlack) 
+            MovePairEntry(moveNum, moveWhite, moveBlack) |>Some
     <!!> ("pFullMoveTextEntry", 3)
 
 let pSplitMoveTextEntry = 
     pMoveNumberIndicator .>> ws .>>. pMove
-    |>> fun ((moveNum, contd), move) -> HalfMoveEntry(moveNum,contd,move)
+    |>> fun ((moveNum, contd), move) -> HalfMoveEntry(moveNum,contd,move)|>Some
     <!!> ("pSplitMoveTextEntry", 3)
 
 let pCommentary = 
-    between (str "{") (str "}") (many (noneOf "}")) 
-    <|> between (str ";") newline (many (noneOf "\n")) //to end of line comment
-    |>> charList2String
-    |>> fun text -> CommentEntry(text)
+    between (str "{") (str "}") (skipMany (noneOf "}")) 
+    <|> between (str ";") newline (skipMany (noneOf "\n")) //to end of line comment
+    |>> fun _ -> None
     <!!> ("pCommentary", 3)
     <?> "Comment ( {...} or ;... )"
 
@@ -43,34 +40,32 @@ let pBlackWin = str "0" .>> ws .>> str "-" .>> ws .>> str "1"  |>> fun _ -> Game
 let pEndOpen = str "*"  |>> fun _ -> GameResult.Open
 
 let pEndOfGame =
-    pDraw <|> pWhiteWin <|> pBlackWin <|> pEndOpen |>> fun endType -> GameEndEntry(endType) 
+    pDraw <|> pWhiteWin <|> pBlackWin <|> pEndOpen |>> fun _ -> None
     <!!> ("pEndOfGame", 3)
     <?> "Game termination marker (1/2-1/2 or 1-0 or 0-1 or *)"
 
 let pNAG =
-    pchar '$' >>. pint32 |>> fun code -> NAGEntry(code) 
+    pchar '$' >>. pint32 |>> fun _ -> None
     <?> "NAG ($<num> e.g. $6 or $32)"
     <!!> ("pNAG", 3)
 
-let pMoveSeries, pMoveSeriesImpl = createParserForwardedToRef()
+let (pRAV:Parser<MoveTextEntry option,unit>), pRAVImpl = createParserForwardedToRef()
 
-let pRAV =
-    pchar '(' .>> ws >>. pMoveSeries .>> ws .>> pchar ')' 
-    |>> fun moveSeries -> 
-            RAVEntry(moveSeries)
+pRAVImpl := 
+    between (str "(") (str ")") (many ((noneOf ")("|>>fun _ -> None)<|>pRAV))
+    |>> fun _ -> None
     <?> "RAV e.g. \"(6. Bd3)\""
     <!!> ("pRAV", 4)
-
 let pMoveSeriesEntry= 
      pCommentary
     <|> pNAG
     <|> pRAV
     <|> attempt(pFullMoveTextEntry) 
     <|> attempt(pSplitMoveTextEntry)
-    <|> attempt(pEndOfGame)
+    <|> pEndOfGame
     <!!> ("pMoveSeriesEntry", 4)
 
-do pMoveSeriesImpl := (
+let pMoveSeries = (
     sepEndBy1 pMoveSeriesEntry ws
     <!!> ("pMoveSeries", 5)
     )

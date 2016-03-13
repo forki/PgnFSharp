@@ -24,35 +24,35 @@ let ``Empty database test``() =
 [<Test>]
 let ``Simple database test``() = 
     let db = PgnReader.ReadFromFile fl2
-    db.ToString().Length |> should equal 814
+    db.ToString().Length |> should equal 806
     db.Length |> should equal 1
 
 [<Test>]
 let ``Time database test``() = 
     let db = PgnReader.ReadFromFile fl3
-    db.ToString().Length |> should equal 5350
+    db.ToString().Length |> should equal 1862
     db.Length |> should equal 4
 
 [<Test>]
 let ``C database test``() = 
     let db = PgnReader.ReadFromFile fl4
-    db.ToString().Length |> should equal 2291
+    db.ToString().Length |> should equal 2275
     db.Length |> should equal 4
 
 [<Test>]
 let ``Informant database test``() = 
     let db = PgnReader.ReadFromFile fl5
-    db.ToString().Length |> should equal 21942
+    db.ToString().Length |> should equal 2755
     db.Length |> should equal 5
 
 [<Test>]
 let ``Demo database test``() = 
     let db = PgnReader.ReadFromFile fl6
-    db.ToString().Length |> should equal 3622
+    db.ToString().Length |> should equal 1401
     db.Length |> should equal 2
 
 [<Test>]
 let ``Tilb database test``() = 
     let db = PgnReader.ReadFromFile fl7
-    db.ToString().Length |> should equal 8583
+    db.ToString().Length |> should equal 2991
     db.Length |> should equal 6

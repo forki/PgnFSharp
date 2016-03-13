@@ -49,4 +49,4 @@ let ``Result to string`` () =
 [<Test>]
 let ``Game to string length`` () =
   let ans = gm.ToString()
-  ans.Length |> should equal 812
+  ans.Length |> should equal 804

@@ -14,34 +14,34 @@ let getres p =
 [<Test>]
 let ``Parse Move Pair`` () =
   let ans = (run pMoveSeriesEntry "53. Nf7+ Kg6")|>getres
-  ans.ToString() |> should equal "53. Nf7+ Kg6"
+  ans.Value.ToString() |> should equal "53. Nf7+ Kg6"
 
 [<Test>]
 let ``Parse Half Move White`` () =
   let ans = (run pMoveSeriesEntry "1. e4")|>getres
-  ans.ToString() |> should equal "1. e4"
+  ans.Value.ToString() |> should equal "1. e4"
 
 [<Test>]
 let ``Parse Half Move Black`` () =
   let ans = (run pMoveSeriesEntry "13... Ba6")|>getres
-  ans.ToString() |> should equal "13... Ba6"
+  ans.Value.ToString() |> should equal "13... Ba6"
 
 [<Test>]
 let ``Parse Comment`` () =
   let ans = (run pMoveSeriesEntry "{this is a comment}")|>getres
-  ans.ToString() |> should equal "{this is a comment}"
+  ans |> should be Null
 
 [<Test>]
 let ``Parse Game End`` () =
   let ans = (run pMoveSeriesEntry "1-0")|>getres
-  ans.ToString() |> should equal "1-0"
+  ans |> should be Null
 
 [<Test>]
 let ``Parse NAG Entry`` () =
   let ans = (run pMoveSeriesEntry "$6")|>getres
-  ans.ToString() |> should equal "$6"
+  ans |> should be Null
 
 [<Test>]
 let ``Parse RAV Entry`` () =
   let ans = (run pMoveSeriesEntry "(6. Bd3 cxd4 7. exd4 d5 { - B14 })")|>getres
-  ans.ToString() |> should equal "(6. Bd3 cxd4 7. exd4 d5 { - B14 })"
+  ans |> should be Null
