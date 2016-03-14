@@ -69,4 +69,4 @@ let ``Parse check`` () =
 [<Test>]
 let ``Parse annotation`` () =
   let ans = (Move.appyPMove "Bb5!!")|>getres
-  ans.Value.ToString() |> should equal "Bb5!!"
+  ans.Value.ToString() |> should equal "Bb5"

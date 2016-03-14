@@ -121,79 +121,12 @@ module Types =
           Rank : int }
         override x.ToString() = x.Fil.ToString() + x.Rank.ToString()
     
-    type BoardSetup = 
-        { Board : Piece option []
-          IsWhiteMove : bool
-          CanWhiteCastleKingSide : bool
-          CanWhiteCastleQueenSide : bool
-          CanBlackCastleKingSide : bool
-          CanBlackCastleQueenSide : bool
-          EnPassantSquare : Square option
-          HalfMoveClock : int
-          FullMoveCount : int }
-    
     type MoveType = 
         | Simple
         | Capture
         | CaptureEnPassant
         | CastleKingSide
         | CastleQueenSide
-    
-    type MoveAnnotation = 
-        | MindBlowing
-        | Brilliant
-        | Good
-        | Interesting
-        | Dubious
-        | Mistake
-        | Blunder
-        | Abysmal
-        | FascinatingButUnsound
-        | Unclear
-        | WithCompensation
-        | EvenPosition
-        | SlightAdvantageWhite
-        | SlightAdvantageBlack
-        | AdvantageWhite
-        | AdvantageBlack
-        | DecisiveAdvantageWhite
-        | DecisiveAdvantageBlack
-        | Space
-        | Initiative
-        | Development
-        | Counterplay
-        | Countering
-        | Idea
-        | TheoreticalNovelty
-        | UnknownAnnotation
-        override x.ToString() = 
-            match x with
-            | MindBlowing -> "!!!"
-            | Brilliant -> "!!"
-            | Good -> "!"
-            | Interesting -> "!?"
-            | Dubious -> "?!"
-            | Mistake -> "?"
-            | Blunder -> "??"
-            | Abysmal -> "???"
-            | FascinatingButUnsound -> "!!?"
-            | Unclear -> "∞"
-            | WithCompensation -> "=/∞"
-            | EvenPosition -> "="
-            | SlightAdvantageWhite -> "+/="
-            | SlightAdvantageBlack -> "=/+"
-            | AdvantageWhite -> "+/−"
-            | AdvantageBlack -> "−/+"
-            | DecisiveAdvantageWhite -> "+−"
-            | DecisiveAdvantageBlack -> "-+"
-            | Space -> "○"
-            | Initiative -> "↑"
-            | Development -> "↑↑"
-            | Counterplay -> "⇄"
-            | Countering -> "∇"
-            | Idea -> "Δ"
-            | TheoreticalNovelty -> "N"
-            | UnknownAnnotation -> ""
     
     type Move = 
         { Type : MoveType
@@ -207,8 +140,7 @@ module Types =
           PromotedPiece : PieceType option
           IsCheck : bool option
           IsDoubleCheck : bool option
-          IsCheckMate : bool option
-          Annotation : MoveAnnotation option }
+          IsCheckMate : bool option }
         override x.ToString() = 
             let mv = 
                 match x.Type with
@@ -269,15 +201,7 @@ module Types =
                 elif x.IsCheck.IsSome && x.IsCheck.Value then "+"
                 else ""
             
-            let annot = 
-                if x.Annotation.IsNone then ""
-                else x.Annotation.Value.ToString()
-            
-            mv + prom + chk + annot
-    
-    type GameInfo = 
-        { Name : string
-          Value : string }
+            mv + prom + chk
     
     let FormatTag name value = "[" + name + " \"" + value + "\"]" + nl
     

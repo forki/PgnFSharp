@@ -7,9 +7,9 @@ ScidNET
 
 This is a set of tools for chess PGN files using F#.
 
-This is based heavily on the excellent [pgn.net](https://github.com/iigorr/pgn.net) by Igor Lankin. 
+A much more comprehensive tool is the excellent [pgn.net](https://github.com/iigorr/pgn.net) by Igor Lankin. 
 
-The only significant changes are that the PGN is parsed to F# types.
+This version is very much simplified and only outputs the moves of the game and a limited set of the tags.
 
 Binaries can be found as Artifacts from the AppVeyor build - please follow the AppVeyor link above.
 
