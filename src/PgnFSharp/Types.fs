@@ -47,13 +47,15 @@ module Types =
         | BlackWin
         | Draw
         | Open
+        
         override x.ToString() = 
             match x with
             | WhiteWin -> "1-0"
             | BlackWin -> "0-1"
             | Draw -> "1/2-1/2"
             | Open -> "*"
-        member x.ToByte() =
+        
+        member x.ToByte() = 
             match x with
             | WhiteWin -> 0uy
             | BlackWin -> 1uy
@@ -203,6 +205,20 @@ module Types =
             
             mv + prom + chk
     
+    let BlankMv() = 
+        { Type = MoveType.Simple
+          TargetPiece = None
+          TargetSquare = None
+          TargetFile = None
+          Piece = None
+          OriginSquare = None
+          OriginFile = None
+          OriginRank = None
+          PromotedPiece = None
+          IsCheck = None
+          IsDoubleCheck = None
+          IsCheckMate = None }
+    
     let FormatTag name value = "[" + name + " \"" + value + "\"]" + nl
     
     type Game = 
@@ -226,24 +242,22 @@ module Types =
         
         override x.ToString() = 
             let sb = new StringBuilder()
-            let rec mvs2txt ct mvl =
+            
+            let rec mvs2txt ct mvl = 
                 if List.isEmpty mvl then sb.ToString()
-                elif mvl.Length=1 then
-                    sb.Append (" " + ct.ToString() + ". " + mvl.Head.ToString())|>ignore
-                    sb.ToString() 
-                else
+                elif mvl.Length = 1 then 
+                    sb.Append(" " + ct.ToString() + ". " + mvl.Head.ToString()) |> ignore
+                    sb.ToString()
+                else 
                     let w = mvl.Head.ToString()
                     let b = mvl.Tail.Head.ToString()
                     let rest = mvl.Tail.Tail
-                    sb.Append (" " + ct.ToString() + ". " + w + " " + b)|>ignore
-                    mvs2txt (ct+1) rest
-            
+                    sb.Append(" " + ct.ToString() + ". " + w + " " + b) |> ignore
+                    mvs2txt (ct + 1) rest
             (x.Event |> FormatTag "Event") + (x.Site |> FormatTag "Site") + (x.DateStr |> FormatTag "Date") 
             + (x.Round |> FormatTag "Round") + (x.WhitePlayer |> FormatTag "White") 
-            + (x.BlackPlayer |> FormatTag "Black") + (x.Result.ToString() |> FormatTag "Result") 
-            + nl
-            + (x.Moves|>mvs2txt 1)
-            + " " + x.Result.ToString()
+            + (x.BlackPlayer |> FormatTag "Black") + (x.Result.ToString() |> FormatTag "Result") + nl 
+            + (x.Moves |> mvs2txt 1) + " " + x.Result.ToString()
     
     let BlankGm() = 
         { Event = "?"

@@ -16,6 +16,7 @@ let getSquare (moveInfo : MoveInfo) =
                Rank = y.Value }
     | _, _ -> None
 
+
 let getMove (originInfo : MoveInfo option, targetInfo : MoveInfo, moveType : MoveType) = 
     match originInfo, targetInfo with
     | None, _ -> 
@@ -138,23 +139,40 @@ let pAnnotation =
 
 let pAdditionalInfo = pIndicator .>> opt(pAnnotation)
 
+let getind (move,i) =
+    match i with 
+    | None -> move|>Some
+    | Some(i) ->
+        match i with
+        | "+"  | "†"  | "ch" -> {move with IsCheck=Some(true)}|>Some
+        | "++" | "††" | "dbl ch" -> {move with IsCheck=Some(true);IsDoubleCheck=Some(true)}|>Some
+        | "#"  | "‡" -> {move with IsCheckMate=Some(true)}|>Some
+        | _ -> move|>Some
    
-let pMove = 
+let pMove0 = 
     attempt pPawnPromotion <|>
     attempt pCapturingMove <|>
-    attempt pBasicMove <|> 
-    pCastle
+    pBasicMove 
     .>>. opt(pAdditionalInfo)
-    |>> fun (move,indicator) ->
-            match indicator with 
-            | None -> move|>Some
-            | Some(i) ->
-                match i with
-                | "+"  | "†"  | "ch" -> {move with IsCheck=Some(true)}|>Some
-                | "++" | "††" | "dbl ch" -> {move with IsCheck=Some(true);IsDoubleCheck=Some(true)}|>Some
-                | "#"  | "‡" -> {move with IsCheckMate=Some(true)}|>Some
-                | _ -> move|>Some
-    <!!> ("pMove", 2)
-    <?> "Move (e.g. Qc4 or e2e4 or 0-0-0 etc.)"
+    |>> getind
+    <!!> ("pComplexMove", 2)
+    <?> "Move (e.g. Qxc4 or e8=Q or Nge2 etc.)"
+
+let shorta (((p,f),r),a) = ({BlankMv() with Piece=p|>Some;TargetFile=f|>Some;TargetSquare={Fil=f;Rank=r}|>Some;TargetPiece=p|>Some},a|>Some)|>getind
+let short ((p,f),r) = {BlankMv() with Piece=p|>Some;TargetFile=f|>Some;TargetSquare={Fil=f;Rank=r}|>Some;TargetPiece=p|>Some}|>Some
+let pawna ((f,r),a) = ({BlankMv() with Piece=PieceType.Pawn|>Some;TargetFile=f|>Some;TargetSquare={Fil=f;Rank=r}|>Some;TargetPiece=PieceType.Pawn|>Some},a|>Some)|>getind
+let pawn (f,r) = {BlankMv() with Piece=PieceType.Pawn|>Some;TargetFile=f|>Some;TargetSquare={Fil=f;Rank=r}|>Some;TargetPiece=PieceType.Pawn|>Some}|>Some
+
+let pShortMove = 
+    (pPiece .>>. pFile .>>. pRank .>>. pAdditionalInfo |>> shorta) <|>
+    (pPiece .>>. pFile .>>. pRank |>> short) <|>
+    (pFile .>>. pRank .>>. pAdditionalInfo |>> pawna) <|>
+    (pFile .>>. pRank |>> pawn) <|>
+    (pCastle .>>. opt(pAdditionalInfo) |>> getind)
+    <!!> ("pShortMove", 2)
+    <?> "Move (e.g. Qc4 or e4 or 0-0-0 etc.)"
+
+
+let pMove = attempt(pShortMove) <|> pMove0
 
 let appyPMove (p: string)= run pMove p
