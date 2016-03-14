@@ -13,18 +13,19 @@ let getres p =
 
 [<Test>]
 let ``Parse Move Pair`` () =
-  let ans = (run pMoveSeriesEntry "53. Nf7+ Kg6")|>getres
-  ans.Value.ToString() |> should equal "53. Nf7+ Kg6"
+  let ans = (run pMoveSeries "53. Nf7+ Kg6")|>getres
+  ans.[1].Value.ToString() |> should equal "Nf7+"
+  ans.[2].Value.ToString() |> should equal "Kg6"
 
 [<Test>]
 let ``Parse Half Move White`` () =
-  let ans = (run pMoveSeriesEntry "1. e4")|>getres
-  ans.Value.ToString() |> should equal "1. e4"
+  let ans = (run pMoveSeries "1. e4")|>getres
+  ans.[1].Value.ToString() |> should equal "e4"
 
 [<Test>]
 let ``Parse Half Move Black`` () =
-  let ans = (run pMoveSeriesEntry "13... Ba6")|>getres
-  ans.Value.ToString() |> should equal "13... Ba6"
+  let ans = (run pMoveSeries "13... Ba6")|>getres
+  ans.[1].Value.ToString() |> should equal "Ba6"
 
 [<Test>]
 let ``Parse Comment`` () =

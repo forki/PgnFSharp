@@ -38,5 +38,4 @@ let (<!!>) (p: Parser<_,_>) (label, depth) : Parser<_,_> =
         p stream
 #endif
 
-
 let (<!>) (p : Parser<_, _>) label : Parser<_, _> = p <!!> (label, 0)

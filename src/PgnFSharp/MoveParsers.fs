@@ -160,13 +160,13 @@ let pMove =
                 | None -> None, None
                 | Some(x) -> x
             match indicator with 
-            | None -> {move with Annotation=annotation}
+            | None -> {move with Annotation=annotation}|>Some
             | Some(i) ->
                 match i with
-                | "+"  | "†"  | "ch" -> {move with Annotation=annotation;IsCheck=Some(true)}
-                | "++" | "††" | "dbl ch" -> {move with Annotation=annotation;IsCheck=Some(true);IsDoubleCheck=Some(true)}
-                | "#"  | "‡" -> {move with Annotation=annotation;IsCheckMate=Some(true)}
-                | _ -> {move with Annotation=annotation}
+                | "+"  | "†"  | "ch" -> {move with Annotation=annotation;IsCheck=Some(true)}|>Some
+                | "++" | "††" | "dbl ch" -> {move with Annotation=annotation;IsCheck=Some(true);IsDoubleCheck=Some(true)}|>Some
+                | "#"  | "‡" -> {move with Annotation=annotation;IsCheckMate=Some(true)}|>Some
+                | _ -> {move with Annotation=annotation}|>Some
 
 
     <!!> ("pMove", 2)

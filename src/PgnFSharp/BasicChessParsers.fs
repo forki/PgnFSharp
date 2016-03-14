@@ -4,46 +4,35 @@ module internal PgnParsers.BasicChess
 open FParsec
 open PgnFSharp
 
-let fileSymbol = [ 'a' .. 'h'] |> List.map (fun x -> x.ToString())
-
-let findFile (a: string) =
-    match a.ToUpper() with
-    |"A" -> File.A
-    |"B" -> File.B
-    |"C" -> File.C
-    |"D" -> File.D
-    |"E" -> File.E
-    |"F" -> File.F
-    |"G" -> File.G
-    |"H" -> File.H
-    | _ -> raise <| System.ArgumentException ("Invalid file letter " + a)
-
-let rankSymbol = [1 .. 8] |> List.map (fun x -> x.ToString())
-
-//NOTE: we allow S (ger. "Springer") for knight was used traditionally and is around in older PGNs
-//NOTE: 'b' is not allowed here as it is reserved for the b file
 let pPiece = 
-        (pchar 'p' >>% PieceType.Pawn)
-    <|> (pchar 'P' >>% PieceType.Pawn)
+    (pchar 'P' >>% PieceType.Pawn)
     <|> (pchar 'N' >>% PieceType.Knight)
-    <|> (pchar 'n' >>% PieceType.Knight)
-    <|> (pchar 'S' >>% PieceType.Knight)
-    <|> (pchar 's' >>% PieceType.Knight)
     <|> (pchar 'B' >>% PieceType.Bishop)
     <|> (pchar 'R' >>% PieceType.Rook)
-    <|> (pchar 'r' >>% PieceType.Rook)
     <|> (pchar 'Q' >>% PieceType.Queen)
-    <|> (pchar 'q' >>% PieceType.Queen)
     <|> (pchar 'K' >>% PieceType.King)
-    <|> (pchar 'k' >>% PieceType.King)
-    <?> "Piece (N, B, R, Q, K, P, n, r, q, k, p)"
+    <?> "Piece (N, B, R, Q, K, P)"
 
-let pFile =  
-    pList(strCI, fileSymbol) |>> findFile
-    <?> "File letter (A..H)"
+let pFile = 
+    (pchar 'a' >>% File.A)
+    <|> (pchar 'b' >>% File.B)
+    <|> (pchar 'c' >>% File.C)
+    <|> (pchar 'd' >>% File.D)
+    <|> (pchar 'e' >>% File.E)
+    <|> (pchar 'f' >>% File.F)
+    <|> (pchar 'g' >>% File.G)
+    <|> (pchar 'h' >>% File.H)
+    <?> "File letter (a..h)"
 
 let pRank = 
-    pList(strCI, rankSymbol) |>> System.Convert.ToInt32
+    (pchar '1' >>% 1)
+    <|> (pchar '2' >>% 2)
+    <|> (pchar '3' >>% 3)
+    <|> (pchar '4' >>% 4)
+    <|> (pchar '5' >>% 5)
+    <|> (pchar '6' >>% 6)
+    <|> (pchar '7' >>% 7)
+    <|> (pchar '8' >>% 8)
     <?> "Rank (1..8)"
 
 

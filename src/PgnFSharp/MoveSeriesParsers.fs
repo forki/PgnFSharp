@@ -9,22 +9,10 @@ let pPeriods =
     <|> (str "…" >>% true) // => Continued move pair
     <|> (pchar '.' >>% false) // => Non-Continued move pair (move start)
 
-let pMoveNumberIndicator = 
-    attempt(pint32 .>> ws .>>. pPeriods |>> fun (num, contd) -> (Some(num), contd))
-    <|> preturn (None, false)
-    <!> "pMoveNumberIndicator"
-    <?> "Move number indicator (e.g. 5. or 13...)"
-
-let pFullMoveTextEntry =
-    pMoveNumberIndicator .>> ws .>>. pMove .>> ws1 .>>. pMove 
-    |>> fun (((moveNum, contd), moveWhite), moveBlack) ->  
-            MovePairEntry(moveNum, moveWhite, moveBlack) |>Some
-    <!!> ("pFullMoveTextEntry", 3)
-
-let pSplitMoveTextEntry = 
-    pMoveNumberIndicator .>> ws .>>. pMove
-    |>> fun ((moveNum, contd), move) -> HalfMoveEntry(moveNum,contd,move)|>Some
-    <!!> ("pSplitMoveTextEntry", 3)
+let pMoveNumber = 
+    pint32 .>> ws .>>. pPeriods |>> fun _ -> None
+    <!> "pMoveNumber"
+    <?> "Move number e.g. 5. or 13...)"
 
 let pCommentary = 
     between (str "{") (str "}") (skipMany (noneOf "}")) 
@@ -49,20 +37,21 @@ let pNAG =
     <?> "NAG ($<num> e.g. $6 or $32)"
     <!!> ("pNAG", 3)
 
-let (pRAV:Parser<MoveTextEntry option,unit>), pRAVImpl = createParserForwardedToRef()
+let (pRAV:Parser<Move option,unit>), pRAVImpl = createParserForwardedToRef()
 
 pRAVImpl := 
     between (str "(") (str ")") (many ((noneOf ")("|>>fun _ -> None)<|>pRAV))
     |>> fun _ -> None
     <?> "RAV e.g. \"(6. Bd3)\""
     <!!> ("pRAV", 4)
+
 let pMoveSeriesEntry= 
-     pCommentary
+    pMove
+    <|> attempt(pMoveNumber)
+    <|> pEndOfGame
+    <|> pCommentary
     <|> pNAG
     <|> pRAV
-    <|> attempt(pFullMoveTextEntry) 
-    <|> attempt(pSplitMoveTextEntry)
-    <|> pEndOfGame
     <!!> ("pMoveSeriesEntry", 4)
 
 let pMoveSeries = (

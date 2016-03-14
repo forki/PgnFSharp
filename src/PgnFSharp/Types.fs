@@ -1,5 +1,7 @@
 ﻿namespace PgnFSharp
 
+open System.Text
+
 [<AutoOpen>]
 module Types = 
     let nl = System.Environment.NewLine
@@ -273,30 +275,6 @@ module Types =
             
             mv + prom + chk + annot
     
-    type MoveTextEntry = 
-        | MovePairEntry of int option * Move * Move
-        | HalfMoveEntry of int option * bool * Move
-        | CommentEntry of string
-        | GameEndEntry of GameResult
-        | NAGEntry of int
-        | RAVEntry of MoveTextEntry list
-        override x.ToString() = 
-            match x with
-            | MovePairEntry(i, w, b) -> 
-                let mvs = w.ToString() + " " + b.ToString()
-                if i.IsSome then i.Value.ToString() + ". " + mvs
-                else mvs
-            | HalfMoveEntry(i, b, m) -> 
-                if i.IsSome then 
-                    i.Value.ToString() + (if b then "... "
-                                          else ". ")
-                    + m.ToString()
-                else m.ToString()
-            | CommentEntry(s) -> "{" + s + "}"
-            | GameEndEntry(r) -> r.ToString()
-            | NAGEntry(i) -> "$" + i.ToString()
-            | RAVEntry(ml) -> "(" + (ml|>List.map(fun m -> m.ToString())|>List.reduce(fun a b -> a + " " + b)) + ")"
-    
     type GameInfo = 
         { Name : string
           Value : string }
@@ -313,7 +291,7 @@ module Types =
           WhitePlayer : string
           BlackPlayer : string
           Result : GameResult
-          MoveText : MoveTextEntry list }
+          Moves : Move list }
         
         member x.DateStr = 
             (if x.Year.IsNone then "????"
@@ -323,11 +301,25 @@ module Types =
                else x.Day.Value.ToString("00"))
         
         override x.ToString() = 
+            let sb = new StringBuilder()
+            let rec mvs2txt ct mvl =
+                if List.isEmpty mvl then sb.ToString()
+                elif mvl.Length=1 then
+                    sb.Append (" " + ct.ToString() + ". " + mvl.Head.ToString())|>ignore
+                    sb.ToString() 
+                else
+                    let w = mvl.Head.ToString()
+                    let b = mvl.Tail.Head.ToString()
+                    let rest = mvl.Tail.Tail
+                    sb.Append (" " + ct.ToString() + ". " + w + " " + b)|>ignore
+                    mvs2txt (ct+1) rest
+            
             (x.Event |> FormatTag "Event") + (x.Site |> FormatTag "Site") + (x.DateStr |> FormatTag "Date") 
             + (x.Round |> FormatTag "Round") + (x.WhitePlayer |> FormatTag "White") 
             + (x.BlackPlayer |> FormatTag "Black") + (x.Result.ToString() |> FormatTag "Result") 
             + nl
-            + (x.MoveText|>List.map(fun m -> m.ToString())|>List.reduce(fun a b -> a + " " + b))
+            + (x.Moves|>mvs2txt 1)
+            + " " + x.Result.ToString()
     
     let BlankGm() = 
         { Event = "?"
@@ -339,6 +331,6 @@ module Types =
           WhitePlayer = "?"
           BlackPlayer = "?"
           Result = Open
-          MoveText = [] }
+          Moves = [] }
     
     type Database = Game list
