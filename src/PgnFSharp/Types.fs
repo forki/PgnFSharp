@@ -129,6 +129,7 @@ module Types =
         | CaptureEnPassant
         | CastleKingSide
         | CastleQueenSide
+        | Short
     
     type Move = 
         { Type : MoveType
@@ -148,7 +149,7 @@ module Types =
                 match x.Type with
                 | CastleKingSide -> "O-O"
                 | CastleQueenSide -> "O-O-O"
-                | Simple -> 
+                | Simple | Short -> 
                     let pc = 
                         if x.Piece.IsNone || x.Piece.Value = Pawn then ""
                         else x.Piece.Value.ToString()

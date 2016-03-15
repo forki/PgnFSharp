@@ -1,5 +1,6 @@
 ﻿[<AutoOpen>]
-module internal PgnParsers.Move
+//module internal PgnParsers.Move
+module PgnParsers.Move
 
 open FParsec
 open PgnFSharp
@@ -158,15 +159,15 @@ let pMove0 =
     <!!> ("pComplexMove", 2)
     <?> "Move (e.g. Qxc4 or e8=Q or Nge2 etc.)"
 
-let shorta (((p,f),r),a) = ({BlankMv() with Piece=p|>Some;TargetFile=f|>Some;TargetSquare={Fil=f;Rank=r}|>Some;TargetPiece=p|>Some},a|>Some)|>getind
-let short ((p,f),r) = {BlankMv() with Piece=p|>Some;TargetFile=f|>Some;TargetSquare={Fil=f;Rank=r}|>Some;TargetPiece=p|>Some}|>Some
-let pawna ((f,r),a) = ({BlankMv() with Piece=PieceType.Pawn|>Some;TargetFile=f|>Some;TargetSquare={Fil=f;Rank=r}|>Some;TargetPiece=PieceType.Pawn|>Some},a|>Some)|>getind
-let pawn (f,r) = {BlankMv() with Piece=PieceType.Pawn|>Some;TargetFile=f|>Some;TargetSquare={Fil=f;Rank=r}|>Some;TargetPiece=PieceType.Pawn|>Some}|>Some
+let shorta (((p,f),r),a) = ({BlankMv() with Type=MoveType.Short;Piece=p|>Some;TargetFile=f|>Some;TargetSquare={Fil=f;Rank=r}|>Some;TargetPiece=p|>Some},a|>Some)|>getind
+let short ((p,f),r) = {BlankMv() with Type=MoveType.Short;Piece=p|>Some;TargetFile=f|>Some;TargetSquare={Fil=f;Rank=r}|>Some;TargetPiece=p|>Some}|>Some
+let pawna ((f,r),a) = ({BlankMv() with Type=MoveType.Short;Piece=PieceType.Pawn|>Some;TargetFile=f|>Some;TargetSquare={Fil=f;Rank=r}|>Some;TargetPiece=PieceType.Pawn|>Some},a|>Some)|>getind
+let pawn (f,r) = {BlankMv() with Type=MoveType.Short;Piece=PieceType.Pawn|>Some;TargetFile=f|>Some;TargetSquare={Fil=f;Rank=r}|>Some;TargetPiece=PieceType.Pawn|>Some}|>Some
 
 let pShortMove = 
-    (pPiece .>>. pFile .>>. pRank .>>. pAdditionalInfo |>> shorta) <|>
+    attempt(pPiece .>>. pFile .>>. pRank .>>. pAdditionalInfo |>> shorta) <|>
     (pPiece .>>. pFile .>>. pRank |>> short) <|>
-    (pFile .>>. pRank .>>. pAdditionalInfo |>> pawna) <|>
+    attempt(pFile .>>. pRank .>>. pAdditionalInfo |>> pawna) <|>
     (pFile .>>. pRank |>> pawn) <|>
     (pCastle .>>. opt(pAdditionalInfo) |>> getind)
     <!!> ("pShortMove", 2)

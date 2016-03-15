@@ -45,19 +45,38 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Types.fs" />
-    <Compile Include="BasicParsers.fs" />
-    <Compile Include="BasicChessParsers.fs" />
-    <Compile Include="TagParsers.fs" />
-    <Compile Include="MoveParsers.fs" />
-    <Compile Include="MoveSeriesParsers.fs" />
-    <Compile Include="GameParsers.fs" />
-    <Compile Include="Parser.fs" />
-    <Compile Include="PgnWriter.fs" />
-    <Compile Include="PgnReader.fs" />
     <None Include="Script.fsx" />
     <None Include="paket.references" />
     <None Include="paket.template" />
+    <Compile Include="TypesA.fs" />
+    <Compile Include="Util.fs" />
+    <Compile Include="Player.fs" />
+    <Compile Include="PieceType.fs" />
+    <Compile Include="Piece.fs" />
+    <Compile Include="Rank.fs" />
+    <Compile Include="File.fs" />
+    <Compile Include="Position.fs" />
+    <Compile Include="BitBoard.fs" />
+    <Compile Include="Zobrist.fs" />
+    <Compile Include="PhasedScore.fs" />
+    <Compile Include="Direction.fs" />
+    <Compile Include="Attacks.fs" />
+    <Compile Include="QuadraticBezier.fs" />
+    <Compile Include="Settings.fs" />
+    <Compile Include="PcSqEvaluator.fs" />
+    <Compile Include="Board.fs" />
+    <Compile Include="FEN.fs" />
+    <Compile Include="MoveGenerate.fs" />
+    <Compile Include="CheckInfo.fs" />
+    <Compile Include="AttackInfo.fs" />
+    <Compile Include="EvalResults.fs" />
+    <Compile Include="PawnEvaluator.fs" />
+    <Compile Include="MaterialEvaluator.fs" />
+    <Compile Include="KingAttackEvaluator.fs" />
+    <Compile Include="MobilityEvaluator.fs" />
+    <Compile Include="MoveUtil.fs" />
+    <Compile Include="Evaluator.fs" />
+    <Compile Include="PGN.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
