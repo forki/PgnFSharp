@@ -95,7 +95,6 @@ module PGN =
                                     
                                     let nreas = 
                                         if nbd |> MoveGenerate.IsDrawByStalemate then GameResultReason.Stalemate
-                                        elif nbd |> Board.IsDrawByRepetition then GameResultReason.Repetition
                                         elif nbd |> Board.IsDrawBy50MoveRule then GameResultReason.FiftyMoveRule
                                         else GameResultReason.MutualAgreement
                                     true, nres, nreas, mvl, nbd
@@ -146,7 +145,7 @@ module PGN =
                 if not ngd || ncl <> 0 then getgm ngd ncl (nres, nreas, nbd, nmvl)
                 else nres, nreas, nbd, (nmvl |> List.rev)
         
-        let res, reas, bd, mvl = 
+        let res, reas, _, mvl = 
             getgm false 0 (None, GameResultReason.NotDecided, Board.Create2 FEN.Start, [])
         if (mvl.Length > 0 || headers.Count > 0) then Create(headers, mvl, res, comments, reas) |> Some
         else None

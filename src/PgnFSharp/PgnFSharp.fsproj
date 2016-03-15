@@ -57,13 +57,11 @@
     <Compile Include="File.fs" />
     <Compile Include="Position.fs" />
     <Compile Include="BitBoard.fs" />
-    <Compile Include="Zobrist.fs" />
     <Compile Include="PhasedScore.fs" />
     <Compile Include="Direction.fs" />
     <Compile Include="Attacks.fs" />
     <Compile Include="QuadraticBezier.fs" />
     <Compile Include="Settings.fs" />
-    <Compile Include="PcSqEvaluator.fs" />
     <Compile Include="Board.fs" />
     <Compile Include="FEN.fs" />
     <Compile Include="MoveGenerate.fs" />

@@ -18,14 +18,6 @@ module FEN =
           Fiftymove = fiftyMove
           Fullmove = fullMove }
     
-    let Reverse(fen : Fen) = 
-        let pieces = new PosPcDict()
-        for pos in Position.AllPositions do
-            pieces.[pos] <- fen.Pieceat.[int (pos |> Position.Reverse)] |> Piece.ToOppositePlayer//OK
-        Create(pieces, fen.Whosturn |> Player.PlayerOther, fen.CastleBS, fen.CastleBL, fen.CastleWS, fen.CastleWL, 
-               (if fen.Enpassant |> Position.IsInBounds then fen.Enpassant |> Position.Reverse
-                else Position.OUTOFBOUNDS), fen.Fiftymove, fen.Fullmove)
-    
     let ToStr(fen : Fen) = 
         let sb = new StringBuilder(50)
         for irank = 0 to 7 do

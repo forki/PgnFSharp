@@ -33,10 +33,6 @@ module MoveUtil =
         else fits.Head
     
     let Parse (board : Brd) (movetext : string) = 
-        let promote = Piece.EMPTY
-        let mFrom = (Position.OUTOFBOUNDS)
-        let mTo = (Position.OUTOFBOUNDS)
-        let regex = new Regex("")
         let movetext = movetext.Replace("+", "")
         let movetext = movetext.Replace("x", "")
         let movetext = movetext.Replace("#", "")
@@ -46,30 +42,6 @@ module MoveUtil =
         let mypawn = 
             if board.WhosTurn = Player.White then Piece.WPawn
             else Piece.BPawn
-        
-        let myknight = 
-            if board.WhosTurn = Player.White then Piece.WKnight
-            else Piece.BKnight
-        
-        let mybishop = 
-            if board.WhosTurn = Player.White then Piece.WBishop
-            else Piece.BBishop
-        
-        let myrook = 
-            if board.WhosTurn = Player.White then Piece.WRook
-            else Piece.BRook
-        
-        let myqueen = 
-            if board.WhosTurn = Player.White then Piece.WQueen
-            else Piece.BQueen
-        
-        let myking = 
-            if board.WhosTurn = Player.White then Piece.WKing
-            else Piece.BKing
-        
-        let mynorth = 
-            if board.WhosTurn = Player.White then Direction.DirN
-            else Direction.DirS
         
         let mysouth = 
             if board.WhosTurn = Player.White then Direction.DirS
