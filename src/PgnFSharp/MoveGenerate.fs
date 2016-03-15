@@ -1,11 +1,12 @@
 ﻿namespace PgnFSharp
 
 module MoveGenerate = 
-    let Create (pfrom : Position) (pto : Position) (piece : Piece) (captured : Piece) = 
-        (int (pfrom) ||| (int (pto) <<< 6) ||| (int (piece) <<< 12) ||| (int (captured) <<< 16))
-    let CreateProm (pfrom : Position) (pto : Position) (piece : Piece) (captured : Piece) (promoteType : PieceType) = 
-        (int (pfrom) ||| (int (pto) <<< 6) ||| (int (piece) <<< 12) ||| (int (captured) <<< 16) 
-         ||| (int (promoteType) <<< 20))
+    let Create (pfrom : Position) (pto : Position) (piece : Piece) (captured : Piece) pgn = 
+        {Code=(int (pfrom) ||| (int (pto) <<< 6) ||| (int (piece) <<< 12) ||| (int (captured) <<< 16))
+         Pgn=pgn}
+    let CreateProm (pfrom : Position) (pto : Position) (piece : Piece) (captured : Piece) (promoteType : PieceType) pgn = 
+        {Code=(int (pfrom) ||| (int (pto) <<< 6) ||| (int (piece) <<< 12) ||| (int (captured) <<< 16) ||| (int (promoteType) <<< 20))
+         Pgn=pgn}
     
     let GenCapsNonCaps (board : Brd) captures = 
         let mypawnwest = 
@@ -44,7 +45,7 @@ module MoveGenerate =
             if att = Bitboard.Empty then mdl
             else 
                 let attPos, natt = Bitboard.PopFirst(att)
-                let mv = Create kingPos attPos board.PieceAt.[int (kingPos)] board.PieceAt.[int (attPos)]
+                let mv = Create kingPos attPos board.PieceAt.[int (kingPos)] board.PieceAt.[int (attPos)] ""
                 let md = { CMDemp with Move = mv }
                 getKingAttacks natt (md :: mdl)
         
@@ -86,7 +87,7 @@ module MoveGenerate =
                         if att = Bitboard.Empty then jmdl
                         else 
                             let attPos, natt = Bitboard.PopFirst(att)
-                            let mv = Create piecepos attPos piece board.PieceAt.[int (attPos)]
+                            let mv = Create piecepos attPos piece board.PieceAt.[int (attPos)] ""
                             let jmd = { CMDemp with Move = mv }
                             getAtts natt (jmd :: jmdl)
                     
@@ -123,29 +124,29 @@ module MoveGenerate =
                                 if (targetpos |> Position.ToRank) = myrank8 then 
                                     let mv = 
                                         CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Queen
+                                            board.PieceAt.[int (targetpos)] PieceType.Queen ""
                                     let imd = { CMDemp with Move = mv }
                                     let imdl = imd :: imdl
                                     let mv = 
                                         CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Rook
+                                            board.PieceAt.[int (targetpos)] PieceType.Rook ""
                                     let imd = { CMDemp with Move = mv }
                                     let imdl = imd :: imdl
                                     let mv = 
                                         CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Bishop
+                                            board.PieceAt.[int (targetpos)] PieceType.Bishop ""
                                     let imd = { CMDemp with Move = mv }
                                     let imdl = imd :: imdl
                                     let mv = 
                                         CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Knight
+                                            board.PieceAt.[int (targetpos)] PieceType.Knight ""
                                     let imd = { CMDemp with Move = mv }
                                     let imdl = imd :: imdl
                                     getPcaps capDir natt imdl
                                 else 
                                     let mv = 
                                         Create piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)]
+                                            board.PieceAt.[int (targetpos)] ""
                                     let imd = { CMDemp with Move = mv }
                                     let imdl = imd :: imdl
                                     getPcaps capDir natt imdl
@@ -162,29 +163,29 @@ module MoveGenerate =
                                 if (targetpos |> Position.ToRank) = myrank8 then 
                                     let mv = 
                                         CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Queen
+                                            board.PieceAt.[int (targetpos)] PieceType.Queen ""
                                     let imd = { CMDemp with Move = mv }
                                     let imdl = imd :: imdl
                                     let mv = 
                                         CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Rook
+                                            board.PieceAt.[int (targetpos)] PieceType.Rook ""
                                     let imd = { CMDemp with Move = mv }
                                     let imdl = imd :: imdl
                                     let mv = 
                                         CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Bishop
+                                            board.PieceAt.[int (targetpos)] PieceType.Bishop ""
                                     let imd = { CMDemp with Move = mv }
                                     let imdl = imd :: imdl
                                     let mv = 
                                         CreateProm piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)] PieceType.Knight
+                                            board.PieceAt.[int (targetpos)] PieceType.Knight ""
                                     let imd = { CMDemp with Move = mv }
                                     let imdl = imd :: imdl
                                     getPones natt imdl
                                 else 
                                     let mv = 
                                         Create piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                            board.PieceAt.[int (targetpos)]
+                                            board.PieceAt.[int (targetpos)] ""
                                     let imd = { CMDemp with Move = mv }
                                     let imdl = imd :: imdl
                                     getPones natt imdl
@@ -206,7 +207,7 @@ module MoveGenerate =
                                 
                                 let mv = 
                                     Create piecepos targetpos board.PieceAt.[int (piecepos)] 
-                                        board.PieceAt.[int (targetpos)]
+                                        board.PieceAt.[int (targetpos)] ""
                                 let imd = { CMDemp with Move = mv }
                                 let imdl = imd :: imdl
                                 getPtwos natt imdl
@@ -235,7 +236,7 @@ module MoveGenerate =
                                 && board.PieceAt.[int (Position.H1)] = Piece.WRook && sqemp && not sqatt) then 
                                 let mv = 
                                     Create Position.E1 Position.G1 board.PieceAt.[int (Position.E1)] 
-                                        board.PieceAt.[int (Position.G1)]
+                                        board.PieceAt.[int (Position.G1)] ""
                                 let md = { CMDemp with Move = mv }
                                 let mdl = md :: mdl
                                 mdl
@@ -254,7 +255,7 @@ module MoveGenerate =
                             && board.PieceAt.[int (Position.A1)] = Piece.WRook && sqemp && not sqatt) then 
                             let mv = 
                                 Create Position.E1 Position.C1 board.PieceAt.[int (Position.E1)] 
-                                    board.PieceAt.[int (Position.C1)]
+                                    board.PieceAt.[int (Position.C1)] ""
                             let md = { CMDemp with Move = mv }
                             let mdl = md :: mdl
                             mdl
@@ -273,7 +274,7 @@ module MoveGenerate =
                                 && board.PieceAt.[int (Position.H8)] = Piece.BRook && sqemp && not sqatt) then 
                                 let mv = 
                                     Create Position.E8 Position.G8 board.PieceAt.[int (Position.E8)] 
-                                        board.PieceAt.[int (Position.G8)]
+                                        board.PieceAt.[int (Position.G8)] ""
                                 let md = { CMDemp with Move = mv }
                                 let mdl = md :: mdl
                                 mdl
@@ -292,7 +293,7 @@ module MoveGenerate =
                             && board.PieceAt.[int (Position.A8)] = Piece.BRook && sqemp && not sqatt) then 
                             let mv = 
                                 Create Position.E8 Position.C8 board.PieceAt.[int (Position.E8)] 
-                                    board.PieceAt.[int (Position.C8)]
+                                    board.PieceAt.[int (Position.C8)] ""
                             let md = { CMDemp with Move = mv }
                             let mdl = md :: mdl
                             mdl

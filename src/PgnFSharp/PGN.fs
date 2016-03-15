@@ -3,6 +3,7 @@
 open System.Text
 open System.Collections.Generic
 open System.Text.RegularExpressions
+open System.IO
 
 type ChessPgnHeaders = Dictionary<string, string>
 
@@ -43,7 +44,7 @@ module PGN =
         if pgn.Headers.ContainsKey("FEN") then pgn.Headers.["FEN"]
         else FEN.StartStr
     
-    let NextGameRdr(sr : System.IO.StreamReader) = 
+    let NextGameRdr(sr : StreamReader) = 
         let headers = new ChessPgnHeaders()
         let comments = new Dictionary<int, string>()
         
@@ -120,6 +121,8 @@ module PGN =
                             elif ntok.Trim() = "*" then 
                                 if okToProcessResults then true, None, reas, mvl, nbd
                                 else gd, res, reas, mvl, nbd
+                            elif ntok.StartsWith("$") then 
+                                gd, res, reas, mvl, nbd
                             else 
                                 let move = MoveUtil.Parse nbd ntok
                                 let nbd = nbd |> Board.MoveApply(move)

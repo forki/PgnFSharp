@@ -31,17 +31,17 @@ type Brd =
 
 module Board = 
     let Cf0 = CasFlg 0
-    let From(move : Move) = (int(move) &&& 0x3F) |> Pos
-    let To(move : Move) = (int(move) >>> 6 &&& 0x3F) |> Pos
-    let MovingPiece(move : Move) = (int(move) >>> 12 &&& 0xF) |> Pc
+    let From(move : Move) = (int(move.Code) &&& 0x3F) |> Pos
+    let To(move : Move) = (int(move.Code) >>> 6 &&& 0x3F) |> Pos
+    let MovingPiece(move : Move) = (int(move.Code) >>> 12 &&& 0xF) |> Pc
     let IsW(move : Move) = move|>MovingPiece|>int<9
-    let MovingPieceType(move : Move) = (int(move) >>> 12 &&& 0x7) |> PcTp
-    let MovingPlayer(move : Move) = (int(move) >>> 15 &&& 0x1) |> Plyr
-    let IsCapture(move : Move) = (int(move) >>> 16 &&& 0xF) <> 0
-    let CapturedPiece(move : Move) = (int(move) >>> 16 &&& 0xF) |> Pc
-    let CapturedPieceType(move : Move) = (int(move) >>> 16 &&& 0x7) |> PcTp
-    let IsPromotion(move : Move) = (int (move) >>> 20 &&& 0x7) <> 0
-    let PromoteType(move : Move) = (int (move) >>> 20 &&& 0x7) |> PcTp
+    let MovingPieceType(move : Move) = (int(move.Code) >>> 12 &&& 0x7) |> PcTp
+    let MovingPlayer(move : Move) = (int(move.Code) >>> 15 &&& 0x1) |> Plyr
+    let IsCapture(move : Move) = (int(move.Code) >>> 16 &&& 0xF) <> 0
+    let CapturedPiece(move : Move) = (int(move.Code) >>> 16 &&& 0xF) |> Pc
+    let CapturedPieceType(move : Move) = (int(move.Code) >>> 16 &&& 0x7) |> PcTp
+    let IsPromotion(move : Move) = (int (move.Code) >>> 20 &&& 0x7) <> 0
+    let PromoteType(move : Move) = (int (move.Code) >>> 20 &&& 0x7) |> PcTp
     
     let Promote(move : Move) = 
         if move

@@ -6,7 +6,7 @@ type Parser() =
     
     member this.ReadFromFile(file : string) = 
         let stream = new FileStream(file, FileMode.Open)
-        let result = this.ReadFromStream(stream)
+        let result = this.ReadFromStream(stream)|>Seq.toList
         stream.Close()
         result
     

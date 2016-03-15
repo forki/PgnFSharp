@@ -32,11 +32,14 @@ module MoveUtil =
             else failwith "invalid move input"
         else fits.Head
     
-    let Parse (board : Brd) (movetext : string) = 
-        let movetext = movetext.Replace("+", "")
+    let Parse (board : Brd) (mtext : string) = 
+        let movetext = mtext.Replace("+", "")
         let movetext = movetext.Replace("x", "")
         let movetext = movetext.Replace("#", "")
         let movetext = movetext.Replace("=", "")
+        let movetext = movetext.Replace("e.p.", "")
+        let movetext = movetext.Replace("!", "")
+        let movetext = movetext.Replace("?", "")
         let me = board.WhosTurn
         
         let mypawn = 
@@ -54,43 +57,43 @@ module MoveUtil =
         if Regex.IsMatch(movetext, "^[abcdefgh][12345678][abcdefgh][12345678]$", RegexOptions.IgnoreCase) then 
             let mFrom = Position.Parse(movetext.Substring(0, 2))
             let mTo = Position.Parse(movetext.Substring(2, 2))
-            MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
+            MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] mtext
         elif Regex.IsMatch(movetext, "^[abcdefgh][12345678][abcdefgh][12345678][BNRQK]$", RegexOptions.IgnoreCase) then 
             let mFrom = Position.Parse(movetext.Substring(0, 2))
             let mTo = Position.Parse(movetext.Substring(2, 2))
             let promote = movetext.[4]|>Piece.ParseAsPiece(me)
-            MoveGenerate.CreateProm mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] (promote|>Piece.ToPieceType)
+            MoveGenerate.CreateProm mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] (promote|>Piece.ToPieceType) mtext
         elif movetext = "0-0" || movetext = "O-O" || movetext = "o-o" then 
             if me = Player.White then 
                 let mFrom = Position.E1
                 let mTo = Position.G1
-                MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
+                MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] mtext
             else 
                 let mFrom = Position.E8
                 let mTo = Position.G8
-                MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
+                MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] mtext
         elif movetext = "0-0-0" || movetext = "O-O-O" || movetext = "o-o-o" then 
             if me = Player.White then 
                 let mFrom = Position.E1
                 let mTo = Position.C1
-                MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
+                MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] mtext
             else 
                 let mFrom = Position.E8
                 let mTo = Position.C8
-                MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
+                MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] mtext
         elif Regex.IsMatch(movetext, "^[abcdefgh][12345678]$") then 
             let mTo = Position.Parse(movetext)
             let tmppos = mTo|>Position.PositionInDirection(mysouth)
             if board.PieceAt.[int(tmppos)] = mypawn then 
                 let mFrom = tmppos
-                MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
+                MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] mtext
             elif board.PieceAt.[int(tmppos)] = Piece.EMPTY && (mTo|>Position.ToRank) = myrank4 then 
                 let tmppos = tmppos|>Position.PositionInDirection(mysouth)
                 if board.PieceAt.[int(tmppos)] = mypawn then 
                     let mFrom = tmppos
-                    MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
-                else failwith ("no pawn can move to " + movetext)
-            else failwith ("no pawn can move to " + movetext)
+                    MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] mtext
+                else failwith ("no pawn can move to " + mtext)
+            else failwith ("no pawn can move to " + mtext)
         elif Regex.IsMatch(movetext, "^[abcdefgh][12345678][BNRQK]$") then 
             let mTo = Position.Parse(movetext.Substring(0, 2))
             let tmppos = mTo|>Position.PositionInDirection(mysouth)
@@ -98,43 +101,43 @@ module MoveUtil =
                 let mFrom = tmppos
                 let promote = movetext.[2]|>Piece.ParseAsPiece(me)
                 MoveGenerate.CreateProm mFrom mTo board.PieceAt.[int(mFrom)] 
-                                        board.PieceAt.[int(mTo)] (promote|>Piece.ToPieceType)
+                                        board.PieceAt.[int(mTo)] (promote|>Piece.ToPieceType) mtext
             else failwith ("no pawn can promoted to " + movetext.Substring(0, 2))
         elif Regex.IsMatch(movetext, "^[abcdefgh][abcdefgh][12345678]$") then 
             let mTo = Position.Parse(movetext.Substring(1, 2))
             let tmpfile = File.Parse(movetext.[0])
             let mFrom = ParseFilter board mTo mypawn tmpfile Rank.EMPTY
-            MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
+            MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] mtext
         elif Regex.IsMatch(movetext, "^[abcdefgh][abcdefgh][12345678][BNRQK]$") then 
             let mTo = Position.Parse(movetext.Substring(1, 2))
             let tmpfile = File.Parse(movetext.[0])
             let mFrom = ParseFilter board mTo mypawn tmpfile Rank.EMPTY
             let promote = movetext.[3]|>Piece.ParseAsPiece(me)
-            MoveGenerate.CreateProm mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] (promote|>Piece.ToPieceType)
+            MoveGenerate.CreateProm mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] (promote|>Piece.ToPieceType) mtext
         elif Regex.IsMatch(movetext, "^[BNRQK][abcdefgh][12345678]$") then 
             let mTo = Position.Parse(movetext.Substring(1, 2))
             let tmppiece = movetext.[0]|>Piece.ParseAsPiece(me)
             let mFrom = ParseFilter board mTo tmppiece File.EMPTY Rank.EMPTY
-            MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
+            MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] mtext
         elif Regex.IsMatch(movetext, "^[BNRQK][abcdefgh][abcdefgh][12345678]$") then 
             let mTo = Position.Parse(movetext.Substring(2, 2))
             let tmppiece = movetext.[0]|>Piece.ParseAsPiece(me)
             let tmpfile = File.Parse(movetext.[1])
             let mFrom = ParseFilter board mTo tmppiece tmpfile Rank.EMPTY
-            MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
+            MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] mtext
         elif Regex.IsMatch(movetext, "^[BNRQK][12345678][abcdefgh][12345678]$") then 
             let mTo = Position.Parse(movetext.Substring(2, 2))
             let tmppiece = movetext.[0]|>Piece.ParseAsPiece(me)
             let tmprank = Rank.Parse(movetext.[1])
             let mFrom = ParseFilter board mTo tmppiece File.EMPTY tmprank
-            MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
+            MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] mtext
         elif Regex.IsMatch(movetext, "^[BNRQK][abcdefgh][12345678][abcdefgh][12345678]$") then 
             let mTo = Position.Parse(movetext.Substring(3, 2))
             let tmppiece = movetext.[0]|>Piece.ParseAsPiece(me)
             let tmpfile = File.Parse(movetext.[1])
             let tmprank = Rank.Parse(movetext.[2])
             let mFrom = ParseFilter board mTo tmppiece tmpfile tmprank
-            MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)]
+            MoveGenerate.Create mFrom mTo board.PieceAt.[int(mFrom)] board.PieceAt.[int(mTo)] mtext
         else failwith "invalid move format"
     
     let DescBd (move : Move) (board : Brd) = 

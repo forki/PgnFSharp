@@ -17,42 +17,42 @@ let fl7 = Path.Combine(fol2, "tilb98r2.pgn")
 
 [<Test>]
 let ``Empty database test``() = 
-    let db1 = PgnReader.ReadFromFile fl1
+    let db1 = PgnReader.ReadFromFile fl1|>List.ofSeq
     db1.ToString().Length |> should equal 2
     db1.Length |> should equal 0
 
 [<Test>]
 let ``Simple database test``() = 
-    let db = PgnReader.ReadFromFile fl2
+    let db = PgnReader.ReadFromFile fl2|>List.ofSeq
     db.ToString().Length |> should equal 815
     db.Length |> should equal 1
 
 [<Test>]
 let ``Time database test``() = 
-    let db = PgnReader.ReadFromFile fl3
+    let db = PgnReader.ReadFromFile fl3|>List.ofSeq
     db.ToString().Length |> should equal 1877
     db.Length |> should equal 4
 
 [<Test>]
 let ``C database test``() = 
-    let db = PgnReader.ReadFromFile fl4
+    let db = PgnReader.ReadFromFile fl4|>List.ofSeq
     db.ToString().Length |> should equal 2294
     db.Length |> should equal 4
 
 [<Test>]
 let ``Informant database test``() = 
-    let db = PgnReader.ReadFromFile fl5
+    let db = PgnReader.ReadFromFile fl5|>List.ofSeq
     db.ToString().Length |> should equal 2452
     db.Length |> should equal 5
 
 [<Test>]
 let ``Demo database test``() = 
-    let db = PgnReader.ReadFromFile fl6
+    let db = PgnReader.ReadFromFile fl6|>List.ofSeq
     db.ToString().Length |> should equal 1397
     db.Length |> should equal 2
 
 [<Test>]
 let ``Tilb database test``() = 
-    let db = PgnReader.ReadFromFile fl7
+    let db = PgnReader.ReadFromFile fl7|>List.ofSeq
     db.ToString().Length |> should equal 2197
     db.Length |> should equal 6

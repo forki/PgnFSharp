@@ -4,8 +4,14 @@ open System
 
 [<AutoOpen>]
 module Types = 
-    type Move = int
-    let MoveEmpty = 0
+    type Move = 
+        { Code : int
+          Pgn : string }
+        override x.ToString() = x.Pgn
+    
+    let MoveEmpty = 
+        { Code = 0
+          Pgn = "" }
     
     [<Flags>]
     type MoveFlags = 
@@ -19,7 +25,7 @@ module Types =
           SEE : int
           Score : int
           Flags : MoveFlags }
-
+    
     let CMDemp = 
         { Move = MoveEmpty
           SEE = 0
@@ -284,4 +290,3 @@ module Types =
         | FileH = 9259542123273814144UL
         | Empty = 0UL
         | Full = 18446744073709551615UL
-
