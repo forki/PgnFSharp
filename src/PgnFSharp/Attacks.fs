@@ -1,4 +1,4 @@
-﻿namespace Lizard.Engine
+﻿namespace PgnFSharp
 
 module Attacks = 
     let Combinations(mask : Bitboard) = 
@@ -291,7 +291,6 @@ module Attacks =
     let KnightAttacks(from : Position) = AttacksKn.[int (from)]
     let KingAttacks(from : Position) = AttacksK.[int (from)]
     let PawnAttacks (from : Position) (player : Player) = AttacksP.[int (player)].[int (from)]
-    let PawnAttacksFlood (from : Position) (player : Player) = AttacksPF.[int (player)].[int (from)]
     
     let BishopAttacks (pos : Position) (allPieces : Bitboard) = 
         let ind1 = uint64 (allPieces &&& MaskB.[int (pos)])
@@ -299,14 +298,11 @@ module Attacks =
         let ind3 = int (ind2 >>> ShiftB.[int (pos)])
         LookupB.[int (pos)].[ind3]
     
-    let BishopMask(pos : Position) = MaskB.[int (pos)]
-    
     let RookAttacks (pos : Position) (allPieces : Bitboard) = 
         let ind1 = uint64 (allPieces &&& MaskR.[int (pos)])
         let ind2 = ind1 * MagicsR.[int (pos)]
         let ind3 = int (ind2 >>> ShiftR.[int (pos)])
         LookupR.[int (pos)].[ind3]
     
-    let RookMask(pos : Position) = MaskR.[int (pos)]
     let QueenAttacks (pos : Position) (allPieces : Bitboard) = 
         (RookAttacks pos allPieces) ||| (BishopAttacks pos allPieces)

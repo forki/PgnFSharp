@@ -48,7 +48,7 @@
     <None Include="Script.fsx" />
     <None Include="paket.references" />
     <None Include="paket.template" />
-    <Compile Include="TypesA.fs" />
+    <Compile Include="Types.fs" />
     <Compile Include="Util.fs" />
     <Compile Include="Player.fs" />
     <Compile Include="PieceType.fs" />
@@ -57,11 +57,8 @@
     <Compile Include="File.fs" />
     <Compile Include="Position.fs" />
     <Compile Include="BitBoard.fs" />
-    <Compile Include="PhasedScore.fs" />
     <Compile Include="Direction.fs" />
     <Compile Include="Attacks.fs" />
-    <Compile Include="QuadraticBezier.fs" />
-    <Compile Include="Settings.fs" />
     <Compile Include="Board.fs" />
     <Compile Include="FEN.fs" />
     <Compile Include="MoveGenerate.fs" />

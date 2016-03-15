@@ -1,4 +1,4 @@
-﻿namespace Lizard.Engine
+﻿namespace PgnFSharp
 
 open System
 
@@ -31,25 +31,6 @@ module Position =
         + (pos
            |> ToRank
            |> Rank.RankToString)
-    
-    let DistanceTo (pto : Position) (pfrom : Position) = 
-        let rankfrom = int (pfrom |> ToRank)
-        let filefrom = int (pfrom |> ToFile)
-        let rankto = int (pto |> ToRank)
-        let fileto = int (pto |> ToFile)
-        let rDiff = abs (rankfrom - rankto)
-        let fDiff = abs (filefrom - fileto)
-        if rDiff > fDiff then rDiff
-        else fDiff
-    
-    let DistanceToNoDiag (pto : Position) (pfrom : Position) = 
-        let rankfrom = int (pfrom |> ToRank)
-        let filefrom = int (pfrom |> ToFile)
-        let rankto = int (pto |> ToRank)
-        let fileto = int (pto |> ToFile)
-        let rDiff = abs (rankfrom - rankto)
-        let fDiff = abs (filefrom - fileto)
-        rDiff + fDiff
     
     let DirectionTo (pto : Position) (pfrom : Position) = 
         let rankfrom = int (pfrom |> ToRank)
@@ -114,31 +95,9 @@ module Position =
             elif (nr |> Rank.IsInBounds) && (nf |> File.IsInBounds) then nr |> Rank.ToPosition(nf)
             else Position.OUTOFBOUNDS
     
-    let Reverse(pos : Position) = 
-        let r = pos |> ToRank
-        let f = pos |> ToFile
-        
-        let newrank = 
-            match r with
-            | Rank.Rank1 -> Rank.Rank8
-            | Rank.Rank2 -> Rank.Rank7
-            | Rank.Rank3 -> Rank.Rank6
-            | Rank.Rank4 -> Rank.Rank5
-            | Rank.Rank5 -> Rank.Rank4
-            | Rank.Rank6 -> Rank.Rank3
-            | Rank.Rank7 -> Rank.Rank2
-            | Rank.Rank8 -> Rank.Rank1
-            | _ -> Rank.EMPTY
-        f |> File.ToPosition(newrank)
-    
     let ToBitboard(pos : Position) = 
         if pos |> IsInBounds then (1UL <<< int (pos)) |> BitB
         else Bitboard.Empty
-    
-    let ToBitboardL(posl : Position list) = 
-        posl
-        |> List.map (ToBitboard)
-        |> List.reduce (|||)
     
     let Between (pto : Position) (pfrom : Position) = 
         let dir = pfrom |> DirectionTo(pto)

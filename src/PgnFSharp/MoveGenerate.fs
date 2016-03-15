@@ -1,4 +1,4 @@
-﻿namespace Lizard.Engine
+﻿namespace PgnFSharp
 
 module MoveGenerate = 
     let Create (pfrom : Position) (pto : Position) (piece : Piece) (captured : Piece) = 

@@ -1,4 +1,4 @@
-﻿namespace Lizard.Engine
+﻿namespace PgnFSharp
 
 open System
 
@@ -39,21 +39,6 @@ module Bitboard =
             let x = uint64 (ibb) >>> 32
             (DebrujinLSB(int (x)) + 32) |> Pos
     
-    let SouthMostPosition(ibb : Bitboard) = 
-        let x = uint64 (ibb)
-        let x = x ||| (x >>> 1)
-        let x = x ||| (x >>> 2)
-        let x = x ||| (x >>> 4)
-        let x = x ||| (x >>> 8)
-        let x = x ||| (x >>> 16)
-        let x = x ||| (x >>> 32)
-        NorthMostPosition((x &&& ~~~(x >>> 1)) |> BitB)
-    
-    let Reverse(ibb : Bitboard) = 
-        ((uint64 (ibb &&& Bitboard.Rank1) >>> 56) ||| (uint64 (ibb &&& Bitboard.Rank2) >>> 40) 
-         ||| (uint64 (ibb &&& Bitboard.Rank3) >>> 24) ||| (uint64 (ibb &&& Bitboard.Rank4) >>> 8) 
-         ||| (uint64 (ibb &&& Bitboard.Rank5) <<< 8) ||| (uint64 (ibb &&& Bitboard.Rank6) <<< 24) 
-         ||| (uint64 (ibb &&& Bitboard.Rank7) <<< 40) ||| (uint64 (ibb &&& Bitboard.Rank8) <<< 56)) |> BitB
     let ShiftDirN(ibb : Bitboard) = (uint64 (ibb &&& ~~~Bitboard.Rank8) >>> 8) |> BitB
     let ShiftDirE(ibb : Bitboard) = (uint64 (ibb &&& ~~~Bitboard.FileH) <<< 1) |> BitB
     let ShiftDirS(ibb : Bitboard) = (uint64 (ibb &&& ~~~Bitboard.Rank1) <<< 8) |> BitB
@@ -115,8 +100,6 @@ module Bitboard =
         getb ibb
     
     let ContainsPos (pos : Position) ibb = (ibb &&& (pos |> Position.ToBitboard)) <> Bitboard.Empty
-    let Contains (other : Bitboard) ibb = (ibb &&& other) <> Bitboard.Empty
-    let IsEmpty ibb = ibb = Bitboard.Empty
     
     let ToPositions(ibb : Bitboard) = 
         let rec getp (bb : Bitboard) ol = 

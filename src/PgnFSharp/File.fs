@@ -1,4 +1,4 @@
-﻿namespace Lizard.Engine
+﻿namespace PgnFSharp
 
 open System
 
@@ -14,5 +14,3 @@ module File =
     let FileToString(file : File) = Filedesclookup.Substring(int (file), 1)
     let IsInBounds(file : File) = int (file) >= 0 && int (file) <= 7
     let ToPosition (rank : Rank) (file : File) = (int (rank) * 8 + int (file)) |> Pos
-    
-    let ToBitboard(file : File) = FileBits.[int(file)]

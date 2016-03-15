@@ -1,4 +1,4 @@
-﻿namespace Lizard.Engine
+﻿namespace PgnFSharp
 
 open System
 
@@ -7,7 +7,6 @@ module Util =
     let Pos i = enum<Position> (i)
     let Dirn i = enum<Direction> (i)
     let CasFlg i = enum<CstlFlgs> (i)
-    let MovFlg i = enum<MoveFlags> (i)
     let PcTp i = enum<PieceType> (i)
     let Pc i = enum<Piece> (i)
     let Plyr i = enum<Player> (i)

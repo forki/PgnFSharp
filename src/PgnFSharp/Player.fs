@@ -1,4 +1,4 @@
-﻿namespace Lizard.Engine
+﻿namespace PgnFSharp
 
 module Player = 
     let AllPlayers = [| Player.White; Player.Black |]
