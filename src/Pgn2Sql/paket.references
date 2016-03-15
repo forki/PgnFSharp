@@ -1,5 +1,3 @@
 group FsSql
 FSharp.Data.SqlClient
 FsPickler
-group FParsec
-FParsec-Big-Data-Edition

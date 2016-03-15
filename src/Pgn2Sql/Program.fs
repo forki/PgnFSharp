@@ -34,7 +34,7 @@ let main argv =
             let fl = "demoGames.pgn"
             Path.Combine(fol,fl)
     // load games from file
-    let gms:Game list = PgnReader.ReadFromFile(pth)
+//    let gms:Game list = PgnReader.ReadFromFile(pth)
 //    let prs = 
 //        let bs = gms|>List.map(fun gm -> gm.BlackPlayer)|>Set.ofList
 //        let ws = gms|>List.map(fun gm -> gm.WhitePlayer)|>Set.ofList
@@ -50,14 +50,14 @@ let main argv =
     let ser = FsPickler.CreateBinarySerializer()
     
     
-    use addp = new SqlCommandProvider<str, conn, SingleRow = true>()
-    let addgm gm =
-        let wid = addp.Execute(gm.WhitePlayer)
-        let bid = addp.Execute(gm.BlackPlayer)
-        //let newrow = dbgms.NewRow(gm.Event,gm.Site,gm.Round,gm.WhitePlayer,gm.BlackPlayer,gm.Result.ToByte(),gm.AdditionalInfo|>ser.Pickle,gm.Tags|>ser.Pickle,gm.MoveText|>ser.Pickle,Year=gm.Year,Month=gm.Month,Day=gm.Day)
-        //dbgms.Rows.Add newrow
-        wid,bid
-    let tst = gms|>List.map addgm
+//    use addp = new SqlCommandProvider<str, conn, SingleRow = true>()
+//    let addgm gm =
+//        let wid = addp.Execute(gm.WhitePlayer)
+//        let bid = addp.Execute(gm.BlackPlayer)
+//        //let newrow = dbgms.NewRow(gm.Event,gm.Site,gm.Round,gm.WhitePlayer,gm.BlackPlayer,gm.Result.ToByte(),gm.AdditionalInfo|>ser.Pickle,gm.Tags|>ser.Pickle,gm.MoveText|>ser.Pickle,Year=gm.Year,Month=gm.Month,Day=gm.Day)
+//        //dbgms.Rows.Add newrow
+//        wid,bid
+//    let tst = gms|>List.map addgm
     //gms|>List.iter addgm
     //let recordsAffected = dbgms.Update()
     //dbgms.BulkCopy(copyOptions = System.Data.SqlClient.SqlBulkCopyOptions.TableLock)

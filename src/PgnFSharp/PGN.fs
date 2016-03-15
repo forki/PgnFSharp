@@ -78,7 +78,7 @@ module PGN =
                                         ntok
                                     else tok
                                 comments.Add(mvl.Length - 1, ntok)
-                            ptok, (hl, "", cl, bd, mvl)
+                            ptok, (hl, "", ncl, bd, mvl)
                         elif cl <> 0 then ptok, (hl, tok + c.ToString(), cl, bd, mvl)
                         elif c = '.' then ptok, (hl, "", cl, bd, mvl)
                         elif c = ' ' then true, (hl, tok, cl, bd, mvl)

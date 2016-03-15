@@ -25,12 +25,6 @@ GITHUB
   specs:
     modules/Octokit/Octokit.fsx (58dce73f9a069ae7fbfbae993f5e6f06ed9218d5)
       Octokit
-GROUP FParsec
-NUGET
-  remote: https://www.nuget.org/api/v2
-  specs:
-    FParsec-Big-Data-Edition (1.0.2)
-
 GROUP FsSql
 NUGET
   remote: https://www.nuget.org/api/v2

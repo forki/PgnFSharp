@@ -7,8 +7,10 @@ let main argv =
     let st = DateTime.Now
     let fol = @"I:\GitHub\PgnFSharp\tests\data\RealFiles"
     let fl = Path.Combine(fol,"o-deville.pgn")
-    let gms = PgnReader.ReadFromFile fl 
-    //let gms = PgnReader.ReadFromFileDebug fl 
+    //let fl = Path.Combine(fol,"demoGames.pgn")
+    use sr = new StreamReader(fl)
+    let gms = PGN.AllGamesRdr sr|>Seq.toArray
+
     let nd = DateTime.Now
     let el = (nd-st).TotalSeconds
     printfn "Elasped Time: %f" el
