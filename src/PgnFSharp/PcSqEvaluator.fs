@@ -32,7 +32,3 @@ module PcSqEvaluator =
         let getps pc = Position.AllPositions |> Array.map (getp pc)
         Piece.AllPieces2 |> Array.map getps
     
-    let PcSqValuesAdd (piece : Piece) (pos : Position) (pPP : PcsqPcPs) (vlue : PhsdScr) = 
-        vlue + (pPP.[int (piece)].[int (pos)])
-    let PcSqValuesRemove (piece : Piece) (pos : Position) (pPP : PcsqPcPs) (vlue : PhsdScr) = 
-        vlue - (pPP.[int (piece)].[int (pos)])

@@ -62,7 +62,7 @@ module PGN =
                                 headers.Add(header.Key, header.Value)
                                 let nbd = 
                                     if header.Key.ToUpper() = "FEN" then 
-                                        Board.Create2 (header.Value |> FEN.FromStr) Evaluator.PcSqDef
+                                        Board.Create2 (header.Value |> FEN.FromStr)
                                     else bd
                                 ptok, (nhl, "", cl, nbd, mvl)
                             else ptok, (nhl, tok, cl, bd, mvl)
@@ -147,7 +147,7 @@ module PGN =
                 else nres, nreas, nbd, (nmvl |> List.rev)
         
         let res, reas, bd, mvl = 
-            getgm false 0 (None, GameResultReason.NotDecided, Board.Create2 FEN.Start Evaluator.PcSqDef, [])
+            getgm false 0 (None, GameResultReason.NotDecided, Board.Create2 FEN.Start, [])
         if (mvl.Length > 0 || headers.Count > 0) then Create(headers, mvl, res, comments, reas) |> Some
         else None
     
@@ -198,7 +198,7 @@ module PGN =
                     sbMoves.Append("} ") |> ignore
                 procmvs (not isw) (ct + 1) mvl.Tail nbd
         
-        let board = Board.Create2 (StartingPosition pgn |> FEN.FromStr) Evaluator.PcSqDef
+        let board = Board.Create2 (StartingPosition pgn |> FEN.FromStr)
         let mvl = pgn.Moves
         procmvs true 1 mvl board
         //result

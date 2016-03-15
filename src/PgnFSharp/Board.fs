@@ -33,9 +33,7 @@ type Brd =
       ZobPawn : int64
       ZobMaterial : int64
       HistL : MvHstry list
-      MovesSinceNull : int
-      PcSqEvaluator : PcsqPcPs
-      PcSq : PhsdScr }
+      MovesSinceNull : int }
 
 module Board = 
     let Cf0 = CasFlg 0
@@ -130,9 +128,7 @@ module Board =
           ZobPawn = 0L
           ZobMaterial = 0L
           HistL = []
-          MovesSinceNull = 100
-          PcSqEvaluator = PcSqEvaluator.Emp()
-          PcSq = PhasedScore.Create 0 0 }
+          MovesSinceNull = 100 }
     
     let BoardZob(bd : Brd) = 
         let zpc = 
@@ -176,8 +172,6 @@ module Board =
         let pieceType = piece|>Piece.ToPieceType
         let pieceat = bd.PieceAt|>Array.mapi(fun i p -> if i=int(mto) then piece elif i = int(mfrom) then Piece.EMPTY else p)
         let zobristBoard = bd.ZobristBoard ^^^ (Zobrist.PiecePosition piece mfrom) ^^^ (Zobrist.PiecePosition piece mto)
-        let pcSq = PcSqEvaluator.PcSqValuesRemove piece mfrom bd.PcSqEvaluator bd.PcSq
-        let pcSq = PcSqEvaluator.PcSqValuesAdd piece mto bd.PcSqEvaluator pcSq
         let posBits = (mfrom |> Position.ToBitboard) ||| (mto |> Position.ToBitboard)
         let piecetypes = bd.PieceTypes|>Array.mapi(fun i p -> if i=int(pieceType) then p ^^^ posBits else p)
         let wtprbds = if player=Player.White then bd.WtPrBds ^^^ posBits else bd.WtPrBds
@@ -191,7 +185,6 @@ module Board =
         let bkkingpos = if pieceType = PieceType.King && player=Player.Black then mto else bd.BkKingPos
         { bd with PieceAt = pieceat
                   ZobristBoard = zobristBoard
-                  PcSq = pcSq
                   PieceTypes = piecetypes
                   WtPrBds = wtprbds
                   BkPrBds = bkprbds
@@ -226,7 +219,6 @@ module Board =
                               if player = Player.Black && i = int (pieceType) then countOthers + 1
                               else p)
         
-        let pcSq = PcSqEvaluator.PcSqValuesAdd piece pos bd.PcSqEvaluator bd.PcSq
         let posBits = pos |> Position.ToBitboard
         
         let piecetypes = 
@@ -247,7 +239,6 @@ module Board =
                   ZobMaterial = zobmaterial
                   WtPcCnt = wtpccnt
                   BkPcCnt = bkpccnt
-                  PcSq = pcSq
                   PieceTypes = piecetypes
                   PieceLocationsAll = piecelocationsall
                   WtPrBds = wtprbds
@@ -282,7 +273,6 @@ module Board =
                               if player = Player.Black && i = int (pieceType) then countOthers
                               else p)
         
-        let pcSq = PcSqEvaluator.PcSqValuesRemove piece pos bd.PcSqEvaluator bd.PcSq
         let notPosBits = ~~~(pos |> Position.ToBitboard)
         
         let piecetypes = 
@@ -300,7 +290,6 @@ module Board =
                   ZobMaterial = zobmat
                   WtPcCnt = wtpccnt
                   BkPcCnt = bkpccnt
-                  PcSq = pcSq
                   PieceTypes = piecetypes
                   WtPrBds = wtprbds
                   BkPrBds = bkprbds
@@ -520,8 +509,7 @@ module Board =
                   PieceTypes = bd.PieceTypes |> Array.map (fun p -> Bitboard.Empty)
                   WtPrBds = Bitboard.Empty
                   BkPrBds = Bitboard.Empty
-                  PieceLocationsAll = Bitboard.Empty
-                  PcSq = PhasedScore.Create 0 0 }
+                  PieceLocationsAll = Bitboard.Empty }
     
     let LastTwoMovesNull(bd : Brd) = 
         bd.MovesSinceNull = 0 && bd.HistL.Length >= 2 && bd.HistL.Tail.Head.Move = MoveEmpty
@@ -603,16 +591,10 @@ module Board =
                              |> AttacksTo(if bd.WhosTurn=Player.White then bd.WtKingPos else bd.BkKingPos)
                              &&& (if (bd.WhosTurn|>Player.PlayerOther)=Player.White then bd.WtPrBds else bd.BkPrBds) }
 
-    let Create2 fen pcSqEvaluator = 
+    let Create2 fen = 
         let bd = Create()
         
-        let bd = { bd with PcSqEvaluator = pcSqEvaluator }
         let bd = bd |> initPieceAtArray
         let bd = bd |> FENCurrent fen
         bd
     
-    let Create3 fen prevMoves pcSqEvaluator = 
-        let rec getbd mvl ibd = 
-            if List.isEmpty mvl then ibd
-            else getbd mvl.Tail (ibd |> MoveApply mvl.Head)
-        getbd prevMoves (Create2 fen pcSqEvaluator)

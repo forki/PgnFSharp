@@ -67,15 +67,7 @@
     <Compile Include="Board.fs" />
     <Compile Include="FEN.fs" />
     <Compile Include="MoveGenerate.fs" />
-    <Compile Include="CheckInfo.fs" />
-    <Compile Include="AttackInfo.fs" />
-    <Compile Include="EvalResults.fs" />
-    <Compile Include="PawnEvaluator.fs" />
-    <Compile Include="MaterialEvaluator.fs" />
-    <Compile Include="KingAttackEvaluator.fs" />
-    <Compile Include="MobilityEvaluator.fs" />
     <Compile Include="MoveUtil.fs" />
-    <Compile Include="Evaluator.fs" />
     <Compile Include="PGN.fs" />
   </ItemGroup>
   <PropertyGroup>
