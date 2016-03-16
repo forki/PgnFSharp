@@ -95,24 +95,24 @@ module PGN =
                 let c = chl.Head
                 donum (tok + c.ToString()) chl.Tail
         
-        let rec getgm st gd (res, bd, mvl) = 
-            let rec proclin st ptok tok (chl, gd) (res, bd, mvl) = 
-                if List.isEmpty chl then st, gd, (res, bd, (mvl : Move list))
+        let rec getgm st (res, bd, mvl) = 
+            let rec proclin st ptok tok chl (res, bd, mvl) = 
+                if List.isEmpty chl then st, (res, bd, (mvl : Move list))
                 else 
                     let c = chl.Head
                     match st with
                     | InComment(cl) -> 
                         let nst, nchl = docomm cl chl
-                        proclin nst ptok tok (nchl, gd) (res, bd, mvl)
+                        proclin nst ptok tok nchl (res, bd, mvl)
                     | InRAV(cl) -> 
                         let nst, nchl = dorav cl chl
-                        proclin nst ptok tok (nchl, gd) (res, bd, mvl)
+                        proclin nst ptok tok nchl (res, bd, mvl)
                     | InNAG -> 
                         let nst, nchl = donag chl
-                        proclin nst ptok tok (nchl, gd) (res, bd, mvl)
+                        proclin nst ptok tok nchl (res, bd, mvl)
                     | InNum -> 
                         let nst, nchl = donum "" chl
-                        proclin nst ptok tok (nchl, gd) (res, bd, mvl)
+                        proclin nst ptok tok nchl (res, bd, mvl)
                     | InHeader -> 
                         let nst, (ntok, nbd) = 
                             if c = ']' then 
@@ -123,48 +123,43 @@ module PGN =
                                     else bd
                                 Unknown, ("", nbd)
                             else st, (tok + c.ToString(), bd)
-                        proclin nst ptok ntok (chl.Tail, gd) (res, nbd, mvl)
+                        proclin nst ptok ntok (chl.Tail) (res, nbd, mvl)
                     | InMove -> 
                             let nst, nptok, (ntok, nbd, nmvl) = 
                                 if c = ' ' then Unknown, true, (tok, bd, mvl)
                                 else st, ptok, (tok + c.ToString(), bd, mvl)
-                            if nptok && ntok = "" then proclin st false ntok (chl.Tail, gd) (res, nbd, mvl)
+                            if nptok && ntok = "" then proclin st false ntok (chl.Tail) (res, nbd, mvl)
                             elif nptok then 
                                 let nptok = false
-                                let ngd, nres, nmvl, nbd = 
+                                let nres, nmvl, nbd = 
                                     let move = MoveUtil.Parse nbd ntok
                                     let nbd = nbd |> Board.MoveApply(move)
                                     let nmvl = move :: mvl
-                                    if nbd |> MoveGenerate.IsMate then 
-                                        let nres = 
-                                            if nbd.WhosTurn = Player.White then GameResult.BlackWins |> Some
-                                            else GameResult.WhiteWins |> Some
-                                        true, nres, nmvl, nbd
-                                    else gd, res, nmvl, nbd
-                                proclin nst nptok "" (chl.Tail, ngd) (nres, nbd, nmvl)
-                            else proclin nst nptok ntok (chl.Tail, gd) (res, nbd, nmvl)
+                                    res, nmvl, nbd
+                                proclin nst nptok "" (chl.Tail) (nres, nbd, nmvl)
+                            else proclin nst nptok ntok (chl.Tail) (res, nbd, nmvl)
                     | FinishedOK -> 
-                            st, true, (res, bd, mvl)
+                            st, (res, bd, mvl)
                     | _ -> 
-                        if c = '[' then proclin InHeader ptok tok (chl.Tail, gd) (res, bd, mvl)
-                        elif c = '{' then proclin (InComment(1)) ptok tok (chl.Tail, gd) (res, bd, mvl)
-                        elif c = '(' then proclin (InRAV(1)) ptok tok (chl.Tail, gd) (res, bd, mvl)
-                        elif c = '$' then proclin InNAG ptok tok (chl.Tail, gd) (res, bd, mvl)
-                        elif c = '*' then proclin FinishedOK ptok tok (chl.Tail, true) (res, bd, mvl)
-                        elif System.Char.IsNumber(c)||c = '.' then proclin InNum ptok tok (chl, gd) (res, bd, mvl)
-                        elif c = ' ' then proclin Unknown ptok tok (chl.Tail, gd) (res, bd, mvl)
-                        else proclin InMove ptok tok (chl, gd) (res, bd, mvl)
+                        if c = '[' then proclin InHeader ptok tok (chl.Tail) (res, bd, mvl)
+                        elif c = '{' then proclin (InComment(1)) ptok tok (chl.Tail) (res, bd, mvl)
+                        elif c = '(' then proclin (InRAV(1)) ptok tok (chl.Tail) (res, bd, mvl)
+                        elif c = '$' then proclin InNAG ptok tok (chl.Tail) (res, bd, mvl)
+                        elif c = '*' then proclin FinishedOK ptok tok (chl.Tail) (res, bd, mvl)
+                        elif System.Char.IsNumber(c)||c = '.' then proclin InNum ptok tok chl (res, bd, mvl)
+                        elif c = ' ' then proclin Unknown ptok tok (chl.Tail) (res, bd, mvl)
+                        else proclin InMove ptok tok (chl) (res, bd, mvl)
             
             let lin = sr.ReadLine()
             if lin = null then res, bd, (mvl |> List.rev)
             else 
                 let line = lin + " "
                 let cArray = line.ToCharArray()
-                let nst, ngd, (nres, nbd, nmvl) = proclin st false "" ((cArray |> Array.toList), gd) (res, bd, mvl)
-                if ngd||nst=FinishedOK then nres, nbd, (nmvl |> List.rev)
-                else getgm nst ngd (nres, nbd, nmvl)
+                let nst, (nres, nbd, nmvl) = proclin st false "" ((cArray |> Array.toList)) (res, bd, mvl)
+                if nst=FinishedOK then nres, nbd, (nmvl |> List.rev)
+                else getgm nst (nres, nbd, nmvl)
         
-        let res, _, mvl = getgm Unknown false (None, Board.Create2 FEN.Start, [])
+        let res, _, mvl = getgm Unknown (None, Board.Create2 FEN.Start, [])
         if (mvl.Length > 0 || headers.Count > 0) then Create(headers, mvl, res) |> Some
         else None
     

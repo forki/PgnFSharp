@@ -30,7 +30,7 @@ let ``Simple database test``() =
 [<Test>]
 let ``Time database test``() = 
     let db = PgnReader.ReadFromFile fl3|>List.ofSeq
-    db.ToString().Length |> should equal 15
+    db.ToString().Length |> should equal 51
     db.Length |> should equal 4
 
 [<Test>]
