@@ -24,35 +24,35 @@ let ``Empty database test``() =
 [<Test>]
 let ``Simple database test``() = 
     let db = PgnReader.ReadFromFile fl2|>List.ofSeq
-    db.ToString().Length |> should equal 815
+    db.ToString().Length |> should equal 15
     db.Length |> should equal 1
 
 [<Test>]
 let ``Time database test``() = 
     let db = PgnReader.ReadFromFile fl3|>List.ofSeq
-    db.ToString().Length |> should equal 1877
+    db.ToString().Length |> should equal 15
     db.Length |> should equal 4
 
 [<Test>]
 let ``C database test``() = 
     let db = PgnReader.ReadFromFile fl4|>List.ofSeq
-    db.ToString().Length |> should equal 2294
+    db.ToString().Length |> should equal 51
     db.Length |> should equal 4
 
 [<Test>]
 let ``Informant database test``() = 
     let db = PgnReader.ReadFromFile fl5|>List.ofSeq
-    db.ToString().Length |> should equal 2452
+    db.ToString().Length |> should equal 51
     db.Length |> should equal 5
 
 [<Test>]
 let ``Demo database test``() = 
     let db = PgnReader.ReadFromFile fl6|>List.ofSeq
-    db.ToString().Length |> should equal 1397
+    db.ToString().Length |> should equal 30
     db.Length |> should equal 2
 
 [<Test>]
 let ``Tilb database test``() = 
     let db = PgnReader.ReadFromFile fl7|>List.ofSeq
-    db.ToString().Length |> should equal 2197
+    db.ToString().Length |> should equal 51
     db.Length |> should equal 6

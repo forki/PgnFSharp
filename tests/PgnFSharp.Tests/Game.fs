@@ -49,4 +49,4 @@ let gm = db.Head
 [<Test>]
 let ``Game to string length`` () =
   let ans = gm.ToString()
-  ans.Length |> should equal 813
+  ans.Length |> should equal 13

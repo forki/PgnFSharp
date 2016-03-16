@@ -61,20 +61,6 @@ module Types =
         | White = 0
         | Black = 1
     
-    type GameResultReason = 
-        | NotDecided = 0
-        | Checkmate = 1
-        | Resign = 2
-        | OutOfTime = 3
-        | Adjudication = 4
-        | Stalemate = 5
-        | FiftyMoveRule = 6
-        | InsufficientMaterial = 7
-        | MutualAgreement = 8
-        | Repetition = 9
-        | Unknown = 10
-        | IllegalMove = 11
-    
     type GameResult = 
         | Draw = 0
         | WhiteWins = 1

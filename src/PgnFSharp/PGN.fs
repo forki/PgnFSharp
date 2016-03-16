@@ -9,7 +9,7 @@ type ChessPgnHeaders = Dictionary<string, string>
 
 module ChessPGNHeaders = 
     let TryParse headerLine = 
-        let pattern = @"\[(?<key>[\w]+)\s+\""(?<value>[\S\s]+)\""\]"
+        let pattern = @"\[(?<key>[\w]+)\s+\""(?<value>[\S\s]+)\""\]|\[(?<key>[\w]+)\s+\""\""\]"
         let regex = new Regex(pattern)
         let matches = regex.Matches(headerLine)
         if matches.Count <> 1 then 
@@ -28,129 +28,144 @@ module ChessPGNHeaders =
 type Pgn = 
     { Moves : Move list
       Result : GameResult Option
-      ResultReason : GameResultReason
-      Headers : ChessPgnHeaders
-      Comments : Dictionary<int, string> }
+      Headers : ChessPgnHeaders }
 
 module PGN = 
-    let Create(headers, moves, result, comments, reason) = 
+    let Create(headers, moves, result) = 
         { Moves = moves
           Result = result
-          ResultReason = reason
-          Headers = headers
-          Comments = comments }
+          Headers = headers }
     
     let StartingPosition(pgn : Pgn) = 
         if pgn.Headers.ContainsKey("FEN") then pgn.Headers.["FEN"]
         else FEN.StartStr
     
+    type State = 
+        | Unknown
+        | InHeader
+        | InMove
+        | InComment of int
+        | InRAV of int
+        | InNAG
+        | InNum
+        | FinishedOK
+        | Invalid
+        | FinishedInvalid
+    
     let NextGameRdr(sr : StreamReader) = 
         let headers = new ChessPgnHeaders()
-        let comments = new Dictionary<int, string>()
         
-        let rec getgm gd cl (res, reas, bd, mvl) = 
-            let rec proclin ptok hl tok (cl, chl, gd) (res, reas, bd, mvl) = 
-                if List.isEmpty chl then gd, cl, (res, reas, bd, (mvl : Move list))
+        let rec docomm cl chl = 
+            if List.isEmpty chl then InComment(cl), chl
+            else 
+                let c = chl.Head
+                
+                let ncl = 
+                    if c = '}' then cl - 1
+                    elif c = '{' then cl + 1
+                    else cl
+                if ncl = 0 then Unknown, chl.Tail
+                else docomm ncl chl.Tail
+        
+        let rec dorav cl chl = 
+            if List.isEmpty chl then InRAV(cl), chl
+            else 
+                let c = chl.Head
+                
+                let ncl = 
+                    if c = ')' then cl - 1
+                    elif c = '(' then cl + 1
+                    else cl
+                if ncl = 0 then Unknown, chl.Tail
+                else dorav ncl chl.Tail
+        
+        let rec donag chl = 
+            if List.isEmpty chl then Unknown, chl
+            else 
+                let c = chl.Head
+                if c = ' ' then Unknown, chl.Tail
+                else donag chl.Tail
+        
+        let isEnd s = s="1/2-1/2"||s="1-0"||s="0-1"
+        let rec donum tok chl = 
+            if List.isEmpty chl || chl.Head = ' 'then 
+                if tok|>isEnd then FinishedOK, chl
+                else Unknown, chl
+            else 
+                let c = chl.Head
+                donum (tok + c.ToString()) chl.Tail
+        
+        let rec getgm st gd (res, bd, mvl) = 
+            let rec proclin st ptok tok (chl, gd) (res, bd, mvl) = 
+                if List.isEmpty chl then st, gd, (res, bd, (mvl : Move list))
                 else 
                     let c = chl.Head
-                    
-                    let nptok, (nhl, ntok, ncl, nbd, nmvl) = 
-                        if c = '[' then ptok, (hl + 1, tok, cl, bd, mvl)
-                        elif c = ']' && hl > 0 then 
-                            let nhl = hl - 1
-                            if nhl = 0 then 
+                    match st with
+                    | InComment(cl) -> 
+                        let nst, nchl = docomm cl chl
+                        proclin nst ptok tok (nchl, gd) (res, bd, mvl)
+                    | InRAV(cl) -> 
+                        let nst, nchl = dorav cl chl
+                        proclin nst ptok tok (nchl, gd) (res, bd, mvl)
+                    | InNAG -> 
+                        let nst, nchl = donag chl
+                        proclin nst ptok tok (nchl, gd) (res, bd, mvl)
+                    | InNum -> 
+                        let nst, nchl = donum "" chl
+                        proclin nst ptok tok (nchl, gd) (res, bd, mvl)
+                    | InHeader -> 
+                        let nst, (ntok, nbd) = 
+                            if c = ']' then 
                                 let header = ChessPGNHeaders.Parse("[" + tok + "]")
                                 headers.Add(header.Key, header.Value)
                                 let nbd = 
-                                    if header.Key.ToUpper() = "FEN" then 
-                                        Board.Create2 (header.Value |> FEN.FromStr)
+                                    if header.Key.ToUpper() = "FEN" then Board.Create2(header.Value |> FEN.FromStr)
                                     else bd
-                                ptok, (nhl, "", cl, nbd, mvl)
-                            else ptok, (nhl, tok, cl, bd, mvl)
-                        elif hl <> 0 then ptok, (hl, (tok + c.ToString()), cl, bd, mvl)
-                        elif c = '(' || c = '{' then ptok, (hl, tok, cl + 1, bd, mvl)
-                        elif c = ')' || c = '}' then 
-                            let ncl = cl - 1
-                            if ncl = 0 then 
-                                let ntok = 
-                                    if (comments.ContainsKey(mvl.Length - 1)) then 
-                                        let ntok = comments.[mvl.Length - 1] + " " + tok
-                                        comments.Remove(mvl.Length - 1) |> ignore
-                                        ntok
-                                    else tok
-                                comments.Add(mvl.Length - 1, ntok)
-                            ptok, (hl, "", ncl, bd, mvl)
-                        elif cl <> 0 then ptok, (hl, tok + c.ToString(), cl, bd, mvl)
-                        elif c = '.' then ptok, (hl, "", cl, bd, mvl)
-                        elif c = ' ' then true, (hl, tok, cl, bd, mvl)
-                        else ptok, (hl, tok + c.ToString(), cl, bd, mvl)
-                    if nptok && ntok = "" then proclin false nhl ntok (ncl, chl.Tail, gd) (res, reas, nbd, mvl)
-                    elif nptok then 
-                        let nptok = false
-                        let okToProcessResults = (headers.Count > 0 || mvl.Length > 0)
-                        
-                        let ngd, nres, nreas, nmvl, nbd = 
-                            if ntok.Trim() = "1/2-1/2" then 
-                                if okToProcessResults then 
-                                    let nres = GameResult.Draw |> Some
-                                    
-                                    let nreas = 
-                                        if nbd |> MoveGenerate.IsDrawByStalemate then GameResultReason.Stalemate
-                                        elif nbd |> Board.IsDrawBy50MoveRule then GameResultReason.FiftyMoveRule
-                                        else GameResultReason.MutualAgreement
-                                    true, nres, nreas, mvl, nbd
-                                else gd, res, reas, mvl, nbd
-                            elif ntok.Trim() = "1-0" then 
-                                if okToProcessResults then 
-                                    let nres = GameResult.WhiteWins |> Some
-                                    
-                                    let nreas = 
-                                        if nbd |> MoveGenerate.IsMate then GameResultReason.Checkmate
-                                        else GameResultReason.Resign
-                                    true, nres, nreas, mvl, nbd
-                                else gd, res, reas, mvl, nbd
-                            elif ntok.Trim() = "0-1" then 
-                                if okToProcessResults then 
-                                    let nres = GameResult.BlackWins |> Some
-                                    
-                                    let nreas = 
-                                        if nbd |> MoveGenerate.IsMate then GameResultReason.Checkmate
-                                        else GameResultReason.Resign
-                                    true, nres, nreas, mvl, nbd
-                                else gd, res, reas, mvl, nbd
-                            elif ntok.Trim() = "*" then 
-                                if okToProcessResults then true, None, reas, mvl, nbd
-                                else gd, res, reas, mvl, nbd
-                            elif ntok.StartsWith("$") then 
-                                gd, res, reas, mvl, nbd
-                            else 
-                                let move = MoveUtil.Parse nbd ntok
-                                let nbd = nbd |> Board.MoveApply(move)
-                                let nmvl = move :: mvl
-                                if nbd |> MoveGenerate.IsMate then 
-                                    let nres = 
-                                        if nbd.WhosTurn = Player.White then GameResult.BlackWins |> Some
-                                        else GameResult.WhiteWins |> Some
-                                    
-                                    let nreas = GameResultReason.Checkmate
-                                    true, nres, nreas, nmvl, nbd
-                                else gd, res, reas, nmvl, nbd
-                        proclin nptok nhl "" (ncl, chl.Tail, ngd) (nres, nreas, nbd, nmvl)
-                    else proclin nptok nhl ntok (ncl, chl.Tail, gd) (res, reas, nbd, nmvl)
+                                Unknown, ("", nbd)
+                            else st, (tok + c.ToString(), bd)
+                        proclin nst ptok ntok (chl.Tail, gd) (res, nbd, mvl)
+                    | InMove -> 
+                            let nst, nptok, (ntok, nbd, nmvl) = 
+                                if c = ' ' then Unknown, true, (tok, bd, mvl)
+                                else st, ptok, (tok + c.ToString(), bd, mvl)
+                            if nptok && ntok = "" then proclin st false ntok (chl.Tail, gd) (res, nbd, mvl)
+                            elif nptok then 
+                                let nptok = false
+                                let ngd, nres, nmvl, nbd = 
+                                    let move = MoveUtil.Parse nbd ntok
+                                    let nbd = nbd |> Board.MoveApply(move)
+                                    let nmvl = move :: mvl
+                                    if nbd |> MoveGenerate.IsMate then 
+                                        let nres = 
+                                            if nbd.WhosTurn = Player.White then GameResult.BlackWins |> Some
+                                            else GameResult.WhiteWins |> Some
+                                        true, nres, nmvl, nbd
+                                    else gd, res, nmvl, nbd
+                                proclin nst nptok "" (chl.Tail, ngd) (nres, nbd, nmvl)
+                            else proclin nst nptok ntok (chl.Tail, gd) (res, nbd, nmvl)
+                    | FinishedOK -> 
+                            st, true, (res, bd, mvl)
+                    | _ -> 
+                        if c = '[' then proclin InHeader ptok tok (chl.Tail, gd) (res, bd, mvl)
+                        elif c = '{' then proclin (InComment(1)) ptok tok (chl.Tail, gd) (res, bd, mvl)
+                        elif c = '(' then proclin (InRAV(1)) ptok tok (chl.Tail, gd) (res, bd, mvl)
+                        elif c = '$' then proclin InNAG ptok tok (chl.Tail, gd) (res, bd, mvl)
+                        elif c = '*' then proclin FinishedOK ptok tok (chl.Tail, true) (res, bd, mvl)
+                        elif System.Char.IsNumber(c)||c = '.' then proclin InNum ptok tok (chl, gd) (res, bd, mvl)
+                        elif c = ' ' then proclin Unknown ptok tok (chl.Tail, gd) (res, bd, mvl)
+                        else proclin InMove ptok tok (chl, gd) (res, bd, mvl)
             
             let lin = sr.ReadLine()
-            if lin = null then res, reas, bd, (mvl |> List.rev)
+            if lin = null then res, bd, (mvl |> List.rev)
             else 
                 let line = lin + " "
                 let cArray = line.ToCharArray()
-                let ngd, ncl, (nres, nreas, nbd, nmvl) = 
-                    proclin false 0 "" (cl, (cArray |> Array.toList), gd) (res, reas, bd, mvl)
-                if not ngd || ncl <> 0 then getgm ngd ncl (nres, nreas, nbd, nmvl)
-                else nres, nreas, nbd, (nmvl |> List.rev)
+                let nst, ngd, (nres, nbd, nmvl) = proclin st false "" ((cArray |> Array.toList), gd) (res, bd, mvl)
+                if ngd||nst=FinishedOK then nres, nbd, (nmvl |> List.rev)
+                else getgm nst ngd (nres, nbd, nmvl)
         
-        let res, reas, _, mvl = 
-            getgm false 0 (None, GameResultReason.NotDecided, Board.Create2 FEN.Start, [])
-        if (mvl.Length > 0 || headers.Count > 0) then Create(headers, mvl, res, comments, reas) |> Some
+        let res, _, mvl = getgm Unknown false (None, Board.Create2 FEN.Start, [])
+        if (mvl.Length > 0 || headers.Count > 0) then Create(headers, mvl, res) |> Some
         else None
     
     let AllGamesRdr(sr : System.IO.StreamReader) = 
@@ -193,14 +208,9 @@ module PGN =
                     sbMoves.Append(ifullmove.ToString() + ". ") |> ignore
                 sbMoves.Append((MoveUtil.DescBd mv bd) + " ") |> ignore
                 let nbd = bd |> Board.MoveApply(mv)
-                if pgn.Comments.ContainsKey(ct - 1) then 
-                    let comment = pgn.Comments.[ct - 1]
-                    sbMoves.Append("{") |> ignore
-                    sbMoves.Append(comment) |> ignore
-                    sbMoves.Append("} ") |> ignore
                 procmvs (not isw) (ct + 1) mvl.Tail nbd
         
-        let board = Board.Create2 (StartingPosition pgn |> FEN.FromStr)
+        let board = Board.Create2(StartingPosition pgn |> FEN.FromStr)
         let mvl = pgn.Moves
         procmvs true 1 mvl board
         //result
