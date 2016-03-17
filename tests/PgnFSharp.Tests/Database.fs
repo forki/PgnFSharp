@@ -14,6 +14,7 @@ let fl4 = Path.Combine(fol2, "C.pgn")
 let fl5 = Path.Combine(fol2, "chess-informant-sample.pgn")
 let fl6 = Path.Combine(fol2, "demoGames.pgn")
 let fl7 = Path.Combine(fol2, "tilb98r2.pgn")
+let fl8 = Path.Combine(fol2, "endings.pgn")
 
 [<Test>]
 let ``Empty database test``() = 
@@ -56,3 +57,9 @@ let ``Tilb database test``() =
     let db = PgnReader.ReadFromFile fl7|>List.ofSeq
     db.ToString().Length |> should equal 51
     db.Length |> should equal 6
+
+[<Test>]
+let ``Endings database test``() = 
+    let db = PgnReader.ReadFromFile fl8|>List.ofSeq
+    db.ToString().Length |> should equal 2
+    db.Length |> should equal 0
