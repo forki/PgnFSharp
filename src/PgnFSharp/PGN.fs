@@ -4,14 +4,7 @@ open System.Text
 open System.Text.RegularExpressions
 open System.IO
 
-type Pgn = 
-    { Moves : Move list
-      Headers : (string * string) list }
-
 module PGN = 
-    let Create(headers, moves) = 
-        { Moves = moves
-          Headers = headers }
     
     type State = 
         | Unknown
@@ -148,7 +141,7 @@ module PGN =
                 else getgm nst nbd nmvl nhl
         
         let _, mvl, hl = getgm Unknown (Board.Create2 FEN.Start) [] []
-        if mvl.Length > 0 then Create(hl, mvl) |> Some
+        if mvl.Length > 0 then Game.Create(hl, mvl) |> Some
         else None
     
     let AllGamesRdr(sr : System.IO.StreamReader) = 
@@ -171,7 +164,7 @@ module PGN =
         let reader = new System.IO.StreamReader(memory)
         NextGameRdr(reader)
     
-    let Write (writer : System.IO.TextWriter) (pgn : Pgn) = 
+    let Write (writer : System.IO.TextWriter) (pgn : Game) = 
         let maxLineLen = 90
         let nl = System.Environment.NewLine
         let sbMoves = new StringBuilder()
