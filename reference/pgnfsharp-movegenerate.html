@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Types - PgnFSharp</title>
+    <title>MoveGenerate - PgnFSharp</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Phil Brooks"/>
@@ -35,7 +35,7 @@
 
 
 
-<h1>Types</h1>
+<h1>MoveGenerate</h1>
 <p>
   <span>Namespace: PgnFSharp</span><br />
 </p>
@@ -43,107 +43,6 @@
 </div>
 
 <!-- Render nested types and modules, if there are any -->
-  <h2>Nested types and modules</h2>
-  <div>
-      <table class="table table-bordered type-list">
-    <thead>
-      <tr><td>Type</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-bitboard.html">Bitboard</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-chessmovedata.html">ChessMoveData</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-cstlflgs.html">CstlFlgs</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-direction.html">Direction</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-fen.html">Fen</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-file.html">File</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-game.html">Game</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-gameresult.html">GameResult</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-move.html">Move</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-moveflags.html">MoveFlags</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-piece.html">Piece</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-piecetype.html">PieceType</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-player.html">Player</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-position.html">Position</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-rank.html">Rank</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-    </tbody>
-  </table>
-
-  </div>
 
   <h3>Functions and values</h3>
   <table class="table table-bordered member-list">
@@ -154,15 +53,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '143', 143)" onmouseover="showTip(event, '143', 143)">
-            CMDemp 
+          <code onmouseout="hideTip(event, '92', 92)" onmouseover="showTip(event, '92', 92)">
+            Create pfrom pto piece captured pgn
           </code>
-          <div class="tip" id="143">
-            <strong>Signature:</strong> ChessMoveData<br />
+          <div class="tip" id="92">
+            <strong>Signature:</strong> pfrom:Position -&gt; pto:Position -&gt; piece:Piece -&gt; captured:Piece -&gt; pgn:string -&gt; Move<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L30-30" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/MoveGenerate.fs#L4-4" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -172,15 +71,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '144', 144)" onmouseover="showTip(event, '144', 144)">
-            FormatTag name value
+          <code onmouseout="hideTip(event, '93', 93)" onmouseover="showTip(event, '93', 93)">
+            CreateProm (...)
           </code>
-          <div class="tip" id="144">
-            <strong>Signature:</strong> name:string -&gt; value:string -&gt; string<br />
+          <div class="tip" id="93">
+            <strong>Signature:</strong> pfrom:Position -&gt; pto:Position -&gt; piece:Piece -&gt; captured:Piece -&gt; promoteType:PieceType -&gt; pgn:string -&gt; Move<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L289-289" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/MoveGenerate.fs#L7-7" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -190,15 +89,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '145', 145)" onmouseover="showTip(event, '145', 145)">
-            MoveEmpty 
+          <code onmouseout="hideTip(event, '94', 94)" onmouseover="showTip(event, '94', 94)">
+            GenCapsNonCaps board captures
           </code>
-          <div class="tip" id="145">
-            <strong>Signature:</strong> Move<br />
+          <div class="tip" id="94">
+            <strong>Signature:</strong> board:Brd -&gt; captures:bool -&gt; ChessMoveData list<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L13-13" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/MoveGenerate.fs#L11-11" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -208,15 +107,69 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '146', 146)" onmouseover="showTip(event, '146', 146)">
-            nl 
+          <code onmouseout="hideTip(event, '95', 95)" onmouseover="showTip(event, '95', 95)">
+            GenMoves board
           </code>
-          <div class="tip" id="146">
-            <strong>Signature:</strong> string<br />
+          <div class="tip" id="95">
+            <strong>Signature:</strong> board:Brd -&gt; Move list<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L288-288" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/MoveGenerate.fs#L305-305" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '96', 96)" onmouseover="showTip(event, '96', 96)">
+            GenMovesLegal board
+          </code>
+          <div class="tip" id="96">
+            <strong>Signature:</strong> board:Brd -&gt; Move list<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/MoveGenerate.fs#L310-310" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '97', 97)" onmouseover="showTip(event, '97', 97)">
+            IsDrawByStalemate bd
+          </code>
+          <div class="tip" id="97">
+            <strong>Signature:</strong> bd:Brd -&gt; bool<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/MoveGenerate.fs#L320-320" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '98', 98)" onmouseover="showTip(event, '98', 98)">
+            IsMate bd
+          </code>
+          <div class="tip" id="98">
+            <strong>Signature:</strong> bd:Brd -&gt; bool<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/MoveGenerate.fs#L324-324" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>

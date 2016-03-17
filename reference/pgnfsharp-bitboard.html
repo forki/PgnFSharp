@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Bitboard - PgnFSharp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="author" content="Phil Brooks"/>
+
+    <script src="https://code.jquery.com/jquery-1.8.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.8.23/jquery-ui.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet"/>
+
+    <link type="text/css" rel="stylesheet" href="/PgnFSharp/content/style.css" />
+    <script type="text/javascript" src="/PgnFSharp/content/tips.js"></script>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li><a href="http://fsharp.org">fsharp.org</a></li>
+          <li><a href="http://github.com/pbbwfc/PgnFSharp">github page</a></li>
+        </ul>
+        <h3 class="muted"><a href="/PgnFSharp/index.html">PgnFSharp</a></h3>
+      </div>
+      <hr />
+      <div class="row">
+        <div class="span9" id="main">
+          
+
+
+
+<h1>Bitboard</h1>
+<p>
+  <span>Namespace: PgnFSharp</span><br />
+</p>
+<div class="xmldoc">
+</div>
+
+<!-- Render nested types and modules, if there are any -->
+
+  <h3>Functions and values</h3>
+  <table class="table table-bordered member-list">
+    <thead>
+      <tr><td>Function or value</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '24', 24)" onmouseover="showTip(event, '24', 24)">
+            BitCount ibb
+          </code>
+          <div class="tip" id="24">
+            <strong>Signature:</strong> ibb:Bitboard -&gt; int<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L25-25" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '25', 25)" onmouseover="showTip(event, '25', 25)">
+            ContainsPos pos ibb
+          </code>
+          <div class="tip" id="25">
+            <strong>Signature:</strong> pos:Position -&gt; ibb:Bitboard -&gt; bool<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L102-102" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '26', 26)" onmouseover="showTip(event, '26', 26)">
+            DebrujinLSB num
+          </code>
+          <div class="tip" id="26">
+            <strong>Signature:</strong> num:int -&gt; int<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L10-10" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '27', 27)" onmouseover="showTip(event, '27', 27)">
+            DebrujinPositions 
+          </code>
+          <div class="tip" id="27">
+            <strong>Signature:</strong> int []<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L6-6" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '28', 28)" onmouseover="showTip(event, '28', 28)">
+            Flood dir ibb
+          </code>
+          <div class="tip" id="28">
+            <strong>Signature:</strong> dir:Direction -&gt; ibb:Bitboard -&gt; Bitboard<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L95-95" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '29', 29)" onmouseover="showTip(event, '29', 29)">
+            GetFirstPos ibb
+          </code>
+          <div class="tip" id="29">
+            <strong>Signature:</strong> ibb:Bitboard -&gt; Position<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L113-113" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '30', 30)" onmouseover="showTip(event, '30', 30)">
+            GetRemainPos first ibb
+          </code>
+          <div class="tip" id="30">
+            <strong>Signature:</strong> first:Position -&gt; ibb:Bitboard -&gt; Bitboard<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L122-122" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '31', 31)" onmouseover="showTip(event, '31', 31)">
+            NorthMostPosition ibb
+          </code>
+          <div class="tip" id="31">
+            <strong>Signature:</strong> ibb:Bitboard -&gt; Position<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L34-34" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '32', 32)" onmouseover="showTip(event, '32', 32)">
+            PopFirst ibb
+          </code>
+          <div class="tip" id="32">
+            <strong>Signature:</strong> ibb:Bitboard -&gt; Position * Bitboard<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L124-124" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '33', 33)" onmouseover="showTip(event, '33', 33)">
+            Shift dir ibb
+          </code>
+          <div class="tip" id="33">
+            <strong>Signature:</strong> dir:Direction -&gt; ibb:Bitboard -&gt; Bitboard<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L51-51" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '34', 34)" onmouseover="showTip(event, '34', 34)">
+            ShiftDirE ibb
+          </code>
+          <div class="tip" id="34">
+            <strong>Signature:</strong> ibb:Bitboard -&gt; Bitboard<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L43-43" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '35', 35)" onmouseover="showTip(event, '35', 35)">
+            ShiftDirN ibb
+          </code>
+          <div class="tip" id="35">
+            <strong>Signature:</strong> ibb:Bitboard -&gt; Bitboard<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L42-42" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '36', 36)" onmouseover="showTip(event, '36', 36)">
+            ShiftDirNE ibb
+          </code>
+          <div class="tip" id="36">
+            <strong>Signature:</strong> ibb:Bitboard -&gt; Bitboard<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L46-46" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '37', 37)" onmouseover="showTip(event, '37', 37)">
+            ShiftDirNW ibb
+          </code>
+          <div class="tip" id="37">
+            <strong>Signature:</strong> ibb:Bitboard -&gt; Bitboard<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L49-49" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '38', 38)" onmouseover="showTip(event, '38', 38)">
+            ShiftDirS ibb
+          </code>
+          <div class="tip" id="38">
+            <strong>Signature:</strong> ibb:Bitboard -&gt; Bitboard<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L44-44" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '39', 39)" onmouseover="showTip(event, '39', 39)">
+            ShiftDirSE ibb
+          </code>
+          <div class="tip" id="39">
+            <strong>Signature:</strong> ibb:Bitboard -&gt; Bitboard<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L47-47" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '40', 40)" onmouseover="showTip(event, '40', 40)">
+            ShiftDirSW ibb
+          </code>
+          <div class="tip" id="40">
+            <strong>Signature:</strong> ibb:Bitboard -&gt; Bitboard<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L48-48" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '41', 41)" onmouseover="showTip(event, '41', 41)">
+            ShiftDirW ibb
+          </code>
+          <div class="tip" id="41">
+            <strong>Signature:</strong> ibb:Bitboard -&gt; Bitboard<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L45-45" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '42', 42)" onmouseover="showTip(event, '42', 42)">
+            ToPositions ibb
+          </code>
+          <div class="tip" id="42">
+            <strong>Signature:</strong> ibb:Bitboard -&gt; Position list<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/BitBoard.fs#L104-104" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+        </div>
+        <div class="span3">
+          <img src="/PgnFSharp/img/logo.png" alt="F# Project" style="width:150px;margin:10px" />  
+          <ul class="nav nav-list" id="menu" style="margin-top: 20px;">
+            <li class="nav-header">PgnFSharp</li>
+            <li><a href="/PgnFSharp/index.html">Home page</a></li>
+            <li class="divider"></li>
+            <li><a href="http://github.com/pbbwfc/PgnFSharp">Source Code on GitHub</a></li>
+            <li><a href="/PgnFSharp/license.html">License</a></li>
+            <li><a href="/PgnFSharp/release-notes.html">Release Notes</a></li>
+            
+            <li class="nav-header">Getting started</li>
+            <li><a href="/PgnFSharp/tutorial.html">Simple Example</a></li>
+
+            <li class="nav-header">Documentation</li>
+            <li><a href="/PgnFSharp/reference/index.html">API Reference</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <a href="http://github.com/pbbwfc/PgnFSharp"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"/></a>
+  </body>
+  </html>

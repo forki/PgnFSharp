@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8"/>
-    <title>Types - PgnFSharp</title>
+    <title>PGN - PgnFSharp</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="description" content=""/>
     <meta name="author" content="Phil Brooks"/>
@@ -35,7 +35,7 @@
 
 
 
-<h1>Types</h1>
+<h1>PGN</h1>
 <p>
   <span>Namespace: PgnFSharp</span><br />
 </p>
@@ -52,91 +52,7 @@
     <tbody>
         <tr>
           <td class="type-name">
-            <a href="pgnfsharp-types-bitboard.html">Bitboard</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-chessmovedata.html">ChessMoveData</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-cstlflgs.html">CstlFlgs</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-direction.html">Direction</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-fen.html">Fen</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-file.html">File</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-game.html">Game</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-gameresult.html">GameResult</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-move.html">Move</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-moveflags.html">MoveFlags</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-piece.html">Piece</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-piecetype.html">PieceType</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-player.html">Player</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-position.html">Position</a>
-          </td>
-          <td class="xmldoc"></td>
-        </tr>
-        <tr>
-          <td class="type-name">
-            <a href="pgnfsharp-types-rank.html">Rank</a>
+            <a href="pgnfsharp-pgn-state.html">State</a>
           </td>
           <td class="xmldoc"></td>
         </tr>
@@ -154,15 +70,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '143', 143)" onmouseover="showTip(event, '143', 143)">
-            CMDemp 
+          <code onmouseout="hideTip(event, '102', 102)" onmouseover="showTip(event, '102', 102)">
+            AllGamesFile fil
           </code>
-          <div class="tip" id="143">
-            <strong>Signature:</strong> ChessMoveData<br />
+          <div class="tip" id="102">
+            <strong>Signature:</strong> fil:FileInfo -&gt; seq&lt;Game&gt;<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L30-30" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/PGN.fs#L154-154" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -172,15 +88,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '144', 144)" onmouseover="showTip(event, '144', 144)">
-            FormatTag name value
+          <code onmouseout="hideTip(event, '103', 103)" onmouseover="showTip(event, '103', 103)">
+            AllGamesRdr sr
           </code>
-          <div class="tip" id="144">
-            <strong>Signature:</strong> name:string -&gt; value:string -&gt; string<br />
+          <div class="tip" id="103">
+            <strong>Signature:</strong> sr:StreamReader -&gt; seq&lt;Game&gt;<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L289-289" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/PGN.fs#L147-147" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -190,15 +106,15 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '145', 145)" onmouseover="showTip(event, '145', 145)">
-            MoveEmpty 
+          <code onmouseout="hideTip(event, '104', 104)" onmouseover="showTip(event, '104', 104)">
+            NextGameRdr sr
           </code>
-          <div class="tip" id="145">
-            <strong>Signature:</strong> Move<br />
+          <div class="tip" id="104">
+            <strong>Signature:</strong> sr:StreamReader -&gt; Game option<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L13-13" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/PGN.fs#L21-21" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
@@ -208,15 +124,33 @@
       <tr>
         <td class="member-name">
 
-          <code onmouseout="hideTip(event, '146', 146)" onmouseover="showTip(event, '146', 146)">
-            nl 
+          <code onmouseout="hideTip(event, '105', 105)" onmouseover="showTip(event, '105', 105)">
+            NextGameStr str
           </code>
-          <div class="tip" id="146">
-            <strong>Signature:</strong> string<br />
+          <div class="tip" id="105">
+            <strong>Signature:</strong> str:string -&gt; Game option<br />
                       </div>
         </td>
         <td class="xmldoc">
-            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/Types.fs#L288-288" class="github-link">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/PGN.fs#L162-162" class="github-link">
+              <img src="../content/img/github.png" class="normal" />
+              <img src="../content/img/github-blue.png" class="hover" />
+            </a>
+          
+        </td>
+      </tr>
+      <tr>
+        <td class="member-name">
+
+          <code onmouseout="hideTip(event, '106', 106)" onmouseover="showTip(event, '106', 106)">
+            Write writer pgn
+          </code>
+          <div class="tip" id="106">
+            <strong>Signature:</strong> writer:TextWriter -&gt; pgn:Game -&gt; unit<br />
+                      </div>
+        </td>
+        <td class="xmldoc">
+            <a href="http://github.com/pbbwfc/PgnFSharp/tree/master/src/PgnFSharp/PGN.fs#L167-167" class="github-link">
               <img src="../content/img/github.png" class="normal" />
               <img src="../content/img/github-blue.png" class="hover" />
             </a>
