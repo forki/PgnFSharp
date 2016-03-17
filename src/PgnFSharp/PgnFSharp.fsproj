@@ -65,8 +65,8 @@
     <Compile Include="MoveUtil.fs" />
     <Compile Include="PGN.fs" />
     <Compile Include="Parser.fs" />
-    <Compile Include="PgnReader.fs" />
-    <Compile Include="PgnWriter.fs" />
+    <Compile Include="PgnRead.fs" />
+    <Compile Include="PgnWrite.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

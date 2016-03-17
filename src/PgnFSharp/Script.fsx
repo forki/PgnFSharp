@@ -14,4 +14,4 @@ let ofl = Path.Combine(fol,"simple-game_copy.pgn")
 let sr = new StreamReader(fl)
 let gms = PGN.AllGamesRdr sr|>Seq.toList
 if File.Exists ofl then File.Delete ofl
-PgnWriter.Write gms ofl
+PgnWrite.ToFile gms ofl

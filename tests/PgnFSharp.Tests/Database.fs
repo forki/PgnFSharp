@@ -18,48 +18,55 @@ let fl8 = Path.Combine(fol2, "endings.pgn")
 
 [<Test>]
 let ``Empty database test``() = 
-    let db1 = PgnReader.ReadFromFile fl1|>List.ofSeq
+    let db1 = PgnRead.FromFile fl1
     db1.ToString().Length |> should equal 2
     db1.Length |> should equal 0
 
 [<Test>]
 let ``Simple database test``() = 
-    let db = PgnReader.ReadFromFile fl2|>List.ofSeq
-    db.ToString().Length |> should equal 15
+    let db = PgnRead.FromFile fl2
+    let ans = db|>PgnWrite.ToStr
+    ans.Length |> should equal 815
     db.Length |> should equal 1
 
 [<Test>]
 let ``Time database test``() = 
-    let db = PgnReader.ReadFromFile fl3|>List.ofSeq
-    db.ToString().Length |> should equal 51
+    let db = PgnRead.FromFile fl3
+    let ans = db|>PgnWrite.ToStr
+    ans.Length |> should equal 2719
     db.Length |> should equal 4
 
 [<Test>]
 let ``C database test``() = 
-    let db = PgnReader.ReadFromFile fl4|>List.ofSeq
-    db.ToString().Length |> should equal 51
+    let db = PgnRead.FromFile fl4
+    let ans = db|>PgnWrite.ToStr
+    ans.Length |> should equal 2971
     db.Length |> should equal 4
 
 [<Test>]
 let ``Informant database test``() = 
-    let db = PgnReader.ReadFromFile fl5|>List.ofSeq
-    db.ToString().Length |> should equal 51
+    let db = PgnRead.FromFile fl5
+    let ans = db|>PgnWrite.ToStr
+    ans.Length |> should equal 3635
     db.Length |> should equal 5
 
 [<Test>]
 let ``Demo database test``() = 
-    let db = PgnReader.ReadFromFile fl6|>List.ofSeq
-    db.ToString().Length |> should equal 30
+    let db = PgnRead.FromFile fl6
+    let ans = db|>PgnWrite.ToStr
+    ans.Length |> should equal 1397
     db.Length |> should equal 2
 
 [<Test>]
 let ``Tilb database test``() = 
-    let db = PgnReader.ReadFromFile fl7|>List.ofSeq
-    db.ToString().Length |> should equal 51
+    let db = PgnRead.FromFile fl7
+    let ans = db|>PgnWrite.ToStr
+    ans.Length |> should equal 4055
     db.Length |> should equal 6
 
 [<Test>]
 let ``Endings database test``() = 
-    let db = PgnReader.ReadFromFile fl8|>List.ofSeq
-    db.ToString().Length |> should equal 2
+    let db = PgnRead.FromFile fl8
+    let ans = db|>PgnWrite.ToStr
+    ans.Length |> should equal 0
     db.Length |> should equal 0
