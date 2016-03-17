@@ -67,13 +67,13 @@ module Types =
         | WhiteWins
         | BlackWins
         | NotKnown
-        override x.ToString() =    
+        override x.ToString() = 
             match x with
             | Draw -> "1/2-1/2"
-            | WhiteWins -> "1-0" 
+            | WhiteWins -> "1-0"
             | BlackWins -> "0-1"
             | NotKnown -> "*"
-
+    
     type Position = 
         | A8 = 0
         | B8 = 1
@@ -348,18 +348,18 @@ module Types =
                     | "Date" -> 
                         let b = v.Split('.')
                         if b.Length = 3 then 
+                            let tfy, y = Int16.TryParse(b.[0])
+                            let tfm, m = Byte.TryParse(b.[1])
+                            let tfd, d = Byte.TryParse(b.[2])
                             addhdrs hl.Tail { gm with Year = 
-                                                          b.[0]
-                                                          |> Convert.ToInt16
-                                                          |> Some
+                                                          if tfy then y |> Some
+                                                          else None
                                                       Month = 
-                                                          b.[1]
-                                                          |> Convert.ToByte
-                                                          |> Some
+                                                          if tfm then m |> Some
+                                                          else None
                                                       Day = 
-                                                          b.[2]
-                                                          |> Convert.ToByte
-                                                          |> Some }
+                                                          if tfd then d |> Some
+                                                          else None }
                         else addhdrs hl.Tail gm
                     | "Round" -> addhdrs hl.Tail { gm with Round = v }
                     | "White" -> addhdrs hl.Tail { gm with White = v }

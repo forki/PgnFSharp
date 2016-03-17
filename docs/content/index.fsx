@@ -20,13 +20,13 @@ open PgnFSharp
 open System.IO
 
 let fl = Path.Combine(__SOURCE_DIRECTORY__,"simple-game.pgn")
-let gms = PgnReader.ReadFromFile fl
+let gms = PgnRead.FromFile fl
 
 (**
 You can then load the first game and get the player of the white pieces:
 *)
 let gm = gms.Head
-let white = gm.WhitePlayer
+let white = gm.White
 
 (** And the variable `white` has the following value: *)
 

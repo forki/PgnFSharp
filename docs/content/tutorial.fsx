@@ -15,17 +15,17 @@ open PgnFSharp
 open System.IO
 
 let fl = Path.Combine(__SOURCE_DIRECTORY__,"o-deville.pgn")
-let gms = PgnReader.ReadFromFile fl
+let gms = PgnRead.FromFile fl
 
 (**
 You can then filter the games where the name is "Adams, Michael":
 *)
-let filt = gms|>List.filter(fun gm -> gm.WhitePlayer="Adams, Michael"||gm.BlackPlayer="Adams, Michael")
+let filt = gms|>List.filter(fun gm -> gm.White="Adams, Michael"||gm.Black="Adams, Michael")
 
 (** You can then save this as a new PGN: *)
 
 let ofl = Path.Combine(__SOURCE_DIRECTORY__,"Adams.pgn")
-PgnWriter.Write filt ofl
+PgnWrite.ToFile filt ofl
 
 (** This has saved 8 games out of 11,586 *)
 
