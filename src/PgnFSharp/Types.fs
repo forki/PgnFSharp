@@ -313,17 +313,50 @@ module Types =
             let rec mvs2txt ct mvl = 
                 if List.isEmpty mvl then sb.ToString()
                 elif mvl.Length = 1 then 
-                    sb.Append(" " + ct.ToString() + ". " + mvl.Head.ToString()) |> ignore
+                    sb.Append(ct.ToString() + ". " + mvl.Head.ToString() + " ") |> ignore
                     sb.ToString()
                 else 
                     let w = mvl.Head.ToString()
                     let b = mvl.Tail.Head.ToString()
                     let rest = mvl.Tail.Tail
-                    sb.Append(" " + ct.ToString() + ". " + w + " " + b) |> ignore
+                    sb.Append(ct.ToString() + ". " + w + " " + b + " ") |> ignore
                     mvs2txt (ct + 1) rest
             (x.Event |> FormatTag "Event") + (x.Site |> FormatTag "Site") + (x.DateStr |> FormatTag "Date") 
             + (x.Round |> FormatTag "Round") + (x.White |> FormatTag "White") + (x.Black |> FormatTag "Black") 
-            + (x.Result.ToString() |> FormatTag "Result") + nl + (x.Moves |> mvs2txt 1) + " " + x.Result.ToString()
+            + (x.Result.ToString() |> FormatTag "Result") + nl + (x.Moves |> mvs2txt 1) + x.Result.ToString()
+        
+        member x.AddHdr(t, v) = 
+            match t with
+            | "Event" -> { x with Event = v }
+            | "Site" -> { x with Site = v }
+            | "Date" -> 
+                let b = v.Split('.')
+                if b.Length = 3 then 
+                    let tfy, y = Int16.TryParse(b.[0])
+                    let tfm, m = Byte.TryParse(b.[1])
+                    let tfd, d = Byte.TryParse(b.[2])
+                    { x with Year = 
+                                 if tfy then y |> Some
+                                 else None
+                             Month = 
+                                 if tfm then m |> Some
+                                 else None
+                             Day = 
+                                 if tfd then d |> Some
+                                 else None }
+                else x
+            | "Round" -> { x with Round = v }
+            | "White" -> { x with White = v }
+            | "Black" -> { x with Black = v }
+            | "Result" -> 
+                let res = 
+                    match v with
+                    | "1/2-1/2" -> Draw
+                    | "1-0" -> WhiteWins
+                    | "0-1" -> BlackWins
+                    | _ -> NotKnown
+                { x with Result = res }
+            | _ -> x
         
         static member Blank() = 
             { Event = "?"
@@ -336,41 +369,3 @@ module Types =
               Black = "?"
               Result = NotKnown
               Moves = [] }
-        
-        static member Create(headers, moves) = 
-            let rec addhdrs hl gm = 
-                if List.isEmpty hl then gm
-                else 
-                    let t, v = hl.Head
-                    match t with
-                    | "Event" -> addhdrs hl.Tail { gm with Event = v }
-                    | "Site" -> addhdrs hl.Tail { gm with Site = v }
-                    | "Date" -> 
-                        let b = v.Split('.')
-                        if b.Length = 3 then 
-                            let tfy, y = Int16.TryParse(b.[0])
-                            let tfm, m = Byte.TryParse(b.[1])
-                            let tfd, d = Byte.TryParse(b.[2])
-                            addhdrs hl.Tail { gm with Year = 
-                                                          if tfy then y |> Some
-                                                          else None
-                                                      Month = 
-                                                          if tfm then m |> Some
-                                                          else None
-                                                      Day = 
-                                                          if tfd then d |> Some
-                                                          else None }
-                        else addhdrs hl.Tail gm
-                    | "Round" -> addhdrs hl.Tail { gm with Round = v }
-                    | "White" -> addhdrs hl.Tail { gm with White = v }
-                    | "Black" -> addhdrs hl.Tail { gm with Black = v }
-                    | "Result" -> 
-                        let res = 
-                            match v with
-                            | "1/2-1/2" -> Draw
-                            | "1-0" -> WhiteWins
-                            | "0-1" -> BlackWins
-                            | _ -> NotKnown
-                        addhdrs hl.Tail { gm with Result = res }
-                    | _ -> addhdrs hl.Tail gm
-            addhdrs headers { Game.Blank() with Moves = moves }

@@ -42,33 +42,36 @@ module PGN =
                 if ncl = 0 then Unknown, s.[1..]
                 else dorav ncl s.[1..]
         
-        let getwd (s : string) =
+        let getwd (s : string) = 
             let eloc = s.IndexOf(" ")
             
             let tok = 
                 if eloc = -1 then s
-                else s.[..eloc-1]
+                else s.[..eloc - 1]
             
             let es = 
                 if eloc = -1 then ""
-                else s.[eloc+1..]
-            tok,es
+                else s.[eloc + 1..]
+            
+            tok, es
         
         let donag s = 
-            let _,es = s|>getwd 
+            let _, es = s |> getwd
             es
         
         let isEnd s = s = "1/2-1/2" || s = "1-0" || s = "0-1"
         
         let donum s = 
-            let tok,es = s|>getwd 
+            let tok, es = s |> getwd
             if tok |> isEnd then FinishedOK, es
             else Unknown, es
         
-        let doinv (s:string) = 
-            let tok,es = s.Trim()|>getwd 
-            if tok |> isEnd then FinishedInvalid, es
-            else Invalid, es
+        let rec doinv (s : string) = 
+            if s = "" then Invalid
+            else 
+                let tok, es = s |> getwd
+                if tok |> isEnd then FinishedInvalid
+                else doinv es
         
         let gethdr hl = 
             let pattern = @"\[(?<key>[\w]+)\s+\""(?<value>[\S\s]+)\""\]|\[(?<key>[\w]+)\s+\""\""\]"
@@ -79,49 +82,49 @@ module PGN =
                 let mtch = matches.[0]
                 mtch.Groups.["key"].Value, mtch.Groups.["value"].Value
         
-        let dohdr hl (s : string) = 
+        let dohdr (gm:Game) (s : string) = 
             let eloc = s.IndexOf("]")
-            if eloc = -1 then Invalid, hl, ""
+            if eloc = -1 then Invalid, gm, ""
             else 
-                let tok = s.[..eloc-1]
-                let es = s.[eloc+1..]
+                let tok = s.[..eloc - 1]
+                let es = s.[eloc + 1..]
                 let h = gethdr ("[" + tok + "]")
-                let nhl = h :: hl
-                if fst h = "FEN" then Invalid, nhl, es
-                else Unknown, nhl, es
+                let ngm = h |>gm.AddHdr
+                if fst h = "FEN" then Invalid, ngm, es
+                else Unknown, ngm, es
         
         let domv bd s = 
-            let tok,es = s|>getwd 
+            let tok, es = s |> getwd
             let move = MoveUtil.Parse bd tok
             let nbd = bd |> Board.MoveApply(move)
             move, nbd, es
         
-        let rec proclin st s bd mvl hl = 
-            if s = "" then st, bd, mvl, hl
+        let rec proclin st s bd gm = 
+            if s = "" then st, bd, gm
             else 
                 match st with
                 | InComment(cl) -> 
                     let nst, ns = docomm cl s
-                    proclin nst ns bd mvl hl
+                    proclin nst ns bd gm
                 | InRAV(cl) -> 
                     let nst, ns = dorav cl s
-                    proclin nst ns bd mvl hl
+                    proclin nst ns bd gm
                 | InNAG -> 
                     let ns = s |> donag
-                    proclin Unknown ns bd mvl hl
+                    proclin Unknown ns bd gm
                 | InNum -> 
                     let nst, ns = s |> donum
-                    proclin nst ns bd mvl hl
+                    proclin nst ns bd gm
                 | Invalid -> 
-                    let nst, ns = s |> doinv
-                    proclin nst ns bd mvl hl
+                    let nst = s |> doinv
+                    nst, bd, gm
                 | InHeader -> 
-                    let nst, nhl, ns = dohdr hl s
-                    proclin nst ns bd mvl nhl
+                    let nst, ngm, ns = dohdr gm s
+                    proclin nst ns bd ngm
                 | InMove -> 
                     let move, nbd, ns = domv bd s
-                    proclin Unknown ns nbd (move :: mvl) hl
-                | FinishedOK | FinishedInvalid -> st, bd, mvl, hl
+                    proclin Unknown ns nbd {gm with Moves = (move :: gm.Moves)}
+                | FinishedOK | FinishedInvalid -> st, bd, gm
                 | Unknown -> 
                     let st, ns = 
                         match s.[0] with
@@ -133,19 +136,19 @@ module PGN =
                         | c when System.Char.IsNumber(c) || c = '.' -> InNum, s
                         | ' ' -> Unknown, s.[1..]
                         | _ -> InMove, s
-                    proclin st ns bd mvl hl
+                    proclin st ns bd gm
         
-        let rec getgm st bd mvl hl = 
+        let rec getgm st bd gm = 
             let lin = sr.ReadLine()
-            if lin |> isNull then bd, (mvl |> List.rev), hl
+            if lin |> isNull then bd, {gm with Moves = (gm.Moves |> List.rev)}
             else 
-                let nst, nbd, nmvl, nhl = proclin st lin bd mvl hl
-                if nst = FinishedOK then nbd, (nmvl |> List.rev), nhl
-                elif nst = FinishedInvalid then nbd, [], []
-                else getgm nst nbd nmvl nhl
+                let nst, nbd, ngm = proclin st lin bd gm
+                if nst = FinishedOK then nbd, {ngm with Moves = (ngm.Moves |> List.rev)}
+                elif nst = FinishedInvalid then nbd, Game.Blank()
+                else getgm nst nbd ngm
         
-        let _, mvl, hl = getgm Unknown (Board.Create2 FEN.Start) [] []
-        if mvl.Length > 0 then Game.Create(hl, mvl) |> Some
+        let _, gm = getgm Unknown (Board.Create2 FEN.Start) (Game.Blank())
+        if gm.Moves.Length > 0 then gm |> Some
         else None
     
     let AllGamesRdr(sr : System.IO.StreamReader) = 

@@ -26,42 +26,42 @@ let ``Empty database test``() =
 let ``Simple database test``() = 
     let db = PgnRead.FromFile fl2
     let ans = db|>PgnWrite.ToStr
-    ans.Length |> should equal 815
+    ans.Length |> should equal 814
     db.Length |> should equal 1
 
 [<Test>]
 let ``Time database test``() = 
     let db = PgnRead.FromFile fl3
     let ans = db|>PgnWrite.ToStr
-    ans.Length |> should equal 2719
+    ans.Length |> should equal 2715
     db.Length |> should equal 4
 
 [<Test>]
 let ``C database test``() = 
     let db = PgnRead.FromFile fl4
     let ans = db|>PgnWrite.ToStr
-    ans.Length |> should equal 2971
+    ans.Length |> should equal 2967
     db.Length |> should equal 4
 
 [<Test>]
 let ``Informant database test``() = 
     let db = PgnRead.FromFile fl5
     let ans = db|>PgnWrite.ToStr
-    ans.Length |> should equal 3635
+    ans.Length |> should equal 3630
     db.Length |> should equal 5
 
 [<Test>]
 let ``Demo database test``() = 
     let db = PgnRead.FromFile fl6
     let ans = db|>PgnWrite.ToStr
-    ans.Length |> should equal 1397
+    ans.Length |> should equal 1395
     db.Length |> should equal 2
 
 [<Test>]
 let ``Tilb database test``() = 
     let db = PgnRead.FromFile fl7
     let ans = db|>PgnWrite.ToStr
-    ans.Length |> should equal 4055
+    ans.Length |> should equal 4049
     db.Length |> should equal 6
 
 [<Test>]
