@@ -19,6 +19,11 @@ module PGN =
         | FinishedInvalid
     
     let NextGameRdr(sr : StreamReader) = 
+        let tostr (c:char list) = System.String.Concat(c)
+        let tochl (s:string) = s.ToCharArray() |> List.ofArray
+        
+        
+        
         let gethdr hl = 
             let pattern = @"\[(?<key>[\w]+)\s+\""(?<value>[\S\s]+)\""\]|\[(?<key>[\w]+)\s+\""\""\]"
             let regex = new Regex(pattern)
@@ -52,90 +57,94 @@ module PGN =
                 if ncl = 0 then Unknown, chl.Tail
                 else dorav ncl chl.Tail
         
-        let rec donag chl = 
-            if List.isEmpty chl then Unknown, chl
-            else 
-                let c = chl.Head
-                if c = ' ' then Unknown, chl.Tail
-                else donag chl.Tail
+        let donag chl = 
+            let s = chl|>tostr
+            let eloc = s.IndexOf(" ")
+            let es = if eloc= -1 then "" else s.Substring(eloc+1)
+            es|>tochl
         
         let isEnd s = s = "1/2-1/2" || s = "1-0" || s = "0-1"
         
-        let rec donum tok chl = 
-            if List.isEmpty chl || chl.Head = ' ' then 
-                if tok |> isEnd then FinishedOK, chl
-                else Unknown, chl
-            else 
-                let c = chl.Head
-                donum (tok + c.ToString()) chl.Tail
+        let donum chl = 
+            let s = chl|>tostr
+            let eloc = s.IndexOf(" ")
+            let tok = if eloc = -1 then s else s.Substring(0,eloc)
+            let es = if eloc= -1 then "" else s.Substring(eloc+1)
+            if tok |> isEnd then FinishedOK, es|>tochl
+            else Unknown,es|>tochl
         
-        let rec doinv tok chl = 
-            if List.isEmpty chl then 
-                if tok |> isEnd then FinishedInvalid, chl
-                else Invalid, chl
-            elif chl.Head = ' ' then 
-                if tok |> isEnd then FinishedInvalid, chl.Tail
-                else Invalid, chl.Tail
-            else 
-                let c = chl.Head
-                doinv (tok + c.ToString()) chl.Tail
+        let doinv chl = 
+            let s = chl|>tostr
+            let eloc = s.Trim().IndexOf(" ")
+            let tok = if eloc = -1 then s else s.Substring(0,eloc)
+            let es = if eloc= -1 then "" else s.Substring(eloc+1)
+            if tok |> isEnd then FinishedInvalid, es|>tochl
+            else Invalid,es|>tochl
+
+        let dohdr hl chl = 
+            let s = chl|>tostr
+            let eloc = s.IndexOf("]")
+            if eloc = -1 then Invalid, hl, []
+            else
+                let tok = s.Substring(0,eloc)
+                let es = s.Substring(eloc+1)
+                let h = gethdr ("[" + tok + "]")
+                let nhl = h :: hl
+                if fst h = "FEN" then Invalid, nhl, es|>tochl
+                else Unknown, nhl, es|>tochl
+
+        let domv bd chl = 
+            let s = chl|>tostr
+            let eloc = s.IndexOf(" ")
+            let tok = if eloc = -1 then s else s.Substring(0,eloc)
+            let es = if eloc= -1 then "" else s.Substring(eloc+1)
+            let move = MoveUtil.Parse bd tok
+            let nbd = bd |> Board.MoveApply(move)
+            move, nbd, es|>tochl
         
-        let rec proclin st tok chl bd mvl hl = 
+        let rec proclin st chl bd mvl hl = 
             if List.isEmpty chl then st, bd, mvl, hl
             else 
                 let c = chl.Head
                 match st with
                 | InComment(cl) -> 
                     let nst, nchl = docomm cl chl
-                    proclin nst tok nchl bd mvl hl
+                    proclin nst nchl bd mvl hl
                 | InRAV(cl) -> 
                     let nst, nchl = dorav cl chl
-                    proclin nst tok nchl bd mvl hl
+                    proclin nst nchl bd mvl hl
                 | InNAG -> 
-                    let nst, nchl = donag chl
-                    proclin nst tok nchl bd mvl hl
+                    let nchl = donag chl
+                    proclin Unknown nchl bd mvl hl
                 | InNum -> 
-                    let nst, nchl = donum "" chl
-                    proclin nst tok nchl bd mvl hl
+                    let nst, nchl = donum chl
+                    proclin nst nchl bd mvl hl
                 | Invalid -> 
-                    let nst, nchl = doinv "" chl
-                    proclin nst tok nchl bd mvl hl
+                    let nst, nchl = doinv chl
+                    proclin nst nchl bd mvl hl
                 | InHeader -> 
-                    let nst, ntok, nhl = 
-                        if c = ']' then 
-                            let h = gethdr ("[" + tok + "]")
-                            let nhl = h :: hl
-                            if fst h = "FEN" then Invalid, "", nhl
-                            else Unknown, "", nhl
-                        else st, (tok + c.ToString()), hl
-                    proclin nst ntok (chl.Tail) bd mvl nhl
+                    let nst, nhl, nchl = dohdr hl chl 
+                    proclin nst nchl bd mvl nhl
                 | InMove -> 
-                    if c = ' ' then 
-                        let nmvl, nbd = 
-                            let move = MoveUtil.Parse bd tok
-                            let nbd = bd |> Board.MoveApply(move)
-                            let nmvl = move :: mvl
-                            nmvl, nbd
-                        proclin Unknown "" (chl.Tail) nbd nmvl hl
-                    else proclin st (tok + c.ToString()) (chl.Tail) bd mvl hl
+                    let move, nbd, nchl = domv bd chl 
+                    proclin Unknown nchl nbd (move :: mvl) hl
                 | FinishedOK | FinishedInvalid -> st, bd, mvl, hl
                 | Unknown -> 
-                    if c = '[' then proclin InHeader tok (chl.Tail) bd mvl hl
-                    elif c = '{' then proclin (InComment(1)) tok (chl.Tail) bd mvl hl
-                    elif c = '(' then proclin (InRAV(1)) tok (chl.Tail) bd mvl hl
-                    elif c = '$' then proclin InNAG tok (chl.Tail) bd mvl hl
-                    elif c = '*' then proclin FinishedOK tok (chl.Tail) bd mvl hl
-                    elif System.Char.IsNumber(c) || c = '.' then proclin InNum tok chl bd mvl hl
-                    elif c = ' ' then proclin Unknown tok (chl.Tail) bd mvl hl
-                    else proclin InMove tok chl bd mvl hl
+                    if c = '[' then proclin InHeader (chl.Tail) bd mvl hl
+                    elif c = '{' then proclin (InComment(1)) (chl.Tail) bd mvl hl
+                    elif c = '(' then proclin (InRAV(1)) (chl.Tail) bd mvl hl
+                    elif c = '$' then proclin InNAG (chl.Tail) bd mvl hl
+                    elif c = '*' then proclin FinishedOK (chl.Tail) bd mvl hl
+                    elif System.Char.IsNumber(c) || c = '.' then proclin InNum chl bd mvl hl
+                    elif c = ' ' then proclin Unknown (chl.Tail) bd mvl hl
+                    else proclin InMove chl bd mvl hl
         
         let rec getgm st bd mvl hl = 
             let lin = sr.ReadLine()
             if lin|>isNull then bd, (mvl |> List.rev), hl
             else 
-                let line = lin + " "
-                let cList = line.ToCharArray() |> List.ofArray
-                let nst, nbd, nmvl, nhl = proclin st "" cList bd mvl hl
+                let chl = lin|>tochl
+                let nst, nbd, nmvl, nhl = proclin st chl bd mvl hl
                 if nst = FinishedOK then nbd, (nmvl |> List.rev), nhl
                 elif nst = FinishedInvalid then nbd, [], []
                 else getgm nst nbd nmvl nhl
