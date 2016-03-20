@@ -358,7 +358,7 @@ module Types =
                 { x with Result = res }
             | _ -> x
         
-        static member Blank() = 
+        static member Blank = 
             { Event = "?"
               Site = "?"
               Year = None

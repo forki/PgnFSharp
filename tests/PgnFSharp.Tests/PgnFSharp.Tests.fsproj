@@ -66,6 +66,7 @@
     <Compile Include="FsUnit.fs" />
     <Compile Include="Move.fs" />
     <Compile Include="MoveEntry.fs" />
+    <Compile Include="Psn.fs" />
     <Compile Include="Game.fs" />
     <Compile Include="Database.fs" />
     <None Include="paket.references" />

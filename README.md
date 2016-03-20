@@ -1,6 +1,4 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/hhb7xtnlv9pd2o9j?svg=true)](https://ci.appveyor.com/project/pb_bwfc/pgnfsharp)
-[![Issue Stats](http://issuestats.com/github/pbbwfc/PgnFSharp/badge/issue)](http://issuestats.com/github/pbbwfc/PgnFSharp)
-[![Issue Stats](http://issuestats.com/github/pbbwfc/PgnFSharp/badge/pr)](http://issuestats.com/github/pbbwfc/PgnFSharp)
 
 ScidNET
 =======

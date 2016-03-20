@@ -144,10 +144,10 @@ module PGN =
             else 
                 let nst, nbd, ngm = proclin st lin bd gm
                 if nst = FinishedOK then nbd, {ngm with Moves = (ngm.Moves |> List.rev)}
-                elif nst = FinishedInvalid then nbd, Game.Blank()
+                elif nst = FinishedInvalid then nbd, Game.Blank
                 else getgm nst nbd ngm
         
-        let _, gm = getgm Unknown (Board.Create2 FEN.Start) (Game.Blank())
+        let _, gm = getgm Unknown (Board.Create2 FEN.Start) Game.Blank
         if gm.Moves.Length > 0 then gm |> Some
         else None
     
