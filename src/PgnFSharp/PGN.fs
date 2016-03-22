@@ -18,6 +18,8 @@ module PGN =
         | FinishedInvalid
     
     let NextGameRdr(sr : StreamReader) = 
+        let pos = Psn.Start()
+        
         let rec docomm cl (s : string) = 
             if s = "" then InComment(cl), ""
             else 
@@ -82,14 +84,14 @@ module PGN =
                 let mtch = matches.[0]
                 mtch.Groups.["key"].Value, mtch.Groups.["value"].Value
         
-        let dohdr (gm:Game) (s : string) = 
+        let dohdr (gm : Game) (s : string) = 
             let eloc = s.IndexOf("]")
             if eloc = -1 then Invalid, gm, ""
             else 
                 let tok = s.[..eloc - 1]
                 let es = s.[eloc + 1..]
                 let h = gethdr ("[" + tok + "]")
-                let ngm = h |>gm.AddHdr
+                let ngm = h |> gm.AddHdr
                 if fst h = "FEN" then Invalid, ngm, es
                 else Unknown, ngm, es
         
@@ -97,6 +99,8 @@ module PGN =
             let tok, es = s |> getwd
             let move = MoveUtil.Parse bd tok
             let nbd = bd |> Board.MoveApply(move)
+            let mv = tok |> Psn.GetMv pos
+            mv|>pos.DoMv
             move, nbd, es
         
         let rec proclin st s bd gm = 
@@ -123,7 +127,7 @@ module PGN =
                     proclin nst ns bd ngm
                 | InMove -> 
                     let move, nbd, ns = domv bd s
-                    proclin Unknown ns nbd {gm with Moves = (move :: gm.Moves)}
+                    proclin Unknown ns nbd { gm with Moves = (move :: gm.Moves) }
                 | FinishedOK | FinishedInvalid -> st, bd, gm
                 | Unknown -> 
                     let st, ns = 
@@ -140,10 +144,10 @@ module PGN =
         
         let rec getgm st bd gm = 
             let lin = sr.ReadLine()
-            if lin |> isNull then bd, {gm with Moves = (gm.Moves |> List.rev)}
+            if lin |> isNull then bd, { gm with Moves = (gm.Moves |> List.rev) }
             else 
                 let nst, nbd, ngm = proclin st lin bd gm
-                if nst = FinishedOK then nbd, {ngm with Moves = (ngm.Moves |> List.rev)}
+                if nst = FinishedOK then nbd, { ngm with Moves = (ngm.Moves |> List.rev) }
                 elif nst = FinishedInvalid then nbd, Game.Blank
                 else getgm nst nbd ngm
         
