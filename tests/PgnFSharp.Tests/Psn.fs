@@ -11,23 +11,23 @@ let s3 = "r1bq1bnr/p1pP1kp1/n3p2p/5pP1/Pp6/2N4P/1PPP1P2/R1BQKBNR w"
 
 [<Test>]
 let ``Load start to Posn``() = 
-    let ans = Psn.FromStr s0
+    let ans = Posn.FromString s0
     ans.ToString() |> should equal s0
 
 [<Test>]
 let ``Load pos1 to Posn``() = 
-    let ans = Psn.FromStr s1
+    let ans = Posn.FromString s1
     ans.ToString() |> should equal s1
 
 [<Test>]
 let ``Load pos2 to Posn``() = 
-    let ans = Psn.FromStr s2
+    let ans = Posn.FromString s2
     ans.ToString() |> should equal s2
 
 [<Test>]
 let ``Get Castle Kingside`` () =
-  let pos = Psn.FromStr s1
-  let ans = Psn.GetMv pos "O-O"
+  let pos = Posn.FromString s1
+  let ans = pos.GetMv "O-O"
   ans.ToString() |> should equal "O-O"
   ans.Mfrom |> should equal 60
   ans.Mto |> should equal 62
@@ -37,8 +37,8 @@ let ``Get Castle Kingside`` () =
 
 [<Test>]
 let ``Get Castle Queenside`` () =
-  let pos = Psn.FromStr s1
-  let ans = Psn.GetMv pos "O-O-O"
+  let pos = Posn.FromString s1
+  let ans = pos.GetMv "O-O-O"
   ans.ToString() |> should equal "O-O-O"
   ans.Mfrom |> should equal 60
   ans.Mto |> should equal 58
@@ -48,8 +48,8 @@ let ``Get Castle Queenside`` () =
 
 [<Test>]
 let ``Get Pawn Move`` () =
-  let pos = Psn.FromStr s1
-  let ans = Psn.GetMv pos "d4"
+  let pos = Posn.FromString s1
+  let ans = pos.GetMv "d4"
   ans.ToString() |> should equal "d4"
   ans.Mfrom |> should equal 51
   ans.Mto |> should equal 35
@@ -59,8 +59,8 @@ let ``Get Pawn Move`` () =
 
 [<Test>]
 let ``Get Knight Move`` () =
-  let pos = Psn.FromStr s1
-  let ans = Psn.GetMv pos "Nf3"
+  let pos = Posn.FromString s1
+  let ans = pos.GetMv "Nf3"
   ans.ToString() |> should equal "Nf3"
   ans.Mfrom |> should equal 62
   ans.Mto |> should equal 45
@@ -70,8 +70,8 @@ let ``Get Knight Move`` () =
 
 [<Test>]
 let ``Get Knight Move 2`` () =
-  let pos = Psn.FromStr "rn2k1nr/pp3ppp/1qp5/3p1b2/3P4/1QN1P1P1/PP2BPP1/R3K1NR b"
-  let ans = Psn.GetMv pos "Na6"
+  let pos = Posn.FromString "rn2k1nr/pp3ppp/1qp5/3p1b2/3P4/1QN1P1P1/PP2BPP1/R3K1NR b"
+  let ans = pos.GetMv "Na6"
   ans.ToString() |> should equal "Na6"
   ans.Mfrom |> should equal 1
   ans.Mto |> should equal 16
@@ -81,8 +81,8 @@ let ``Get Knight Move 2`` () =
 
 [<Test>]
 let ``Get Rook Move`` () =
-  let pos = Psn.FromStr "r6r/1p1b1kp1/p1b1pp1p/q7/2p1PB2/2N3Q1/PPP2PPP/3R1RK1 w"
-  let ans = Psn.GetMv pos "Rd2"
+  let pos = Posn.FromString "r6r/1p1b1kp1/p1b1pp1p/q7/2p1PB2/2N3Q1/PPP2PPP/3R1RK1 w"
+  let ans = pos.GetMv "Rd2"
   ans.ToString() |> should equal "Rd2"
   ans.Mfrom |> should equal 59
   ans.Mto |> should equal 51
@@ -92,8 +92,8 @@ let ``Get Rook Move`` () =
 
 [<Test>]
 let ``Get Knight Capture`` () =
-  let pos = Psn.FromStr s1
-  let ans = Psn.GetMv pos "Nxd5"
+  let pos = Posn.FromString s1
+  let ans = pos.GetMv "Nxd5"
   ans.ToString() |> should equal "Nxd5"
   ans.Mfrom |> should equal 42
   ans.Mto |> should equal 27
@@ -103,8 +103,8 @@ let ``Get Knight Capture`` () =
 
 [<Test>]
 let ``Get Rook Capture`` () =
-  let pos = Psn.FromStr "3rr3/1p3kp1/p4p1p/q1b1pP2/1bp1P3/2N1B1Q1/PPPR2PP/3R2K1 w"
-  let ans = Psn.GetMv pos "Rxd8"
+  let pos = Posn.FromString "3rr3/1p3kp1/p4p1p/q1b1pP2/1bp1P3/2N1B1Q1/PPPR2PP/3R2K1 w"
+  let ans = pos.GetMv "Rxd8"
   ans.ToString() |> should equal "Rxd8"
   ans.Mfrom |> should equal 51
   ans.Mto |> should equal 3
@@ -114,8 +114,8 @@ let ``Get Rook Capture`` () =
 
 [<Test>]
 let ``Get Queen Capture`` () =
-  let pos = Psn.FromStr "1Q3b2/3Nq1kp/6p1/3Q1p2/3P4/4P1PP/2r3r1/1R2R1K1 w"
-  let ans = Psn.GetMv pos "Qxg2"
+  let pos = Posn.FromString "1Q3b2/3Nq1kp/6p1/3Q1p2/3P4/4P1PP/2r3r1/1R2R1K1 w"
+  let ans = pos.GetMv "Qxg2"
   ans.ToString() |> should equal "Qxg2"
   ans.Mfrom |> should equal 27
   ans.Mto |> should equal 54
@@ -125,8 +125,8 @@ let ``Get Queen Capture`` () =
 
 [<Test>]
 let ``Get Pawn Capture`` () =
-  let pos = Psn.FromStr s1
-  let ans = Psn.GetMv pos "gxh6"
+  let pos = Posn.FromString s1
+  let ans = pos.GetMv "gxh6"
   ans.ToString() |> should equal "gxh6"
   ans.Mfrom |> should equal 30
   ans.Mto |> should equal 23
@@ -136,8 +136,8 @@ let ``Get Pawn Capture`` () =
 
 [<Test>]
 let ``Get Pawn Capture E.p.`` () =
-  let pos = Psn.FromStr s1
-  let ans = Psn.GetMv pos "gxf6e.p."
+  let pos = Posn.FromString s1
+  let ans = pos.GetMv "gxf6e.p."
   ans.ToString() |> should equal "gxf6e.p."
   ans.Mfrom |> should equal 30
   ans.Mto |> should equal 21
@@ -147,8 +147,8 @@ let ``Get Pawn Capture E.p.`` () =
 
 [<Test>]
 let ``Get ambiguous file`` () =
-  let pos = Psn.FromStr s1
-  let ans = Psn.GetMv pos "Nge2"
+  let pos = Posn.FromString s1
+  let ans = pos.GetMv "Nge2"
   ans.ToString() |> should equal "Nge2"
   ans.Mfrom |> should equal 62
   ans.Mto |> should equal 52
@@ -158,8 +158,8 @@ let ``Get ambiguous file`` () =
 
 [<Test>]
 let ``Get ambiguous Rook Move`` () =
-  let pos = Psn.FromStr "r3b2r/1p1b1kp1/p3pp1p/q7/2p1PB2/2N3Q1/PPP2PPP/R4RK1 w"
-  let ans = Psn.GetMv pos "Rad1"
+  let pos = Posn.FromString "r3b2r/1p1b1kp1/p3pp1p/q7/2p1PB2/2N3Q1/PPP2PPP/R4RK1 w"
+  let ans = pos.GetMv "Rad1"
   ans.ToString() |> should equal "Rad1"
   ans.Mfrom |> should equal 56
   ans.Mto |> should equal 59
@@ -169,8 +169,8 @@ let ``Get ambiguous Rook Move`` () =
 
 [<Test>]
 let ``Get ambiguous rank`` () =
-  let pos = Psn.FromStr s2
-  let ans = Psn.GetMv pos "R6a7"
+  let pos = Posn.FromString s2
+  let ans = pos.GetMv "R6a7"
   ans.ToString() |> should equal "R6a7"
   ans.Mfrom |> should equal 16
   ans.Mto |> should equal 8
@@ -180,8 +180,8 @@ let ``Get ambiguous rank`` () =
 
 [<Test>]
 let ``Get promotion`` () =
-  let pos = Psn.FromStr "8/6P1/7K/8/1p6/8/Pk6/8 w"
-  let ans = Psn.GetMv pos "g8=Q"
+  let pos = Posn.FromString "8/6P1/7K/8/1p6/8/Pk6/8 w"
+  let ans = pos.GetMv "g8=Q"
   ans.ToString() |> should equal "g8=Q"
   ans.Mfrom |> should equal 14
   ans.Mto |> should equal 6
@@ -191,8 +191,8 @@ let ``Get promotion`` () =
 
 [<Test>]
 let ``Get promotion capture`` () =
-  let pos = Psn.FromStr s3
-  let ans = Psn.GetMv pos "dxc8=Q"
+  let pos = Posn.FromString s3
+  let ans = pos.GetMv "dxc8=Q"
   ans.ToString() |> should equal "dxc8=Q"
   ans.Mfrom |> should equal 11
   ans.Mto |> should equal 2
@@ -202,8 +202,8 @@ let ``Get promotion capture`` () =
 
 [<Test>]
 let ``Get check`` () =
-  let pos = Psn.FromStr s1
-  let ans = Psn.GetMv pos "Bb5+"
+  let pos = Posn.FromString s1
+  let ans = pos.GetMv "Bb5+"
   ans.ToString() |> should equal "Bb5+"
   ans.Mfrom |> should equal 61
   ans.Mto |> should equal 25
@@ -213,8 +213,8 @@ let ``Get check`` () =
 
 [<Test>]
 let ``Get Queen check`` () =
-  let pos = Psn.FromStr "8/8/Q7/1r6/5P1P/Pk4P1/6BK/3qq3 b"
-  let ans = Psn.GetMv pos "Qg1+"
+  let pos = Posn.FromString "8/8/Q7/1r6/5P1P/Pk4P1/6BK/3qq3 b"
+  let ans = pos.GetMv "Qg1+"
   ans.ToString() |> should equal "Qg1+"
   ans.Mfrom |> should equal 60
   ans.Mto |> should equal 62
@@ -224,8 +224,8 @@ let ``Get Queen check`` () =
 
 [<Test>]
 let ``Get where restricted by check`` () =
-  let pos = Psn.FromStr "rnbqk2r/pp1p1ppp/4pn2/2p5/1bPP4/2N1P3/PP3PPP/R1BQKBNR w"
-  let ans = Psn.GetMv pos "Ne2"
+  let pos = Posn.FromString "rnbqk2r/pp1p1ppp/4pn2/2p5/1bPP4/2N1P3/PP3PPP/R1BQKBNR w"
+  let ans = pos.GetMv "Ne2"
   ans.ToString() |> should equal "Ne2"
   ans.Mfrom |> should equal 62
   ans.Mto |> should equal 52

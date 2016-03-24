@@ -49,11 +49,7 @@
     <None Include="paket.references" />
     <None Include="paket.template" />
     <Compile Include="Types.fs" />
-    <Compile Include="Psn.fs" />
     <Compile Include="PGN.fs" />
-    <Compile Include="Parser.fs" />
-    <Compile Include="PgnRead.fs" />
-    <Compile Include="PgnWrite.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

@@ -18,7 +18,7 @@ module PGN =
         | FinishedInvalid
     
     let NextGameRdr(sr : StreamReader) = 
-        let pos = Psn.Start()
+        let pos = Posn.Start()
         
         let rec docomm cl (s : string) = 
             if s = "" then InComment(cl), ""
@@ -91,14 +91,16 @@ module PGN =
                 let tok = s.[..eloc - 1]
                 let es = s.[eloc + 1..]
                 let h = gethdr ("[" + tok + "]")
-                let ngm = h |> gm.AddHdr
-                if fst h = "FEN" then Invalid, ngm, es
-                else Unknown, ngm, es
+                if fst h = "FEN" then Invalid, gm, es
+                elif fst h = "Result" && snd h = "*" then Invalid, gm, es
+                else 
+                    let ngm = h |> gm.AddHdr
+                    Unknown, ngm, es
         
         let domv s = 
             let tok, es = s |> getwd
-            let mv = tok |> Psn.GetMv pos
-            mv|>pos.DoMv
+            let mv = tok |> pos.GetMv
+            mv |> pos.DoMv
             mv, es
         
         let rec proclin st s gm = 
@@ -173,3 +175,36 @@ module PGN =
         let reader = new System.IO.StreamReader(memory)
         NextGameRdr(reader)
     
+    let ReadFromStream(stream : Stream) = 
+        let sr = new StreamReader(stream)
+        let db = AllGamesRdr(sr)
+        db
+    
+    let ReadFromFile(file : string) = 
+        let stream = new FileStream(file, FileMode.Open)
+        let result = ReadFromStream(stream) |> Seq.toList
+        stream.Close()
+        result
+    
+    let ReadGamesFromStream(stream : Stream) = 
+        let sr = new StreamReader(stream)
+        seq { 
+            while not sr.EndOfStream do
+                yield NextGameRdr(sr)
+        }
+    
+    let ReadGamesFromFile(file : string) = 
+        let sr = new StreamReader(file)
+        seq { 
+            while not sr.EndOfStream do
+                yield NextGameRdr(sr)
+        }
+    
+    let WriteToFile db file = 
+        use fs = File.CreateText file
+        db |> List.iter (fun (gm : Game) -> fs.WriteLine(gm.ToString()))
+    
+    let WriteToStr db = 
+        let sb = new StringBuilder()
+        db |> List.iter (fun (gm : Game) -> sb.AppendLine(gm.ToString()) |> ignore)
+        sb.ToString()
