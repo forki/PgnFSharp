@@ -64,7 +64,6 @@
   <Import Project="..\..\.paket\paket.targets" />
   <ItemGroup>
     <Compile Include="FsUnit.fs" />
-    <Compile Include="Move.fs" />
     <Compile Include="MoveEntry.fs" />
     <Compile Include="Psn.fs" />
     <Compile Include="Game.fs" />

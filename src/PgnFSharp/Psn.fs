@@ -4,24 +4,6 @@ open System
 open System.Text
 open System.Text.RegularExpressions
 
-/// Move type where not a simple move
-type MvTyp = 
-    | Prom of char
-    | CasK
-    | CasQ
-    | Ep
-
-/// Index of square on the board
-type Sq = int
-
-/// Fast type for making moves on board
-type Mov = 
-    { Mfrom : Sq
-      Mto : Sq
-      Mtyp : MvTyp option
-      Mpgn : string }
-    override x.ToString() = x.Mpgn
-
 /// Board state - quick version
 type Posn = 
     { Sqs : char []

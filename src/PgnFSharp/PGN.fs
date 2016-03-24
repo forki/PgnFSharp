@@ -95,40 +95,38 @@ module PGN =
                 if fst h = "FEN" then Invalid, ngm, es
                 else Unknown, ngm, es
         
-        let domv bd s = 
+        let domv s = 
             let tok, es = s |> getwd
-            let move = MoveUtil.Parse bd tok
-            let nbd = bd |> Board.MoveApply(move)
             let mv = tok |> Psn.GetMv pos
             mv|>pos.DoMv
-            move, nbd, es
+            mv, es
         
-        let rec proclin st s bd gm = 
-            if s = "" then st, bd, gm
+        let rec proclin st s gm = 
+            if s = "" then st, gm
             else 
                 match st with
                 | InComment(cl) -> 
                     let nst, ns = docomm cl s
-                    proclin nst ns bd gm
+                    proclin nst ns gm
                 | InRAV(cl) -> 
                     let nst, ns = dorav cl s
-                    proclin nst ns bd gm
+                    proclin nst ns gm
                 | InNAG -> 
                     let ns = s |> donag
-                    proclin Unknown ns bd gm
+                    proclin Unknown ns gm
                 | InNum -> 
                     let nst, ns = s |> donum
-                    proclin nst ns bd gm
+                    proclin nst ns gm
                 | Invalid -> 
                     let nst = s |> doinv
-                    nst, bd, gm
+                    nst, gm
                 | InHeader -> 
                     let nst, ngm, ns = dohdr gm s
-                    proclin nst ns bd ngm
+                    proclin nst ns ngm
                 | InMove -> 
-                    let move, nbd, ns = domv bd s
-                    proclin Unknown ns nbd { gm with Moves = (move :: gm.Moves) }
-                | FinishedOK | FinishedInvalid -> st, bd, gm
+                    let move, ns = domv s
+                    proclin Unknown ns { gm with Moves = (move :: gm.Moves) }
+                | FinishedOK | FinishedInvalid -> st, gm
                 | Unknown -> 
                     let st, ns = 
                         match s.[0] with
@@ -140,18 +138,18 @@ module PGN =
                         | c when System.Char.IsNumber(c) || c = '.' -> InNum, s
                         | ' ' -> Unknown, s.[1..]
                         | _ -> InMove, s
-                    proclin st ns bd gm
+                    proclin st ns gm
         
-        let rec getgm st bd gm = 
+        let rec getgm st gm = 
             let lin = sr.ReadLine()
-            if lin |> isNull then bd, { gm with Moves = (gm.Moves |> List.rev) }
+            if lin |> isNull then { gm with Moves = (gm.Moves |> List.rev) }
             else 
-                let nst, nbd, ngm = proclin st lin bd gm
-                if nst = FinishedOK then nbd, { ngm with Moves = (ngm.Moves |> List.rev) }
-                elif nst = FinishedInvalid then nbd, Game.Blank
-                else getgm nst nbd ngm
+                let nst, ngm = proclin st lin gm
+                if nst = FinishedOK then { ngm with Moves = (ngm.Moves |> List.rev) }
+                elif nst = FinishedInvalid then Game.Blank
+                else getgm nst ngm
         
-        let _, gm = getgm Unknown (Board.Create2 FEN.Start) Game.Blank
+        let gm = getgm Unknown Game.Blank
         if gm.Moves.Length > 0 then gm |> Some
         else None
     
@@ -175,58 +173,3 @@ module PGN =
         let reader = new System.IO.StreamReader(memory)
         NextGameRdr(reader)
     
-    let Write (writer : System.IO.TextWriter) (pgn : Game) = 
-        let maxLineLen = 90
-        let nl = System.Environment.NewLine
-        let sbMoves = new StringBuilder()
-        let sbHeaders = new StringBuilder()
-        
-        //headers
-        //        for header in pgn.Headers do
-        //            sbHeaders.AppendLine(sprintf @"[%s ""%s""]" header.Key header.Value) |> ignore
-        //        if not (pgn.Headers.ContainsKey("Result")) then 
-        //            sbHeaders.Append(sprintf @"[Result ""%s""]" pgn.Headers.["Result"] + nl) |> ignore
-        //        sbHeaders.Append(nl) |> ignore
-        //moves
-        let rec procmvs isw ct (mvl : Move list) bd = 
-            if not (List.isEmpty mvl) then 
-                let mv = mvl.Head
-                if isw then 
-                    let ifullmove = (ct / 2) + 1
-                    sbMoves.Append(ifullmove.ToString() + ". ") |> ignore
-                sbMoves.Append((MoveUtil.DescBd mv bd) + " ") |> ignore
-                let nbd = bd |> Board.MoveApply(mv)
-                procmvs (not isw) (ct + 1) mvl.Tail nbd
-        
-        let board = Board.Create2(FEN.Start)
-        let mvl = pgn.Moves
-        procmvs true 1 mvl board
-        //result
-        //        if pgn.Result.Value = GameResult.WhiteWins then sbMoves.Append("1-0 ") |> ignore
-        //        elif pgn.Result.Value = GameResult.BlackWins then sbMoves.Append("0-1 ") |> ignore
-        //        elif pgn.Result.Value = GameResult.Draw then sbMoves.Append("1/2-1/2 ") |> ignore
-        //reformat move section to break into lines
-        //        else 
-        //            if //return result
-        //               not pgn.Result.IsSome then sbMoves.Append("* ") |> ignore
-        let wda = sbMoves.ToString().Split(' ')
-        let sbMoves1 = new StringBuilder()
-        
-        let rec procwds cl wdl = 
-            if List.isEmpty wdl then cl
-            else 
-                let wd : string = wdl.Head
-                
-                let ncl = 
-                    if cl = "" then wd
-                    elif (cl.Length + wd.Length) > maxLineLen then 
-                        sbMoves1.Append(cl + nl) |> ignore
-                        wd
-                    else cl + " " + wd
-                procwds ncl wdl.Tail
-        
-        let cl = procwds "" (wda |> Array.toList)
-        sbMoves1.Append(cl) |> ignore
-        writer.Write(sbHeaders.ToString())
-        writer.Write(sbMoves1.ToString())
-        writer.WriteLine()
