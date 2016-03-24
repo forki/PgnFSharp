@@ -69,6 +69,17 @@ let ``Get Knight Move`` () =
   pos.ToString()|>should equal "rnbqkbnr/p1p3p1/4p2p/3p1pP1/Pp6/2N1PN1P/1PPP1P2/R1BQKB1R b"
 
 [<Test>]
+let ``Get Knight Move 2`` () =
+  let pos = Psn.FromStr "rn2k1nr/pp3ppp/1qp5/3p1b2/3P4/1QN1P1P1/PP2BPP1/R3K1NR b"
+  let ans = Psn.GetMv pos "Na6"
+  ans.ToString() |> should equal "Na6"
+  ans.Mfrom |> should equal 1
+  ans.Mto |> should equal 16
+  ans.Mtyp |> should be Null
+  pos.DoMv ans
+  pos.ToString()|>should equal "r3k1nr/pp3ppp/nqp5/3p1b2/3P4/1QN1P1P1/PP2BPP1/R3K1NR w"
+
+[<Test>]
 let ``Get Rook Move`` () =
   let pos = Psn.FromStr "r6r/1p1b1kp1/p1b1pp1p/q7/2p1PB2/2N3Q1/PPP2PPP/3R1RK1 w"
   let ans = Psn.GetMv pos "Rd2"
@@ -100,6 +111,17 @@ let ``Get Rook Capture`` () =
   ans.Mtyp |> should be Null
   pos.DoMv ans
   pos.ToString()|>should equal "3Rr3/1p3kp1/p4p1p/q1b1pP2/1bp1P3/2N1B1Q1/PPP3PP/3R2K1 b"
+
+[<Test>]
+let ``Get Queen Capture`` () =
+  let pos = Psn.FromStr "1Q3b2/3Nq1kp/6p1/3Q1p2/3P4/4P1PP/2r3r1/1R2R1K1 w"
+  let ans = Psn.GetMv pos "Qxg2"
+  ans.ToString() |> should equal "Qxg2"
+  ans.Mfrom |> should equal 27
+  ans.Mto |> should equal 54
+  ans.Mtyp |> should be Null
+  pos.DoMv ans
+  pos.ToString()|>should equal "1Q3b2/3Nq1kp/6p1/5p2/3P4/4P1PP/2r3Q1/1R2R1K1 b"
 
 [<Test>]
 let ``Get Pawn Capture`` () =
@@ -158,6 +180,17 @@ let ``Get ambiguous rank`` () =
 
 [<Test>]
 let ``Get promotion`` () =
+  let pos = Psn.FromStr "8/6P1/7K/8/1p6/8/Pk6/8 w"
+  let ans = Psn.GetMv pos "g8=Q"
+  ans.ToString() |> should equal "g8=Q"
+  ans.Mfrom |> should equal 14
+  ans.Mto |> should equal 6
+  ans.Mtyp.Value |> should equal (Prom('Q'))
+  pos.DoMv ans
+  pos.ToString()|>should equal "6Q1/8/7K/8/1p6/8/Pk6/8 b"
+
+[<Test>]
+let ``Get promotion capture`` () =
   let pos = Psn.FromStr s3
   let ans = Psn.GetMv pos "dxc8=Q"
   ans.ToString() |> should equal "dxc8=Q"
@@ -179,12 +212,23 @@ let ``Get check`` () =
   pos.ToString()|>should equal "rnbqkbnr/p1p3p1/4p2p/1B1p1pP1/Pp6/2N1P2P/1PPP1P2/R1BQK1NR b"
 
 [<Test>]
+let ``Get Queen check`` () =
+  let pos = Psn.FromStr "8/8/Q7/1r6/5P1P/Pk4P1/6BK/3qq3 b"
+  let ans = Psn.GetMv pos "Qg1+"
+  ans.ToString() |> should equal "Qg1+"
+  ans.Mfrom |> should equal 60
+  ans.Mto |> should equal 62
+  ans.Mtyp |> should be Null
+  pos.DoMv ans
+  pos.ToString()|>should equal "8/8/Q7/1r6/5P1P/Pk4P1/6BK/3q2q1 w"
+
+[<Test>]
 let ``Get where restricted by check`` () =
   let pos = Psn.FromStr "rnbqk2r/pp1p1ppp/4pn2/2p5/1bPP4/2N1P3/PP3PPP/R1BQKBNR w"
   let ans = Psn.GetMv pos "Ne2"
   ans.ToString() |> should equal "Ne2"
-  ans.Mfrom |> should equal 61
-  ans.Mto |> should equal 25
+  ans.Mfrom |> should equal 62
+  ans.Mto |> should equal 52
   ans.Mtyp |> should be Null
   pos.DoMv ans
-  pos.ToString()|>should equal "rnbqkbnr/p1p3p1/4p2p/1B1p1pP1/Pp6/2N1P2P/1PPP1P2/R1BQK1NR b"
+  pos.ToString()|>should equal "rnbqk2r/pp1p1ppp/4pn2/2p5/1bPP4/2N1P3/PP2NPPP/R1BQKB1R b"

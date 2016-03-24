@@ -44,6 +44,10 @@ type Posn =
                 else getstr (i + 1) 0 chl.Tail
         getstr 0 0 (x.Sqs |> List.ofArray)
     
+    member x.Copy() = 
+        { Sqs = x.Sqs |> Array.copy
+          IsW = x.IsW }
+    
     member x.DoMv mv = 
         x.IsW <- not x.IsW
         let c = x.Sqs.[mv.Mfrom]
@@ -51,7 +55,7 @@ type Posn =
         x.Sqs.[mv.Mto] <- c
         if mv.Mtyp.IsSome then 
             match mv.Mtyp.Value with
-            | Prom(c) -> x.Sqs.[mv.Mto] <- c
+            | Prom(c) -> x.Sqs.[mv.Mto] <- if x.IsW then c|>Char.ToLower else c
             | CasK -> 
                 x.Sqs.[mv.Mto - 1] <- x.Sqs.[mv.Mto + 1]
                 x.Sqs.[mv.Mto + 1] <- ' '
@@ -110,6 +114,18 @@ module Psn =
     
     /// Gets Move from string
     let GetMv pos mv = 
+        //general failure message
+        let fl() = failwith ("not done yet, mv: " + mv + " pos: " + pos.ToString())
+        let samef a b = a % 8 = b % 8
+        let samer a b = a / 8 = b / 8
+        let samefr a b = samef a b || samer a b
+        let samedg a b = abs (a % 8 - b % 8) = abs (a / 8 - b / 8)
+        let samedgfr a b = samedg a b || samefr a b
+        let isnmv a b  =
+            let rd= abs(a/8-b/8)
+            let fd= abs(a%8-b%8)
+            rd=2&&fd=1||fd=2&&rd=1
+        
         let strip chars = 
             String.collect (fun c -> 
                 if Seq.exists ((=) c) chars then ""
@@ -139,48 +155,163 @@ module Psn =
             else 
                 match pc with
                 | 'N' | 'n' -> 
-                    let dfs = mfs |> Array.map (fun f -> f, (mto - f) |> abs)
-                    let nmvs = [| 6; 10; 15; 17 |]
-                    let vdfs = dfs |> Array.filter (fun (_, d) -> Array.IndexOf(nmvs, d) <> -1)
-                    if vdfs.Length = 1 then 
-                        { Mfrom = vdfs.[0] |> fst
+                    let ms = mfs |> Array.filter (isnmv mto)
+                    if ms.Length = 1 then 
+                        { Mfrom = ms.[0]
                           Mto = mto
                           Mtyp = None
                           Mpgn = mv }
-                    else failwith "Too many Knights!)"
+                    //filter out moves that lead to check
+                    else 
+                        let isok m = 
+                            let np = pos.Copy()
+                            
+                            let mov = 
+                                { Mfrom = m
+                                  Mto = mto
+                                  Mtyp = None
+                                  Mpgn = mv }
+                            mov |> np.DoMv
+                            let kc = 
+                                if pos.IsW then 'K'
+                                else 'k'
+                            
+                            let kia = 
+                                np.Sqs
+                                |> Array.mapi (fun i c -> i, c)
+                                |> Array.filter (fun (_, c) -> c = kc)
+                                |> Array.map fst
+                            
+                            let ki = kia.[0]
+                            
+                            let qc = 
+                                if pos.IsW then 'q'
+                                else 'Q'
+                            
+                            let rec chkd stop a rbc i = 
+                                if stop i then false
+                                else 
+                                    let j = i + a
+                                    let pc = np.Sqs.[j]
+                                    if pc = qc || pc = rbc then true
+                                    elif pc = ' ' || pc = kc then chkd stop a rbc j
+                                    else false
+                            
+                            let rc = 
+                                if pos.IsW then 'r'
+                                else 'R'
+                            
+                            let bc = 
+                                if pos.IsW then 'b'
+                                else 'B'
+                            
+                            let chkn = chkd (fun i -> i / 8 = 0) -8 rc
+                            let chke = chkd (fun i -> i % 8 = 7) 1 rc
+                            let chks = chkd (fun i -> i / 8 = 7) 8 rc
+                            let chkw = chkd (fun i -> i % 8 = 0) -1 rc
+                            let chkne = chkd (fun i -> i / 8 = 0 || i % 8 = 7) -7 bc
+                            let chkse = chkd (fun i -> i / 8 = 7 || i % 8 = 7) 9 bc
+                            let chksw = chkd (fun i -> i / 8 = 7 || i % 8 = 0) 7 bc
+                            let chknw = chkd (fun i -> i / 8 = 0 || i % 8 = 0) -9 bc
+                            let inchk = 
+                                chkn ki || chke ki || chks ki || chkw ki || chkne ki || chkse ki || chksw ki || chknw ki
+                            not inchk
+                        
+                        let nms = ms |> Array.filter isok
+                        if nms.Length = 1 then 
+                            { Mfrom = nms.[0]
+                              Mto = mto
+                              Mtyp = None
+                              Mpgn = mv }
+                        else fl()
                 | 'B' | 'b' -> 
-                    let fmfs = mfs |> Array.filter (fun f -> (mto+mto/8)%2=(f+f/8)%2)
+                    let fmfs = mfs |> Array.filter (samedg mto)
                     if fmfs.Length = 1 then 
                         { Mfrom = fmfs.[0]
                           Mto = mto
                           Mtyp = None
                           Mpgn = mv }
-                    else failwith "Too many Bishops!)"
-                | 'R' | 'r' -> 
-                    let fmfs = mfs |> Array.filter (fun f -> (mto - f)%8=0 || mto/8=f/8)
+                    else fl()
+                | 'Q' | 'q' -> 
+                    let fmfs = mfs |> Array.filter (samedgfr mto)
                     if fmfs.Length = 1 then 
                         { Mfrom = fmfs.[0]
                           Mto = mto
                           Mtyp = None
                           Mpgn = mv }
                     else
-                        let rec getval fl =
-                            if List.isEmpty fl then failwith ("can't find valid move, mv: " + mv + " pos: " + pos.ToString())
-                            else
+                        let rec getval fl = 
+                            if List.isEmpty fl then 
+                                failwith ("can't find valid move, mv: " + mv + " pos: " + pos.ToString())
+                            else 
                                 let f = fl.Head
-                                if mto/8=f/8 then
-                                    let betw = if mto<f then pos.Sqs.[mto+1..f-1] else pos.Sqs.[f+1..mto-1]
-                                    if (betw|>Array.filter(fun c -> c<> ' ')).Length=0 then f else getval fl.Tail
-                                else
-                                    let betw = if mto<f then [mto+8..8..f-8]|>List.map(fun i ->pos.Sqs.[i]) else [f+8..8..mto-8]|>List.map(fun i ->pos.Sqs.[i])
-                                    if (betw|>List.filter(fun c -> c<> ' ')).Length=0 then f else getval fl.Tail
-                        let mfrom = fmfs|>List.ofArray|>getval
+                                if samer mto f then 
+                                    let betw = 
+                                        if mto < f then pos.Sqs.[mto + 1..f - 1]
+                                        else pos.Sqs.[f + 1..mto - 1]
+                                    if (betw |> Array.filter (fun c -> c <> ' ')).Length = 0 then f
+                                    else getval fl.Tail
+                                elif samef mto f then
+                                    let betw = 
+                                        if mto < f then [ mto + 8..8..f - 8 ] |> List.map (fun i -> pos.Sqs.[i])
+                                        else [ f + 8..8..mto - 8 ] |> List.map (fun i -> pos.Sqs.[i])
+                                    if (betw |> List.filter (fun c -> c <> ' ')).Length = 0 then f
+                                    else getval fl.Tail
+                                //onsame diagonal
+                                else 
+                                    let betw = 
+                                        if mto < f && (f-mto)%7=0 then [ mto + 7..7..f - 7 ] |> List.map (fun i -> pos.Sqs.[i])
+                                        elif mto < f then [ mto + 9..9..f - 9 ] |> List.map (fun i -> pos.Sqs.[i])
+                                        elif (mto-f)%7=0 then [ f + 7..7..mto - 7 ] |> List.map (fun i -> pos.Sqs.[i])
+                                        else [ f + 9..9..mto - 9 ] |> List.map (fun i -> pos.Sqs.[i])
+                                    if (betw |> List.filter (fun c -> c <> ' ')).Length = 0 then f
+                                    else getval fl.Tail
+                        
+                        let mfrom = 
+                            fmfs
+                            |> List.ofArray
+                            |> getval
+                        
                         { Mfrom = mfrom
                           Mto = mto
                           Mtyp = None
                           Mpgn = mv }
-
-                | _ -> failwith ("not done yet, mv: " + mv + " pos: " + pos.ToString())
+                | 'R' | 'r' -> 
+                    let fmfs = mfs |> Array.filter (samefr mto)
+                    if fmfs.Length = 1 then 
+                        { Mfrom = fmfs.[0]
+                          Mto = mto
+                          Mtyp = None
+                          Mpgn = mv }
+                    else 
+                        let rec getval fl = 
+                            if List.isEmpty fl then 
+                                failwith ("can't find valid move, mv: " + mv + " pos: " + pos.ToString())
+                            else 
+                                let f = fl.Head
+                                if samer mto f then 
+                                    let betw = 
+                                        if mto < f then pos.Sqs.[mto + 1..f - 1]
+                                        else pos.Sqs.[f + 1..mto - 1]
+                                    if (betw |> Array.filter (fun c -> c <> ' ')).Length = 0 then f
+                                    else getval fl.Tail
+                                else 
+                                    let betw = 
+                                        if mto < f then [ mto + 8..8..f - 8 ] |> List.map (fun i -> pos.Sqs.[i])
+                                        else [ f + 8..8..mto - 8 ] |> List.map (fun i -> pos.Sqs.[i])
+                                    if (betw |> List.filter (fun c -> c <> ' ')).Length = 0 then f
+                                    else getval fl.Tail
+                        
+                        let mfrom = 
+                            fmfs
+                            |> List.ofArray
+                            |> getval
+                        
+                        { Mfrom = mfrom
+                          Mto = mto
+                          Mtyp = None
+                          Mpgn = mv }
+                | _ -> fl()
         //simple pawn move e.g. d4
         elif Regex.IsMatch(m, "^[abcdefgh][12345678]$") then 
             let mto = SqDct.[m]
@@ -267,24 +398,22 @@ module Psn =
             else 
                 match pc with
                 | 'N' | 'n' -> 
-                    let dfs = mfs |> Array.map (fun f -> f, (mto - f) |> abs)
-                    let nmvs = [| 6; 10; 15; 17 |]
-                    let vdfs = dfs |> Array.filter (fun (f, d) -> Array.IndexOf(nmvs, d) <> -1 && f % 8 = fn)
-                    if vdfs.Length = 1 then 
-                        { Mfrom = vdfs.[0] |> fst
+                    let ms = mfs |> Array.filter (isnmv mto)|>Array.filter(fun f -> f%8=fn)
+                    if ms.Length = 1 then 
+                        { Mfrom = ms.[0]
                           Mto = mto
                           Mtyp = None
                           Mpgn = mv }
-                    else failwith "Too many Knights!)"
-                | 'R' | 'r' -> 
+                    else fl()
+                | 'R' | 'r' | 'Q' | 'q'  -> 
                     let fmfs = mfs |> Array.filter (fun f -> f % 8 = fn)
                     if fmfs.Length = 1 then 
                         { Mfrom = fmfs.[0]
                           Mto = mto
                           Mtyp = None
                           Mpgn = mv }
-                    else failwith "Too many Rooks!)"
-                | _ -> failwith ("not done yet, pc:" + pc.ToString())
+                    else fl()
+                | _ -> fl()
         //ambiguous rank like R7a6
         elif Regex.IsMatch(m, "^[BNRQK][12345678][abcdefgh][12345678]$") then 
             let mto = SqDct.[m.[2..]]
@@ -308,24 +437,36 @@ module Psn =
             else 
                 match pc with
                 | 'N' | 'n' -> 
-                    let dfs = mfs |> Array.map (fun f -> f, (mto - f) |> abs)
-                    let nmvs = [| 6; 10; 15; 17 |]
-                    let vdfs = dfs |> Array.filter (fun (f, d) -> Array.IndexOf(nmvs, d) <> -1 && f / 8 = rn)
-                    if vdfs.Length = 1 then 
-                        { Mfrom = vdfs.[0] |> fst
+                    let ms = mfs |> Array.filter (isnmv mto)|>Array.filter(fun f -> f/8=rn)
+                    if ms.Length = 1 then 
+                        { Mfrom = ms.[0]
                           Mto = mto
                           Mtyp = None
                           Mpgn = mv }
-                    else failwith "Too many Knights!)"
-                | 'R' | 'r' -> 
+                    else fl()
+                | 'R' | 'r' | 'Q' | 'q'  -> 
                     let rmfs = mfs |> Array.filter (fun f -> f / 8 = rn)
                     if rmfs.Length = 1 then 
                         { Mfrom = rmfs.[0]
                           Mto = mto
                           Mtyp = None
                           Mpgn = mv }
-                    else failwith "Too many Rooks!)"
-                | _ -> failwith ("not done yet, pc:" + pc.ToString())
+                    else fl()
+                | _ -> fl()
+        //pawn promotion like b8=Q
+        elif Regex.IsMatch(m, "^[abcdefgh][12345678][BNRQK]$") then 
+            let mto = SqDct.[m.[0..1]]
+            
+            let r = 
+                int (m.[1].ToString()) + (if pos.IsW then -1
+                                          else 1)
+            
+            let mfrom = SqDct.[m.[0].ToString() + r.ToString()]
+            { Mfrom = mfrom
+              Mto = mto
+              Mtyp = Prom(m.[2]) |> Some
+              Mpgn = mv }
+        //pawn promotion capture like a*b8=Q
         elif Regex.IsMatch(m, "^[abcdefgh][abcdefgh][12345678][BNRQK]$") then 
             let mto = SqDct.[m.[1..2]]
             
@@ -338,4 +479,4 @@ module Psn =
               Mto = mto
               Mtyp = Prom(m.[3]) |> Some
               Mpgn = mv }
-        else failwith ("Unhandled string for move:" + mv)
+        else fl()
