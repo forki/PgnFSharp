@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <None Include="Script.fsx" />
+    <None Include="RegexAP.fsx" />
     <None Include="paket.references" />
     <None Include="paket.template" />
     <Compile Include="Utils.fs" />

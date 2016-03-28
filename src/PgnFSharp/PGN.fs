@@ -1,7 +1,6 @@
 ﻿namespace PgnFSharp
 
 open System.Text
-open System.Text.RegularExpressions
 open System.IO
 
 module PGN = 
@@ -75,26 +74,22 @@ module PGN =
                 if tok |> isEnd then FinishedInvalid
                 else doinv es
         
-        let gethdr hl = 
-            let pattern = @"\[(?<key>[\w]+)\s+\""(?<value>[\S\s]+)\""\]|\[(?<key>[\w]+)\s+\""\""\]"
-            let regex = new Regex(pattern)
-            let matches = regex.Matches(hl)
-            if matches.Count <> 1 then failwith ("not a valid pgn header: " + hl)
-            else 
-                let mtch = matches.[0]
-                mtch.Groups.["key"].Value, mtch.Groups.["value"].Value
-        
         let dohdr (gm : Game) (s : string) = 
             let eloc = s.IndexOf("]")
             if eloc = -1 then Invalid, gm, ""
             else 
                 let tok = s.[..eloc - 1]
                 let es = s.[eloc + 1..]
-                let h = gethdr ("[" + tok + "]")
-                if fst h = "FEN" then Invalid, gm, es
-                elif fst h = "Result" && snd h = "*" then Invalid, gm, es
+                let k,v = //gethdr ("[" + tok + "]")
+                   match ("[" + tok + "]") with
+                     | Header (k,v) -> k,v
+                     | _ -> failwith ("not a valid pgn header: " + "[" + tok + "]")
+                
+                
+                if k = "FEN" then Invalid, gm, es
+                elif k = "Result" && v = "*" then Invalid, gm, es
                 else 
-                    let ngm = h |> gm.AddHdr
+                    let ngm = (k,v) |> gm.AddHdr
                     Unknown, ngm, es
         
         let domv s = 

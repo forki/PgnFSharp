@@ -210,13 +210,38 @@ type Posn =
         
         let m = mv |> strip "+x#=!?"
         let m = m.Replace("e.p.", "")
+        match m with
+        //simple pawn move e.g. d4
+        | SimpleMove('P', sq) -> 
+            let mto = SqDct.[sq]
+            if x.IsW then 
+                if x.Sqs.[mto + 8] = 'P' then 
+                    { Mfrom = mto + 8
+                      Mto = mto
+                      Mtyp = None
+                      Mpgn = mv }
+                else 
+                    { Mfrom = mto + 16
+                      Mto = mto
+                      Mtyp = None
+                      Mpgn = mv }
+            else if x.Sqs.[mto - 8] = 'p' then 
+                { Mfrom = mto - 8
+                  Mto = mto
+                  Mtyp = None
+                  Mpgn = mv }
+            else 
+                { Mfrom = mto - 16
+                  Mto = mto
+                  Mtyp = None
+                  Mpgn = mv }
         //simple piece move e.g. Nf3
-        if Regex.IsMatch(m, "^[BNRQK][abcdefgh][12345678]$") then 
-            let mto = SqDct.[m.[1..]]
+        | SimpleMove(p, sq) -> 
+            let mto = SqDct.[sq]
             
             let pc = 
-                if x.IsW then m.[0]
-                else m.[0] |> Char.ToLower
+                if x.IsW then p
+                else p |> Char.ToLower
             
             let mfs = 
                 x.Sqs
@@ -391,43 +416,18 @@ type Posn =
                           Mtyp = None
                           Mpgn = mv }
                 | _ -> fl()
-        //simple pawn move e.g. d4
-        elif Regex.IsMatch(m, "^[abcdefgh][12345678]$") then 
-            let mto = SqDct.[m]
-            if x.IsW then 
-                if x.Sqs.[mto + 8] = 'P' then 
-                    { Mfrom = mto + 8
-                      Mto = mto
-                      Mtyp = None
-                      Mpgn = mv }
-                else 
-                    { Mfrom = mto + 16
-                      Mto = mto
-                      Mtyp = None
-                      Mpgn = mv }
-            else if x.Sqs.[mto - 8] = 'p' then 
-                { Mfrom = mto - 8
-                  Mto = mto
-                  Mtyp = None
-                  Mpgn = mv }
-            else 
-                { Mfrom = mto - 16
-                  Mto = mto
-                  Mtyp = None
-                  Mpgn = mv }
-        elif m = "O-O" || m = "0-0" || m = "o-o" then 
-            if x.IsW then 
+        | Castle(c) -> 
+            if c = 'K' && x.IsW then 
                 { Mfrom = 60
                   Mto = 62
                   Mtyp = CasK |> Some
                   Mpgn = mv }
-            else 
+            elif c = 'K' then 
                 { Mfrom = 4
                   Mto = 6
                   Mtyp = CasK |> Some
                   Mpgn = mv }
-        elif m = "O-O-O" || m = "0-0-0" || m = "o-o-o" then 
-            if x.IsW then 
+            elif x.IsW then 
                 { Mfrom = 60
                   Mto = 58
                   Mtyp = CasQ |> Some
@@ -438,8 +438,8 @@ type Posn =
                   Mtyp = CasQ |> Some
                   Mpgn = mv }
         //pawn capture like exd6
-        elif Regex.IsMatch(m, "^[abcdefgh][abcdefgh][12345678]$") then 
-            let mto = SqDct.[m.[1..]]
+        | PawnCapture(f, sq) -> 
+            let mto = SqDct.[sq]
             
             let r = 
                 int (m.[2].ToString()) + (if x.IsW then -1
@@ -449,20 +449,20 @@ type Posn =
                 if x.Sqs.[mto] = ' ' then Ep |> Some
                 else None
             
-            let mfrom = SqDct.[m.[0].ToString() + r.ToString()]
+            let mfrom = SqDct.[f.ToString() + r.ToString()]
             { Mfrom = mfrom
               Mto = mto
               Mtyp = mtyp
               Mpgn = mv }
         //ambiguous file like Nge2
-        elif Regex.IsMatch(m, "^[BNRQK][abcdefgh][abcdefgh][12345678]$") then 
-            let mto = SqDct.[m.[2..]]
+        | AbiguousFile(p, f, sq) -> 
+            let mto = SqDct.[sq]
             
             let pc = 
-                if x.IsW then m.[0]
-                else m.[0] |> Char.ToLower
+                if x.IsW then p
+                else p |> Char.ToLower
             
-            let fn = fDct.[m.[1]]
+            let fn = fDct.[f]
             
             let mfs = 
                 x.Sqs
@@ -497,14 +497,14 @@ type Posn =
                     else fl()
                 | _ -> fl()
         //ambiguous rank like R7a6
-        elif Regex.IsMatch(m, "^[BNRQK][12345678][abcdefgh][12345678]$") then 
-            let mto = SqDct.[m.[2..]]
+        | AbiguousRank(p, r, sq) -> 
+            let mto = SqDct.[sq]
             
             let pc = 
-                if x.IsW then m.[0]
-                else m.[0] |> Char.ToLower
+                if x.IsW then p
+                else p |> Char.ToLower
             
-            let rn = rDct.[m.[1]]
+            let rn = rDct.[r]
             
             let mfs = 
                 x.Sqs
@@ -539,8 +539,8 @@ type Posn =
                     else fl()
                 | _ -> fl()
         //pawn promotion like b8=Q
-        elif Regex.IsMatch(m, "^[abcdefgh][12345678][BNRQK]$") then 
-            let mto = SqDct.[m.[0..1]]
+        | Promotion(sq, pc) -> 
+            let mto = SqDct.[sq]
             
             let r = 
                 int (m.[1].ToString()) + (if x.IsW then -1
@@ -549,19 +549,18 @@ type Posn =
             let mfrom = SqDct.[m.[0].ToString() + r.ToString()]
             { Mfrom = mfrom
               Mto = mto
-              Mtyp = Prom(m.[2]) |> Some
+              Mtyp = Prom(pc) |> Some
               Mpgn = mv }
         //pawn promotion capture like a*b8=Q
-        elif Regex.IsMatch(m, "^[abcdefgh][abcdefgh][12345678][BNRQK]$") then 
-            let mto = SqDct.[m.[1..2]]
+        | PromCapture(f, sq, pc) -> 
+            let mto = SqDct.[sq]
             
             let r = 
                 int (m.[2].ToString()) + (if x.IsW then -1
                                           else 1)
             
-            let mfrom = SqDct.[m.[0].ToString() + r.ToString()]
+            let mfrom = SqDct.[f.ToString() + r.ToString()]
             { Mfrom = mfrom
               Mto = mto
-              Mtyp = Prom(m.[3]) |> Some
+              Mtyp = Prom(pc) |> Some
               Mpgn = mv }
-        else fl()
