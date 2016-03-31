@@ -80,16 +80,15 @@ module PGN =
             else 
                 let tok = s.[..eloc - 1]
                 let es = s.[eloc + 1..]
-                let k,v = //gethdr ("[" + tok + "]")
-                   match ("[" + tok + "]") with
-                     | Header (k,v) -> k,v
-                     | _ -> failwith ("not a valid pgn header: " + "[" + tok + "]")
                 
-                
+                let k, v = 
+                    match ("[" + tok + "]") with
+                    | Header(k, v) -> k, v
+                    | _ -> failwith ("not a valid pgn header: " + "[" + tok + "]")
                 if k = "FEN" then Invalid, gm, es
                 elif k = "Result" && v = "*" then Invalid, gm, es
                 else 
-                    let ngm = (k,v) |> gm.AddHdr
+                    let ngm = (k, v) |> gm.AddHdr
                     Unknown, ngm, es
         
         let domv s = 

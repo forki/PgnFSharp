@@ -1,7 +1,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/hhb7xtnlv9pd2o9j?svg=true)](https://ci.appveyor.com/project/pb_bwfc/pgnfsharp)
 
-ScidNET
-=======
+PgnFSharp
+=========
 
 This is a set of tools for chess PGN files using F#.
 

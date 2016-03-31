@@ -25,13 +25,6 @@ GITHUB
   specs:
     modules/Octokit/Octokit.fsx (58dce73f9a069ae7fbfbae993f5e6f06ed9218d5)
       Octokit
-GROUP FsSql
-NUGET
-  remote: https://www.nuget.org/api/v2
-  specs:
-    FSharp.Data.SqlClient (1.8.1)
-    FsPickler (1.8.0)
-
 GROUP Test
 NUGET
   remote: https://www.nuget.org/api/v2

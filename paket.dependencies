@@ -15,9 +15,3 @@ group Test
   nuget NUnit ~> 2
   nuget NUnit.Runners ~> 2
 
-group FsSql
-  source https://nuget.org/api/v2
-  
-  nuget FSharp.Data.SqlClient
-  nuget FsPickler
-
