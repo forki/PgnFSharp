@@ -13,6 +13,17 @@ type GameResult =
         | Draw -> "1/2-1/2"
         | WhiteWins -> "1-0"
         | BlackWins -> "0-1"
+    member x.ToByte() = 
+        match x with
+        | Draw -> byte(1)
+        | WhiteWins -> byte(2)
+        | BlackWins -> byte(0)
+    static member FromByte b = 
+        match b with
+        | b when b=byte(1) -> Draw
+        | b when b=byte(2) -> WhiteWins
+        | b when b=byte(0) -> BlackWins
+        | _ -> failwith "invalid byte for GameResult" 
 
 /// Move type where not a simple move
 type MvTyp = 
