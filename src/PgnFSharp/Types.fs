@@ -45,7 +45,8 @@ type Mov =
 
 /// Game - holds key headers and list of moves
 type Game = 
-    { Event : string
+    { Id : int
+      Event : string
       Site : string
       Year : int16 option
       Month : byte option
@@ -102,6 +103,11 @@ type Game =
                          Day = 
                              if tfd then d |> Some
                              else None }
+            elif b.Length = 1 then 
+                let tfy, y = Int16.TryParse(b.[0])
+                { x with Year = 
+                             if tfy then y |> Some
+                             else None }
             else x
         | "Round" -> { x with Round = v }
         | "White" -> { x with White = v }
@@ -118,7 +124,8 @@ type Game =
     
     static member FormatTag name value = "[" + name + " \"" + value + "\"]" + Environment.NewLine
     static member Blank = 
-        { Event = "?"
+        { Id = -1
+          Event = "?"
           Site = "?"
           Year = None
           Month = None
