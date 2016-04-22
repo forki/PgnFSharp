@@ -1,6 +1,7 @@
 ﻿namespace PgnFSharp
 
 open System
+open System.Text.RegularExpressions
 
 module Psn = 
     //utility functions
@@ -14,6 +15,35 @@ module Psn =
         let rd = abs (a / 8 - b / 8)
         let fd = abs (a % 8 - b % 8)
         rd = 2 && fd = 1 || fd = 2 && rd = 1
+    
+    ///Dictionary of files
+    let private fDct = 
+        [ 'a'..'h' ]
+        |> List.mapi (fun i c -> c, i)
+        |> dict
+    
+    ///Dictionary of ranks
+    let private rDct = 
+        [ 1..8 ]
+        |> List.rev
+        |> List.mapi (fun i c -> char (c.ToString()), i)
+        |> dict
+    
+    ///Dictionary of squares
+    let private SqDct = 
+        [ for r = 8 downto 1 do
+              for f in [ 'a'..'h' ] do
+                  yield f.ToString() + r.ToString() ]
+        |> List.mapi (fun i s -> s, i)
+        |> dict
+    
+    ///Dictionary of squares reversed
+    let private SqDctRev = 
+        [ for r = 8 downto 1 do
+              for f in [ 'a'..'h' ] do
+                  yield f.ToString() + r.ToString() ]
+        |> List.mapi (fun i s -> i, s)
+        |> dict
     
     /// Make a move
     let DoMv mv x = 
@@ -38,6 +68,19 @@ module Psn =
     
     /// Gets Move from string
     let GetMv mv x = 
+        //Active pattern to parse move string
+        let (|SimpleMove|Castle|PawnCapture|AbiguousFile|AbiguousRank|Promotion|PromCapture|) s = 
+            if Regex.IsMatch(s, "^[BNRQK][a-h][1-8]$") then SimpleMove(s.[0], s.[1..])
+            elif Regex.IsMatch(s, "^[a-h][1-8]$") then SimpleMove('P', s)
+            elif s = "O-O" then Castle('K')
+            elif s = "O-O-O" then Castle('Q')
+            elif Regex.IsMatch(s, "^[a-h][a-h][1-8]$") then PawnCapture(s.[0], s.[1..])
+            elif Regex.IsMatch(s, "^[BNRQK][a-h][a-h][1-8]$") then AbiguousFile(s.[0], s.[1], s.[2..])
+            elif Regex.IsMatch(s, "^[BNRQK][1-8][a-h][1-8]$") then AbiguousRank(s.[0], s.[1], s.[2..])
+            elif Regex.IsMatch(s, "^[a-h][1-8][BNRQ]$") then Promotion(s.[0..1], s.[2])
+            elif Regex.IsMatch(s, "^[a-h][a-h][1-8][BNRQ]$") then PromCapture(s.[0], s.[1..2], s.[3])
+            else failwith ("invalid move: " + s)
+        
         //general failure message
         let fl() = failwith ("not done yet, mv: " + mv + " pos: " + x.ToString())
         

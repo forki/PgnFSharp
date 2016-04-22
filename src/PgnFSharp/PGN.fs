@@ -1,8 +1,8 @@
 ﻿namespace PgnFSharp
 
-open System
 open System.Text
 open System.IO
+open System.Text.RegularExpressions
 
 module PGN = 
     type State = 
@@ -76,6 +76,11 @@ module PGN =
                 else doinv es
         
         let dohdr (gm : Game) (s : string) = 
+            //Active pattern to parse header string
+            let (|Header|_|) s = 
+                let m = Regex("\[([\w]+)\s+\"([\s\S]*)\"\]").Match(s)
+                if m.Success then Some(m.Groups.[1].Value, m.Groups.[2].Value)
+                else None
             let eloc = s.IndexOf("]")
             if eloc = -1 then Invalid, gm, ""
             else 
