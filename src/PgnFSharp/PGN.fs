@@ -1,5 +1,6 @@
 ﻿namespace PgnFSharp
 
+open System
 open System.Text
 open System.IO
 
@@ -93,8 +94,8 @@ module PGN =
         
         let domv s = 
             let tok, es = s |> getwd
-            let mv = tok |> pos.GetMv
-            mv |> pos.DoMv
+            let mv = pos |> (Psn.GetMv tok)
+            pos|>(Psn.DoMv mv)
             mv, es
         
         let rec proclin st s gm = 

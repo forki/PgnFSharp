@@ -24,6 +24,14 @@ module Utils =
                   yield f.ToString() + r.ToString() ]
         |> List.mapi (fun i s -> s, i)
         |> dict
+
+    ///Dictionary of squares reversed
+    let SqDctRev = 
+        [ for r = 8 downto 1 do
+              for f in [ 'a'..'h' ] do
+                  yield f.ToString() + r.ToString() ]
+        |> List.mapi (fun i s -> i, s)
+        |> dict
     
     //Regular expression active patterns
     // *********************************

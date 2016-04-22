@@ -51,6 +51,7 @@
     <None Include="paket.template" />
     <Compile Include="Utils.fs" />
     <Compile Include="Types.fs" />
+    <Compile Include="Psn.fs" />
     <Compile Include="PGN.fs" />
   </ItemGroup>
   <PropertyGroup>
